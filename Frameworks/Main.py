@@ -21,6 +21,8 @@ def handle_event() -> None:
             g_is_running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             g_is_running = False
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_RETURN:
+            play_jingle_bgm(test_bgm_3)
 
 g_previous_time: float       = 0.0 # 이전 시간
 g_current_time: float        = 0.0 # 현재 시간
@@ -34,8 +36,7 @@ def main() -> None:
 
     open_canvas(g_window_width, g_window_height) # 캔버스 열기
 
-    add_bgm("Resources/Audio/BGM/BGM_Boss0.wav")
-    play_primary_bgm(g_bgm_bank["Resources/Audio/BGM/BGM_Boss0.wav"])
+    play_primary_bgm(test_bgm_1)
 
     global g_is_running
     global g_previous_time
@@ -43,6 +44,7 @@ def main() -> None:
     g_previous_time = time.time()
     while g_is_running:
         handle_event()
+        update_bgm_state()
 
         # Delta Time 계산
         global g_current_time
