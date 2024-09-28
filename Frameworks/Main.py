@@ -1,14 +1,15 @@
 from pico2d import *
 import time
 
-g_isRunning = True              # 프로그램 구동 여부
-g_windowName = b"Virus Striker" # 프로그램(윈도우) 이름.
-g_windowWidth = 500             # 가로 해상도
-g_windowHeight = 800            # 세로 해상도
+g_isRunning: bool = True              # 프로그램 구동 여부.
+g_windowName: str = b"Virus Striker" # 프로그램(윈도우) 이름.
+g_windowWidth: int = 500             # 가로 해상도 (테스트).
+g_windowHeight: int = 800            # 세로 해상도 (테스트).
 
-def HandleEvent():
+def HandleEvent() -> None:
     global g_isRunning
     
+    # 테스트 구문
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -16,28 +17,28 @@ def HandleEvent():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             g_isRunning = False
 
-g_prevTime = 0
-g_curTime = 0
+g_prevTime:float    = 0.0 # 이전 시간
+g_curTime:float     = 0.0 # 현재 시간
+g_fps:float         = 0.0 # 현재 프레임
 
-g_fps = 0
-
-def main():
+def Main() -> None:
     global g_windowWidth
     global g_windowHeight
 
     open_canvas(g_windowWidth, g_windowHeight) # 캔버스 열기    
 
     global g_isRunning
+    global g_prevTime
+    
+    g_prevTime = time.time() 
     while g_isRunning:
         HandleEvent()
 
-        global g_prevTime
         global g_curTime
 
         # Delta Time 계산
-        g_prevTime = time.time() 
         g_curTime = time.time()
-        deltaTime = g_curTime - g_prevTime  # 밀리초로 계산할 필요 없음
+        deltaTime = g_curTime - g_prevTime / 1000.0
 
         # Fixed Delta Time 계산
         fixedUpdateTime = 1.0 / 50.0
@@ -77,4 +78,4 @@ def main():
     close_canvas()
 
 if __name__ == "__main__":
-    main()
+    Main()
