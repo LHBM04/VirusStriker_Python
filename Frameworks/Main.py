@@ -1,87 +1,90 @@
 from pico2d import *
+from pydub import AudioSegment
+from pydub.playback import play
 import time
+from Core.Core import *
 from Utilities.Resource import *
 from Utilities.AudioSystem import *
 
-g_windowName: str   = b"Virus Striker"  # 프로그램(윈도우) 이름.
-g_windowWidth: int  = 500               # 가로 해상도 (테스트).
-g_windowHeight: int = 800               # 세로 해상도 (테스트).
-g_isRunning: bool   = True              # 프로그램 구동 여부.
+g_window_name: str   = "Virus Striker"   # 프로그램(윈도우) 이름.
+g_window_width: int  = 1280              # 가로 해상도 (테스트).
+g_window_height: int = 800               # 세로 해상도 (테스트).
+g_is_running: bool   = True              # 프로그램 구동 여부.
 
-def HandleEvent() -> None:
-    global g_isRunning
+def handle_event() -> None:
+    global g_is_running
     
     # 테스트 구문
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-            g_isRunning = False
+            g_is_running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            g_isRunning = False
+            g_is_running = False
 
-g_prevTime: float       = 0.0 # 이전 시간
-g_curTime: float        = 0.0 # 현재 시간
+g_previous_time: float       = 0.0 # 이전 시간
+g_current_time: float        = 0.0 # 현재 시간
 
 g_fps: float            = 0.0 # 현재 프레임
-g_fpsDeltaTime: float   = 0.0
+g_fps_delta_time: float   = 0.0
 
-def Main() -> None:
-    global g_windowWidth
-    global g_windowHeight
+def main() -> None:
+    global g_window_width
+    global g_window_height
 
-    open_canvas(g_windowWidth, g_windowHeight) # 캔버스 열기    
+    open_canvas(g_window_width, g_window_height) # 캔버스 열기
 
-    LoadBGM("Resources/Audio/BGM/BGM_Boss0.wav", "Test")
-    PlayPrimaryBGM(g_bgmBank["Test"])
+    add_bgm("Resources/Audio/BGM/BGM_Boss0.wav")
+    play_primary_bgm(g_bgm_bank["Resources/Audio/BGM/BGM_Boss0.wav"])
 
-    global g_isRunning
-    global g_prevTime
+    global g_is_running
+    global g_previous_time
     
-    g_prevTime = time.time() 
-    while g_isRunning:
-        HandleEvent()
+    g_previous_time = time.time()
+    while g_is_running:
+        handle_event()
 
         # Delta Time 계산
-        global g_curTime
+        global g_current_time
 
-        g_curTime = time.time()
-        deltaTime = g_curTime - g_prevTime
+        g_current_time = time.time()
+        delta_time = g_current_time - g_previous_time
 
         # Fixed Delta Time 계산
-        fixedUpdateTime = 1.0 / 50.0
-        fixedDeltaTime  = deltaTime
+        fixed_update_time = 1.0 / 50.0
+        fixed_delta_time  = delta_time
 
-        if fixedDeltaTime >= 2.0:
-            fixedDeltaTime = 2.0
+        if fixed_delta_time >= 2.0:
+            fixed_delta_time = 2.0
 
-        while fixedDeltaTime > fixedUpdateTime:
-            fixedDeltaTime -= fixedUpdateTime
+        while fixed_delta_time > fixed_update_time:
+            fixed_delta_time -= fixed_update_time
             # TODO: FixedUpdate() 넣기
-            # ex) Core.GetInstance().FixedUpdate(fixedUpdateTime)
+            # ex) Core.GetInstance().FixedUpdate(fixed_update_time)
 
         global g_fps
-        global g_fpsDeltaTime
+        global g_fps_delta_time
 
         # 초당 프레임 계산
         g_fps += 1
-        g_fpsDeltaTime += deltaTime
+        g_fps_delta_time += delta_time
         
-        if g_fpsDeltaTime > 1.0:
+        if g_fps_delta_time > 1.0:
             print(f"FPS: {g_fps}")  # FPS 출력
             g_fps = 0
-            g_fpsDeltaTime = 0.0
+            g_fps_delta_time = 0.0
 
         # TODO: Update() 코드 넣기
-        # ex) Core.GetInstance().Update(deltaTime)
+        # ex) Core.GetInstance().Update(delta_time)
 
         # TODO: Key State 업데이트 해주기
         # ex) InputManager.GetInstance().UpdateKeyStates()
         
-        g_prevTime = g_curTime  # 현재 시간으로 prevTime 업데이트
+        g_previous_time = g_current_time  # 현재 시간으로 prevTime 업데이트
         update_canvas()  # 캔버스 업데이트
 
     clear_canvas()
     close_canvas()
 
 if __name__ == "__main__":
-    Main()
+    main()
