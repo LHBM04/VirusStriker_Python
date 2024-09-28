@@ -1,10 +1,12 @@
 from pico2d import *
 import time
+from Utilities.Resource import *
+from Utilities.AudioSystem import *
 
-g_isRunning: bool = True              # 프로그램 구동 여부.
-g_windowName: str = b"Virus Striker" # 프로그램(윈도우) 이름.
-g_windowWidth: int = 500             # 가로 해상도 (테스트).
-g_windowHeight: int = 800            # 세로 해상도 (테스트).
+g_windowName: str   = b"Virus Striker"  # 프로그램(윈도우) 이름.
+g_windowWidth: int  = 500               # 가로 해상도 (테스트).
+g_windowHeight: int = 800               # 세로 해상도 (테스트).
+g_isRunning: bool   = True              # 프로그램 구동 여부.
 
 def HandleEvent() -> None:
     global g_isRunning
@@ -17,17 +19,20 @@ def HandleEvent() -> None:
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             g_isRunning = False
 
-g_prevTime:float    = 0.0 # 이전 시간
-g_curTime:float     = 0.0 # 현재 시간
+g_prevTime: float       = 0.0 # 이전 시간
+g_curTime: float        = 0.0 # 현재 시간
 
-g_fps:float         = 0.0 # 현재 프레임
-g_fpsDeltaTime      = 0.0
+g_fps: float            = 0.0 # 현재 프레임
+g_fpsDeltaTime: float   = 0.0
 
 def Main() -> None:
     global g_windowWidth
     global g_windowHeight
 
     open_canvas(g_windowWidth, g_windowHeight) # 캔버스 열기    
+
+    LoadBGM("Resources/Audio/BGM/BGM_Boss0.wav", "Test")
+    PlayPrimaryBGM(g_bgmBank["Test"])
 
     global g_isRunning
     global g_prevTime
@@ -36,9 +41,9 @@ def Main() -> None:
     while g_isRunning:
         HandleEvent()
 
+        # Delta Time 계산
         global g_curTime
 
-        # Delta Time 계산
         g_curTime = time.time()
         deltaTime = g_curTime - g_prevTime
 
