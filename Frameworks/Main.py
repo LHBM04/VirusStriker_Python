@@ -19,7 +19,9 @@ def HandleEvent() -> None:
 
 g_prevTime:float    = 0.0 # 이전 시간
 g_curTime:float     = 0.0 # 현재 시간
+
 g_fps:float         = 0.0 # 현재 프레임
+g_fpsDeltaTime      = 0.0
 
 def Main() -> None:
     global g_windowWidth
@@ -38,11 +40,11 @@ def Main() -> None:
 
         # Delta Time 계산
         g_curTime = time.time()
-        deltaTime = g_curTime - g_prevTime / 1000.0
+        deltaTime = g_curTime - g_prevTime
 
         # Fixed Delta Time 계산
         fixedUpdateTime = 1.0 / 50.0
-        fixedDeltaTime = deltaTime
+        fixedDeltaTime  = deltaTime
 
         if fixedDeltaTime >= 2.0:
             fixedDeltaTime = 2.0
@@ -53,17 +55,16 @@ def Main() -> None:
             # ex) Core.GetInstance().FixedUpdate(fixedUpdateTime)
 
         global g_fps
+        global g_fpsDeltaTime
 
         # 초당 프레임 계산
-        g_fps = 0
-        fpsDeltaTime = 0.0
         g_fps += 1
-        fpsDeltaTime += deltaTime
+        g_fpsDeltaTime += deltaTime
         
-        if fpsDeltaTime > 1.0:
+        if g_fpsDeltaTime > 1.0:
             print(f"FPS: {g_fps}")  # FPS 출력
             g_fps = 0
-            fpsDeltaTime = 0.0
+            g_fpsDeltaTime = 0.0
 
         # TODO: Update() 코드 넣기
         # ex) Core.GetInstance().Update(deltaTime)
