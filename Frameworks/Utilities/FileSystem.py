@@ -1,7 +1,6 @@
 from pico2d import *
-from typing import Dict
 
-g_sprite_bank = {}
+g_sprite_bank: dict[str, Image] = { }
 
 def AddSprite(_filePath: str) -> None:
     global g_sprite_bank
