@@ -9,10 +9,10 @@ class Vector2:
         self.m_y: float = _y
 
     def Up() -> Vector2:
-        return Vector2(1.0, 0.0)
+        return Vector2(0.0, 1.0)
     
     def Down() -> Vector2:
-        return Vector2(0.0, 1.0)
+        return Vector2(0.0, -1.0)
     
     def Left() -> Vector2:
         return Vector2(-1.0, 0.0)

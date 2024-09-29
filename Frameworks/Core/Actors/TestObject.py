@@ -17,22 +17,26 @@ class TestObject(Object):
         self.position = Vector2(640, 400)
         self.renderLayer = 1 
         self.moveDirection: Vector2 = Vector2()
+        self.moveSpeed: float = 30.0
         
     def Update(self, _deltaTime: float) -> None:
         if InputManager().GetKeyState(SDLK_w) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Up() * (10.0 * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Up() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
 
         if InputManager().GetKeyState(SDLK_s) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Down() * (10.0 * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Down() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
 
         if InputManager().GetKeyState(SDLK_a) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Left() * (10.0 * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Left() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
 
         if InputManager().GetKeyState(SDLK_d) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Right() * (10.0 * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Right() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+
+        self.position += self.moveDirection
+        self.moveDirection = Vector2()
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        self.position += self.moveDirection
+        pass
     
     def LateUpdate(self, _deltaTime: float) -> None:
         pass

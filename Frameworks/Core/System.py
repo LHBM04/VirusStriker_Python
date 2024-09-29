@@ -26,22 +26,22 @@ class SystemManager(metaclass = Singleton):
                     self.windowHeight) # 캔버스 열기
 
     def Inintialize(self) -> None:
-        SceneManager().AddScene("Test 1", TestScene1())
-        SceneManager().AddScene("Test 2", TestScene2())
+        LevelManager().AddLevel("Test 1", TestScene1())
+        LevelManager().AddLevel("Test 2", TestScene2())
 
-        SceneManager().LoadScene("Test 1")
+        LevelManager().LoadLevel("Test 1")
 
     def Update(self, _deltaTime: float) -> None:
-        SceneManager().Update(_deltaTime);
+        LevelManager().Update(_deltaTime);
         InputManager().Update()
         AudioManager().Update()
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        SceneManager().FixedUpdate(_fixedDeltaTime);
+        LevelManager().FixedUpdate(_fixedDeltaTime);
 
     def Render(self) -> None:
-        SceneManager().RenderObject();
-        SceneManager().RenderUI();
+        LevelManager().RenderObject();
+        LevelManager().RenderUI();
     
     # 프로그램 종료 시 캔버스를 정리합니다.
     def CleanUp(self) -> None:
