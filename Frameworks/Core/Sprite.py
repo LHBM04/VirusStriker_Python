@@ -6,13 +6,13 @@ from pathlib import Path
 
 class Sprite:
     def __init__(self, _dirPath: str) -> None:
-        self.m_textures: List[Image] = []        # 해당 스프라이트의 텍스쳐들
-        self.m_textureSize: int = 0              # 해당 스프라이트의 텍스쳐 개수.
-        self.m_currentTextureIndex: int = 0      # 해당 스프라이트의 현재 텍스쳐.
+        self.m_textures: List[Image]    = []    # 해당 스프라이트의 텍스쳐들
+        self.m_textureSize: int         = 0     # 해당 스프라이트의 텍스쳐 개수.
+        self.m_currentTextureIndex: int = 0     # 해당 스프라이트의 현재 텍스쳐.
 
-        self.m_anyLoop: bool = True              # 루프 여부
-        self.m_aniTime: float = 0.1              # 애니메이션 시간.
-        self.m_aniDeltaTime: float = 0.0         # 애니메이션에 사용될 타이머.
+        self.m_anyLoop: bool        = True  # 루프 여부
+        self.m_aniTime: float       = 0.1   # 애니메이션 시간.
+        self.m_aniDeltaTime: float  = 0.0   # 애니메이션에 사용될 타이머.
         
         for file in Path(_dirPath).iterdir():
             if file.is_file():
@@ -34,8 +34,6 @@ class Sprite:
                     self.m_currentTextureIndex = self.m_currentTextureIndex - 1
 
     def Render(self):
-        global m_currentTexture
-        
         if self.m_currentTextureIndex >= self.m_textureSize:
             assert(0)
             return
