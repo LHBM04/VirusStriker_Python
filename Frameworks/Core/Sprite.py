@@ -25,8 +25,8 @@ class Color:
 # 
 class SpriteInfo:
     def __init__(self, 
-                 _position: Vector2 = None, 
-                 _scale: Vector2    = None, 
+                 _position: Vector2 = Vector2(), 
+                 _scale: Vector2    = Vector2(100, 100), 
                  _rotate: float     = 0.0, 
                  _isFilpX: bool     = False, 
                  _isFlipY: bool     = False, 
