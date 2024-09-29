@@ -8,6 +8,22 @@ class Vector2:
         self.m_x: float = _x
         self.m_y: float = _y
 
+    @property
+    def Up() -> Vector2:
+        return Vector2(1, 0)
+    
+    @property
+    def Down() -> Vector2:
+        return Vector2(0, 1)
+    
+    @property
+    def Left() -> Vector2:
+        return Vector2(-1, 0)
+    
+    @property
+    def Right() -> Vector2:
+        return Vector2(1, 0)
+
     def __neg__(self) -> 'Vector2':
         return Vector2(-self.m_x, -self.m_y)
 
@@ -22,3 +38,5 @@ class Vector2:
     
     def __truediv__(self, other):
         return Vector2(self.m_x / other, self.m_y / other)
+    
+
