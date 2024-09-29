@@ -32,7 +32,7 @@ class Sprite:
                     self.m_currentTextureIndex = 0
                 else:
                     self.m_currentTextureIndex = self.m_currentTextureIndex - 1
-
+    
     def Render(self):
         if self.m_currentTextureIndex >= self.m_textureSize:
             assert(0)

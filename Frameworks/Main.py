@@ -28,7 +28,7 @@ g_currentTime: float        = 0.0 # 현재 시간
 g_fps: float            = 0.0 # 현재 프레임
 g_fpsDeltaTime: float   = 0.0
 
-def main() -> None:
+def Main() -> None:
     global g_windowWidth
     global g_windowHeight
 
@@ -93,4 +93,4 @@ def main() -> None:
     close_canvas()
 
 if __name__ == "__main__":
-    main()
+    Main()
