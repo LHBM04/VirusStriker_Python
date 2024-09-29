@@ -35,7 +35,10 @@ class MathF:
     def Flip(_value: float, _over: float = 0.0) -> float:
         return -(_value - _over) + _over
     
-    def Flip_Vector2(_value: Vector2, _over: Vector2 = Vector2()) -> Vector2:
+    def Flip_Vector2(_value: Vector2, _over: Vector2 = None) -> Vector2:
+        if _over is None:
+            _over = Vector2(0.0, 0,0)
+
         return -Vector2(_value - _over) + _over
     
     def Floor(_value: float, _interval: float = 1.0, _offset = 0) -> float:
