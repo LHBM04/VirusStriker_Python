@@ -18,18 +18,3 @@ class Vector2:
 
     def __mul__(self, _other: 'Vector2') -> 'Vector2':
         return Vector2(self.x * _other, self.y * _other)
-
-    def __truediv__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.x / _other, self.y / _other)
-
-    def __floor__(self) -> 'Vector2':
-        return Vector2(MathF.Floor(self.x), MathF.Floor(self.y))
-
-    def __ceil__(self) -> 'Vector2':
-        return Vector2(MathF.Ceil(self.x), MathF.Ceil(self.y))
-
-    def magnitude(self) -> float:
-        return np.sqrt(self.m_x ** 2 + self.m_y ** 2)
-    
-    def dot(self, _other: 'Vector2') -> float:
-        return np.dot([self.m_x, _other.m_y], [self.m_x, _other.m_y])
