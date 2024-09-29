@@ -1,4 +1,4 @@
-class vector2:
+class Vector2:
     m_x: float
     m_y: float
 
