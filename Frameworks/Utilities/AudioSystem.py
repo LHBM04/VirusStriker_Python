@@ -96,29 +96,36 @@ def PlayJingle(_bgm: pygame.mixer.Sound):
     jingleChannel.set_volume(0.5)
     jingleChannel.set_endevent()
 
-DEFAULT_SFX_VOLUME: float   = 0.5
-g_sfxVolume: float          = DEFAULT_SFX_VOLUME
+DEFAULT_SFX_VOLUME: float = 0.5
+g_sfxVolume: float = DEFAULT_SFX_VOLUME
 
-g_maxConcurrentSFXCount = 16
+g_maxConcurrentSFXCount = 5
 g_startIdex = 4
 
-g_sfxChannels: set[pygame.mixer.Channel] = set()
+g_sfxChannels: list[pygame.mixer.Channel] = []  # 리스트로 초기화
 
 def CreateSFXSource() -> pygame.mixer.Channel:
-    g_sfxChannels.add(pygame.mixer.Channel(g_maxConcurrentSFXCount = g_maxConcurrentSFXCount + 1))
-    return g_sfxChannels(g_maxConcurrentSFXCount)
+    global g_sfxChannels
+    global g_maxConcurrentSFXCount
+
+    g_maxConcurrentSFXCount += 1
+    new_channel = pygame.mixer.Channel(g_maxConcurrentSFXCount)
+    g_sfxChannels.append(new_channel)  # 리스트에 추가
+    return new_channel
 
 def InitializeSFXSource() -> None:
-    for index in range(g_startIdex, (g_startIdex + g_maxConcurrentSFXCount) + 1):
+    global g_startIdex
+    global g_maxConcurrentSFXCount
+    global g_sfxChannels
+    
+    for index in range(g_startIdex, g_startIdex + g_maxConcurrentSFXCount):
         g_sfxChannels.append(pygame.mixer.Channel(index))
 
-def PlaySFX(_sfx: pygame.mixer.Sound) -> None: 
-    available_channel = next((ch for ch in g_sfxChannels if not ch.get_busy()), None)
+def PlaySFX(_sfx: pygame.mixer.Sound) -> None:
+    global g_sfxChannels
     
-    if available_channel:
-        available_channel.play(_sfx, 0, 0, 0)
-    else:
-        available_channel = CreateSFXSource(_sfx, 0, 0, 0)
+    available_channel = next((ch for ch in g_sfxChannels if not ch.get_busy()), CreateSFXSource())
+    available_channel.play(_sfx, 0, 0, 0)
 
 testBGM1 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Invincible.wav")
 testBGM2 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Boss1.wav")

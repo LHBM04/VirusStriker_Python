@@ -1,5 +1,7 @@
-from pico2d import *
 import time
+
+from pico2d import *
+
 from Core.Sprite import *
 from Utilities.AudioSystem import *
 from Utilities.FileSystem import *
@@ -20,7 +22,7 @@ def HandleEvent() -> None:
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             g_isRunning = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_RETURN:
-            PlayJingle(testBGM3)
+            PlaySFX(testSFX1)
 
 g_previousTime: float       = 0.0 # 이전 시간
 g_currentTime: float        = 0.0 # 현재 시간
@@ -35,8 +37,7 @@ def Main() -> None:
     open_canvas(g_windowWidth, g_windowHeight) # 캔버스 열기
 
     g_testSprite = Sprite("Resources/Sprites/Objects/Actors/Player/Idle")
-    PlayPrimaryBGM(testBGM1)
-    
+
     global g_isRunning
     global g_previousTime
     
