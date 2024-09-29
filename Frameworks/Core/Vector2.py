@@ -4,25 +4,25 @@ from Utilities.MathF import *
 
 @final
 class Vector2:
-    def __init__(self, _x: float = 0, _y: float = 0) -> None:
+    def __init__(self, _x: float = 0.0, _y: float = 0.0) -> None:
         self.m_x: float = _x
         self.m_y: float = _y
 
     @property
     def Up() -> Vector2:
-        return Vector2(1, 0)
+        return Vector2(1.0, 0.0)
     
     @property
     def Down() -> Vector2:
-        return Vector2(0, 1)
+        return Vector2(0.0, 1.0)
     
     @property
     def Left() -> Vector2:
-        return Vector2(-1, 0)
+        return Vector2(-1.0, 0.0)
     
     @property
     def Right() -> Vector2:
-        return Vector2(1, 0)
+        return Vector2(1.0, 0.0)
 
     def __neg__(self) -> 'Vector2':
         return Vector2(-self.m_x, -self.m_y)
