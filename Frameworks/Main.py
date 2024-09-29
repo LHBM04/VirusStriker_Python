@@ -28,17 +28,15 @@ g_currentTime: float        = 0.0 # 현재 시간
 g_fps: float            = 0.0 # 현재 프레임
 g_fpsDeltaTime: float   = 0.0
 
-g_testSprite = Sprite("Resources/Sprites/Objects/Actors/Player/Idle")
-
 def main() -> None:
     global g_windowWidth
     global g_windowHeight
 
     open_canvas(g_windowWidth, g_windowHeight) # 캔버스 열기
 
+    g_testSprite = Sprite("Resources/Sprites/Objects/Actors/Player/Idle")
     PlayPrimaryBGM(testBGM1)
     
-
     global g_isRunning
     global g_previousTime
     
@@ -55,7 +53,6 @@ def main() -> None:
         g_currentTime = time.time()
         delteTime = g_currentTime - g_previousTime
         
-        global g_testSprite
         g_testSprite.Update(delteTime)
         g_testSprite.Render()
         
