@@ -5,6 +5,7 @@ from pico2d import *
 from Core.Sprite import *
 from Level.Scene import *
 
+from Level.Scene import *
 from Level.TestScenes import *
 from Utilities.InputSystem import *
 from Utilities.AudioSystem import *
@@ -20,7 +21,9 @@ class SystemManager(metaclass = Singleton):
         self.isRunning: bool    = True              # 프로그램 구동 여부.
         self.gameFPS: float     = 0.0               # 게임 초당 프레임.
 
-        open_canvas(self.windowWidth, self.windowHeight) # 캔버스 열기
+        
+        open_canvas(self.windowWidth, 
+                    self.windowHeight) # 캔버스 열기
 
     def Inintialize(self) -> None:
         SceneManager().AddScene("Test 1", TestScene1())
