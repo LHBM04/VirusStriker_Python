@@ -1,22 +1,29 @@
+from typing import final
 import numpy as np
 
 import Core.Vector2 as Vector2
 from Core.Vector2 import *
 
 # 수학 관련 유틸리티
+@final
 class MathF:
+    @property
     def epsilon() -> float:
         return 0.0001
     
+    @property
     def pi() -> float:
         return 3.141592
 
+    @property
     def halfPi() -> float:
         return 1.570796
     
+    @property
     def oneThreeFourthsPi() -> float:
         return 5.4977871
 
+    @property
     def doublePi() -> float:
         return 6.283185
 
