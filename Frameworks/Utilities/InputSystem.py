@@ -21,8 +21,7 @@ class InputManager(metaclass = Singleton):
         self.keyState[key] = state
 
     def GetKeyState(self, key: int) -> EInputState:
-        temp = self.keyState[key]
-        return temp
+        return self.keyState[key]
 
     def Update(self) -> None:
         for index in range(256):

@@ -11,16 +11,16 @@ from Utilities.FileSystem import *
 
 def HandleEvents(_events: list[Event]) -> None:
     for event in _events:
-        if event.type is SDL_QUIT:
+        if event.type == SDL_QUIT:
             SystemManager().isRunning = False
             return
-        if event.type is SDL_KEYDOWN:  # 키가 눌렸을 때
-            if event.key is not None:  # event.key가 None이 아닐 때
+        if event.type == SDL_KEYDOWN:  # 키가 눌렸을 때
+            if event.key != None:  # event.key가 None이 아닐 때
                 InputManager().isKeyPressed = True
                 InputManager().SetKeyState(int(event.key), EInputState.DOWN)
             return
-        elif event.type is SDL_KEYUP:  # 키가 올라갔을 때
-            if event.key is not None:  # event.key가 None이 아닐 때
+        elif event.type == SDL_KEYUP:  # 키가 올라갔을 때
+            if event.key != None:  # event.key가 None이 아닐 때
                 InputManager().isKeyPressed = False
                 InputManager().SetKeyState(int(event.key), EInputState.UP)
             return
