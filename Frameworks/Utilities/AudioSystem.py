@@ -125,6 +125,7 @@ def PlaySFX(_sfx: pygame.mixer.Sound) -> None:
     global g_sfxChannels
     
     available_channel = next((ch for ch in g_sfxChannels if not ch.get_busy()), CreateSFXSource())
+    available_channel.set_volume(g_sfxVolume)
     available_channel.play(_sfx, 0, 0, 0)
 
 testBGM1 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Invincible.wav")
