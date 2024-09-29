@@ -28,13 +28,13 @@ class SpriteInfo:
                  _position: Vector2 = Vector2(), 
                  _scale: Vector2    = Vector2(), 
                  _rotate: float     = 0.0, 
-                 _isFilpX: bool     = False, 
+                 _isFlipX: bool     = False, 
                  _isFlipY: bool     = False, 
                  _color: Color      = Color()) -> None:
         self.position: Vector2    = _position               # 해당 스프라이트의 위치.
         self.scale: Vector2       = _scale                  # 해당 스프라이트의 크기.
         self.rotate: float        = _rotate                 # 해당 스프라이트의 각도.
-        self.isFlip: list[bool]   = [_isFilpX, _isFlipY]    # 해당 스프라이트의 뒤집기 여부.
+        self.isFlip: list[bool]   = [_isFlipX, _isFlipY]    # 해당 스프라이트의 뒤집기 여부.
         self.color: Color         = _color                  # 해당 스프라이트의 R,G,B,A 값
 
 class Sprite:

@@ -51,36 +51,37 @@ class ObjectManager:
 
     # 관리하는 오브젝트들의 Update()를 실행합니다.
     def Update(self, _deltaTime: float) -> None:
-        # 추가할 오브젝트가 있을 경우 관리 중인 리스트에 추가
-        if self.m_addObjects:
-            self.m_objects.extend(self.m_addObjects)  # 올바른 방법으로 추가
-            self.m_addObjects.clear()  # 추가한 후 리스트 비우기
+        if len(self.m_addObjects) > 0:
+            self.m_objects.extend(self.m_addObjects) 
+            self.m_addObjects.clear() 
 
         # 관리 중인 오브젝트가 있을 경우 업데이트 실행
-        if self.m_objects:
-            self.m_objects.sort(key=lambda obj: obj.renderLayer)  # renderLayer에 따라 정렬
+        if len(self.m_objects) > 0:
+            self.m_objects.sort(key=lambda obj: obj.renderLayer)  
             for obj in self.m_objects:
-                obj.Update(_deltaTime)  # 각 오브젝트의 Update 호출
+                obj.Update(_deltaTime)
+                obj.sprite.Update(_deltaTime)
 
             for obj in self.m_objects:
-                obj.LateUpdate(_deltaTime)  # 각 오브젝트의 LateUpdate 호출
+                obj.LateUpdate(_deltaTime)
         
     # 관리하는 오브젝트들의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        if self.m_objects:
+        if len(self.m_objects) > 0:
             toRemove: list[Object] = []  # 제거할 오브젝트 리스트
             
             for obj in self.m_objects:
-                obj.FixedUpdate(_fixedDeltaTime)  # 각 오브젝트의 FixedUpdate 호출
-                if obj.isDestroied:  # 오브젝트가 파괴된 경우
-                    toRemove.append(obj)  # 제거할 리스트에 추가
+                obj.FixedUpdate(_fixedDeltaTime) 
+                if obj.isDestroied: 
+                    toRemove.append(obj) 
 
             for obj in toRemove:
-                self.m_objects.remove(obj)  # 파괴된 오브젝트 제거
+                self.m_objects.remove(obj)
+                del obj
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:
-        if self.m_objects:
+        if len(self.m_objects) > 0:
             for obj in self.m_objects:
                 obj.Render()  # 각 오브젝트의 Render 호출
                 obj.RenderDebug()  # 각 오브젝트의 RenderDebug 호출

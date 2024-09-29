@@ -1,4 +1,6 @@
+from Core.System import *
 from Core.Object import *
+from Level.Scene import *
 from Utilities.InputSystem import *
 
 class TestObject(Object):
@@ -6,7 +8,13 @@ class TestObject(Object):
         super().__init__()
 
         self.sprite = Sprite("Resources/Sprites/Objects/Actors/Player/Idle")
-        self.spriteInfo = SpriteInfo()
+        self.spriteInfo = SpriteInfo(_position = Vector2(640, 400), 
+                                     _scale = Vector2(100, 100),
+                                     _rotate = 0.0,
+                                     _isFlipX = False,
+                                     _isFlipY = False,
+                                     _color = Color(255, 255, 255, 255))
+        self.position = Vector2(640, 400)
         self.renderLayer = 1 
         self.moveDirection: Vector2 = Vector2()
         
@@ -25,9 +33,6 @@ class TestObject(Object):
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         self.position += self.moveDirection
-        self.moveDirection = Vector2()
-
-        print(f"{self.position.m_x} {self.position.m_y}")
     
     def LateUpdate(self, _deltaTime: float) -> None:
         pass
