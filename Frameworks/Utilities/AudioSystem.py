@@ -1,12 +1,3 @@
-# TODO: AudioSystem 개발 과정
-# 1. 메인 BGM 재생/정지 함수 만들기 (완료)
-#   - 일시 정지/정지된 시점 재생 구현
-#   - 페이드 효과 재생/정지 구현
-# 2. 서브 BGM 재생/정지 함수 작성하기 (완료)
-# 3. 징글 BGM 재생/정지 함수 작성하기 (완료)
-# 4. SFX 재생 로직 작성하기 
-#   - 재생 위치 다르게 하기
-#   - 오브젝트 풀링 이용해서 SFX 재생 소스 할당하기
 import pygame
 from enum import Enum
 
@@ -19,87 +10,85 @@ class EBGMState(Enum):
     SECONDARY   = 2
     JINGLE      = 3
 
-current_bgm_type: EBGMState     = EBGMState.NONE    # 현재 재생 중인 BGM의 타입.
-previous_bgm_type: EBGMState    = EBGMState.NONE    # 이전에 재생 중이었던 BGM의 타입.
+currentBGMType: EBGMState     = EBGMState.NONE    # 현재 재생 중인 BGM의 타입.
+previousBGMType: EBGMState    = EBGMState.NONE    # 이전에 재생 중이었던 BGM의 타입.
 
-primary_channel: pygame.mixer.Channel   = pygame.mixer.Channel(0)   # 메인 BGM의 재생 채널
-secondary_channel: pygame.mixer.Channel = pygame.mixer.Channel(1)   # 서브 BGM의 재생 채널
-jingle_channel: pygame.mixer.Channel    = pygame.mixer.Channel(2)   # 징글 BGM의 재생 채널
+primaryChannel: pygame.mixer.Channel   = pygame.mixer.Channel(0)   # 메인 BGM의 재생 채널
+secondaryChannel: pygame.mixer.Channel = pygame.mixer.Channel(1)   # 서브 BGM의 재생 채널
+jingleChannel: pygame.mixer.Channel    = pygame.mixer.Channel(2)   # 징글 BGM의 재생 채널
 
-def play_primary_bgm(_bgm: pygame.mixer.Sound, _is_loop: bool = True, _fade_ms: int = 0):
-    global primary_channel
+def PlayPrimaryBGM(_bgm: pygame.mixer.Sound, _is_loop: bool = True, _fade_ms: int = 0):
+    global primaryChannel
    
-    global current_bgm_type
-    global previous_bgm_type
+    global currentBGMType
+    global previousBGMType
  
-    current_bgm_type, previous_bgm_type = EBGMState.PRIMARY, current_bgm_type 
+    currentBGMType, previousBGMType = EBGMState.PRIMARY, currentBGMType 
 
-    primary_channel.play(_bgm, -1 if _is_loop is True else 0, 0, _fade_ms)
-    primary_channel.set_volume(0.5)
+    primaryChannel.play(_bgm, -1 if _is_loop is True else 0, 0, _fade_ms)
+    primaryChannel.set_volume(0.5)
 
-def stop_primary_bgm(_fade_ms: float = 0.0):
-    global primary_channel
+def StopPrimaryBGM(_fade_ms: float = 0.0):
+    global primaryChannel
 
-    if not primary_channel.get_busy():
+    if not primaryChannel.get_busy():
         return
     
-    primary_channel.stop(_fade_ms)
+    primaryChannel.stop(_fade_ms)
 
-def pause_primary_bgm(_fade_ms: float = 0.0):
-    global primary_channel
+def PausePrimaryBGM(_fade_ms: float = 0.0):
+    global primaryChannel
 
-    if not primary_channel.get_busy():
+    if not primaryChannel.get_busy():
         return
     
-    primary_channel.pause()
+    primaryChannel.pause()
 
-def unpause_primary_bgm(_fade_ms: float = 0.0):
+def ReplayPrimaryBGM(_fade_ms: float = 0.0):
     pass
 
-def play_secondary_bgm(_bgm: pygame.mixer.Sound):
-    global primary_channel
-    global secondary_channel
+def PlaySecondaryBGM(_bgm: pygame.mixer.Sound):
+    global primaryChannel
+    global secondaryChannel
     
-    global current_bgm_type
-    global previous_bgm_type
+    global currentBGMType
+    global previousBGMType
     
-    if primary_channel.get_busy():
-        primary_channel.pause()
+    if primaryChannel.get_busy():
+        primaryChannel.pause()
     
-    current_bgm_type, previous_bgm_type = EBGMState.SECONDARY, current_bgm_type
+    currentBGMType, previousBGMType = EBGMState.SECONDARY, currentBGMType
     
-    secondary_channel.play(_bgm)
-    secondary_channel.set_volume(0.5)
+    secondaryChannel.play(_bgm)
+    secondaryChannel.set_volume(0.5)
 
-def play_jingle_bgm(_bgm: pygame.mixer.Sound):
-    global primary_channel
-    global secondary_channel
-    global jingle_channel
+def PlayJingle(_bgm: pygame.mixer.Sound):
+    global primaryChannel
+    global secondaryChannel
+    global jingleChannel
 
-    global current_bgm_type
-    global previous_bgm_type
+    global currentBGMType
+    global previousBGMType
     
-    if primary_channel.get_busy():
-        primary_channel.pause()
+    if primaryChannel.get_busy():
+        primaryChannel.pause()
 
-    if secondary_channel.get_busy():
-        secondary_channel.pause()
+    if secondaryChannel.get_busy():
+        secondaryChannel.pause()
 
-    current_bgm_type, previous_bgm_type = EBGMState.JINGLE, current_bgm_type
-    jingle_channel.play(_bgm)
-    jingle_channel.set_volume(0.5)
-    jingle_channel.set_endevent()
+    currentBGMType, previousBGMType = EBGMState.JINGLE, currentBGMType
+    jingleChannel.play(_bgm)
+    jingleChannel.set_volume(0.5)
+    jingleChannel.set_endevent()
 
-def update_bgm_state():
-    global current_bgm_type
-    global previous_bgm_type
+def UpdateBGMState():
+    global currentBGMType
+    global previousBGMType
 
-    if current_bgm_type is EBGMState.JINGLE and not jingle_channel.get_busy():
-        current_bgm_type, previous_bgm_type = previous_bgm_type, current_bgm_type
-        primary_channel.unpause()
+    if currentBGMType is EBGMState.JINGLE and not jingleChannel.get_busy():
+        currentBGMType, previousBGMType = previousBGMType, currentBGMType
+        primaryChannel.unpause()
 
-    print(f"{current_bgm_type}, {previous_bgm_type}")
-
-test_bgm_1 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Boss0.wav")
-test_bgm_2 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Boss1.wav")
-test_bgm_3 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_NewScore.wav")
+testBGM1 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Invincible.wav")
+testBGM2 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Boss1.wav")
+testBGM3 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_NewScore.wav")
