@@ -1,5 +1,5 @@
 from pico2d import *
-from Utilities.FileSystem import *
+from ..Utilities.FileSystem import *
 
 class Sprite:
     m_texture: Image = None   # 택스쳐

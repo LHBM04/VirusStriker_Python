@@ -1,7 +1,7 @@
 from pico2d import *
 import time
-from Core.Core import *
 from Utilities.AudioSystem import *
+from Utilities.FileSystem import *
 
 g_windowName: str   = "Virus Striker"   # 프로그램(윈도우) 이름.
 g_windowWidth: int  = 1280              # 가로 해상도 (테스트).
