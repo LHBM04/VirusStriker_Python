@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import final
-import queue
+from collections import deque
 
 from Core.System import *
 from Core.Object import *
@@ -69,7 +69,7 @@ class SceneManager(metaclass = Singleton):
         self.m_scenes: dict[str:Scene]      = {}                    # 관리할 Scene들.
         self.m_currentScene: Scene          = None                  # 현재 활성화된 Scene.
         self.m_nextScene: Scene             = None                  # 이동 중인 Scene
-        self.m_previousScenes: queue[Scene] = queue.Queue()         # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
+        self.m_previousScenes: deque[Scene] = deque()               # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
         
         self.m_loadingBackground: Sprite            = Sprite("Resources/Sprites/Backgrounds/Loading/Logo")    # 로딩 백그라운드
         self.m_loadingBackgroundInfo: SpriteInfo    = SpriteInfo(Vector2(0, 0), 
@@ -98,27 +98,21 @@ class SceneManager(metaclass = Singleton):
         self.m_scenes[_sceneName] = _scene
 
     def LoadScene(self, _sceneName: str) -> None:
-        if len(self.m_scenes) <= 0 or _sceneName not in self.m_scenes:
-            assert(0)
-            return
-        if self.m_currentScene != None:
-            self.m_currentScene.OnExit()
-            self.m_previousScenes.put(self.m_currentScene) # 현재 Scene은 이전의 Scene에 넣어준다.
+        if len(self.m_previousScenes) > 0:
+            self.m_previousScenes[0].OnExit()
 
         self.m_nextScene = self.m_scenes[_sceneName]
+        self.m_previousScenes.append(self.m_nextScene)
+        self.m_previousScenes[0].OnEnter()
 
     def UnloadScene(self) -> None:
-        if self.m_currentScene is None:
-            assert(0)
-            return
-        
-        try:
-            self.m_currentScene.OnExit()
-            self.m_nextScene = self.m_previousScenes.get()
-            self.m_previousScenes.put(self.m_currentScene)
-        except queue.Empty:
-            global g_isRunning
-            g_isRunning = False
+        if len(self.m_previousScenes) <= 0:
+            return;
+
+        self.m_previousScenes.pop().OnExit();
+
+        if len(self.m_previousScenes) > 0:
+            self.m_nextScene = self.m_previousScenes[0]
 
     # -------------------[Game Loop]------------------- # 
 
