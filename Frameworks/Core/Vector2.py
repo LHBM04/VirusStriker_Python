@@ -1,7 +1,8 @@
-import numpy as np
+from typing import final
 
 from Utilities.MathF import *
 
+@final
 class Vector2:
     def __init__(self, _x: float = 0, _y: float = 0) -> None:
         self.m_x: float = _x
