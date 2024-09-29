@@ -93,7 +93,7 @@ def UpdateBGMState():
         currentBGMType, previousBGMType = previousBGMType, currentBGMType
         ReplayPrimaryBGM()
 
-    print(f"current: {currentBGMType}, previous: {previousBGMType}")
+    # print(f"current: {currentBGMType}, previous: {previousBGMType}")
 
 testBGM1 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Invincible.wav")
 testBGM2 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Boss1.wav")

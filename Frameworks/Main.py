@@ -1,5 +1,6 @@
 from pico2d import *
 import time
+from Core.Sprite import *
 from Utilities.AudioSystem import *
 from Utilities.FileSystem import *
 
@@ -27,6 +28,8 @@ g_currentTime: float        = 0.0 # 현재 시간
 g_fps: float            = 0.0 # 현재 프레임
 g_fpsDeltaTime: float   = 0.0
 
+g_testSprite = Sprite("Resources/Sprites/Objects/Actors/Player/Idle")
+
 def main() -> None:
     global g_windowWidth
     global g_windowHeight
@@ -34,6 +37,7 @@ def main() -> None:
     open_canvas(g_windowWidth, g_windowHeight) # 캔버스 열기
 
     PlayPrimaryBGM(testBGM1)
+    
 
     global g_isRunning
     global g_previousTime
@@ -43,21 +47,27 @@ def main() -> None:
         HandleEvent()
         UpdateBGMState()
 
+        clear_canvas()
+       
         # Delta Time 계산
         global g_currentTime
 
         g_currentTime = time.time()
-        delta_time = g_currentTime - g_previousTime
-
+        delteTime = g_currentTime - g_previousTime
+        
+        global g_testSprite
+        g_testSprite.Update(delteTime)
+        g_testSprite.Render()
+        
         # Fixed Delta Time 계산
-        fixed_update_time = 1.0 / 50.0
-        fixed_delta_time  = delta_time
+        fixedUpdateTime = 1.0 / 50.0
+        fixedDeltaTime  = delteTime
 
-        if fixed_delta_time >= 2.0:
-            fixed_delta_time = 2.0
+        if fixedDeltaTime >= 2.0:
+            fixedDeltaTime = 2.0
 
-        while fixed_delta_time > fixed_update_time:
-            fixed_delta_time -= fixed_update_time
+        while fixedDeltaTime > fixedUpdateTime:
+            fixedDeltaTime -= fixedUpdateTime
             # TODO: FixedUpdate() 넣기
             # ex) Core.GetInstance().FixedUpdate(fixed_update_time)
 
@@ -66,10 +76,10 @@ def main() -> None:
 
         # 초당 프레임 계산
         g_fps += 1
-        g_fpsDeltaTime += delta_time
+        g_fpsDeltaTime += delteTime
         
         if g_fpsDeltaTime > 1.0:
-            print(f"FPS: {g_fps}")  # FPS 출력
+            # print(f"FPS: {g_fps}")  # FPS 출력
             g_fps = 0
             g_fpsDeltaTime = 0.0
 
