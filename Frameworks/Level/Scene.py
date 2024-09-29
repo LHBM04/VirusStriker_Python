@@ -6,9 +6,9 @@ from Core.System import *
 from Core.Object import *
 from Utilities.Singleton import *
 
-class Scene:
-    def __init__(self, _sceneName: str) -> None:
-        self.sceneName: str                 = _sceneName        # 해당 Scene의 이름. (나중에 Key로 사용할 것임.)
+class Level:
+    def __init__(self, _levelName: str) -> None:
+        self.levelName: str                 = _levelName        # 해당 Scene의 이름. (나중에 Key로 사용할 것임.)
 
         self.m_objectManager: ObjectManager = ObjectManager()   # 해당 Scene 내 오브젝트를 관리하는 매니저 인스턴스
         self.m_uiManager: ObjectManager     = ObjectManager()   # 해당 Scene 내 UI를 관리하는 매니저 인스턴스
@@ -62,14 +62,14 @@ class Scene:
         pass
 
 @final
-class SceneManager(metaclass = Singleton):
+class LevelManager(metaclass = Singleton):
     def __init__(self) -> None:
         # -------------------[private field]------------------- #
 
-        self.m_scenes: dict[str:Scene]      = {}                    # 관리할 Scene들.
-        self.m_currentScene: Scene          = None                  # 현재 활성화된 Scene.
-        self.m_nextScene: Scene             = None                  # 이동 중인 Scene
-        self.m_previousScenes: deque[Scene] = deque()               # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
+        self.m_levels: dict[str:Level]      = {}                    # 관리할 Scene들.
+        self.m_currentLevel: Level          = None                  # 현재 활성화된 Scene.
+        self.m_nextLevel: Level             = None                  # 이동 중인 Scene
+        self.m_previousLevels: deque[Level] = deque()               # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
         
         self.m_loadingBackground: Sprite            = Sprite("Resources/Sprites/Backgrounds/Loading/Logo")    # 로딩 백그라운드
         self.m_loadingBackgroundInfo: SpriteInfo    = SpriteInfo(Vector2(0, 0), 
@@ -83,48 +83,48 @@ class SceneManager(metaclass = Singleton):
 
     # -------------------[Scene Attributes]------------------- # 
 
-    def GetActiveScene(self) -> Scene:
-        if self.m_currentScene is None:
+    def GetActiveLevel(self) -> Level:
+        if self.m_currentLevel is None:
             assert(0)
             return
         
-        return self.m_currentScene
+        return self.m_currentLevel
     
-    def AddScene(self, _sceneName: str, _scene: Scene) -> None:
-        if _sceneName in self.m_scenes.keys() and _scene in self.m_scenes.values():
+    def AddLevel(self, _levelName: str, _scene: Level) -> None:
+        if _levelName in self.m_levels.keys() and _scene in self.m_levels.values():
             assert(0)
             return
         
-        self.m_scenes[_sceneName] = _scene
+        self.m_levels[_levelName] = _scene
 
-    def LoadScene(self, _sceneName: str) -> None:
-        if len(self.m_previousScenes) > 0:
-            self.m_previousScenes[0].OnExit()
+    def LoadLevel(self, _levelName: str) -> None:
+        if len(self.m_previousLevels) > 0:
+            self.m_previousLevels[0].OnExit()
 
-        self.m_nextScene = self.m_scenes[_sceneName]
-        self.m_previousScenes.append(self.m_nextScene)
-        self.m_previousScenes[0].OnEnter()
+        self.m_nextLevel = self.m_levels[_levelName]
+        self.m_previousLevels.append(self.m_nextLevel)
+        self.m_previousLevels[0].OnEnter()
 
-    def UnloadScene(self) -> None:
-        if len(self.m_previousScenes) <= 0:
+    def UnloadLevel(self) -> None:
+        if len(self.m_previousLevels) <= 0:
             return;
 
-        self.m_previousScenes.pop().OnExit();
+        self.m_previousLevels.pop().OnExit();
 
-        if len(self.m_previousScenes) > 0:
-            self.m_nextScene = self.m_previousScenes[0]
+        if len(self.m_previousLevels) > 0:
+            self.m_nextLevel = self.m_previousLevels[0]
 
     # -------------------[Game Loop]------------------- # 
 
     def Update(self, _deltaTime: float):
         self.isResetDeltaTime = False
-        if self.m_nextScene != None:
+        if self.m_nextLevel != None:
             self.m_loadingBackgroundInfo.color.a = self.m_loadingBackgroundInfo.color.a + _deltaTime * 2.0
             if self.m_loadingBackgroundInfo.color.a >= Color.MAX_COLOR_VALUE:
                 self.m_loadingBackgroundInfo.color.a = Color.MAX_COLOR_VALUE
 
-                self.m_currentScene , self.m_nextScene = self.m_nextScene, None
-                self.m_currentScene.OnEnter()
+                self.m_currentLevel , self.m_nextLevel = self.m_nextLevel, None
+                self.m_currentLevel.OnEnter()
                 self.isResetDeltaTime = True
 
         else:
@@ -134,17 +134,17 @@ class SceneManager(metaclass = Singleton):
 
         self.m_loadingBackground.Update(_deltaTime)
         
-        if self.m_currentScene:
-            self.m_currentScene.Update(_deltaTime)
+        if self.m_currentLevel:
+            self.m_currentLevel.Update(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
-       if self.m_currentScene:
-            self.m_currentScene.FixedUpdate(_fixedDeltaTime)
+       if self.m_currentLevel:
+            self.m_currentLevel.FixedUpdate(_fixedDeltaTime)
 
     def RenderObject(self):
-        if self.m_currentScene:
-            self.m_currentScene.RenderObject()
+        if self.m_currentLevel:
+            self.m_currentLevel.RenderObject()
 
     def RenderUI(self):
-        if self.m_currentScene:
-            self.m_currentScene.RenderUI()
+        if self.m_currentLevel:
+            self.m_currentLevel.RenderUI()
