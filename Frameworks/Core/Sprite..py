@@ -1,8 +1,12 @@
 from pico2d import *
-from Frameworks.Utilities.FileSystem import *
+from Utilities.FileSystem import *
 
 class Sprite:
-    m_image: Image = None   # 이미지
+    m_texture: Image = None   # 택스쳐
+    m_anyLoop: bool = True    # 루프 여부
     
     def __init__(self, _filePath: str) -> None:
-        self.m_image = GetSprite(_path = _filePath)
+        self.m_texture = GetSprite(_path = _filePath)
+
+    def Render():
+        pass
