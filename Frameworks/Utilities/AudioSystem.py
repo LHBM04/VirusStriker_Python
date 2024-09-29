@@ -1,8 +1,7 @@
 from enum import Enum
 
 import pygame
-
-pygame.mixer.init() # pygame.mixer 초기화.
+from Utilities.Singleton import *
 
 # 재생 중인 BGM의 타입을 나타내는 열거형.
 class EBGMState(Enum):
@@ -11,127 +10,91 @@ class EBGMState(Enum):
     SECONDARY   = 2
     JINGLE      = 3
 
-currentBGMType: EBGMState     = EBGMState.NONE    # 현재 재생 중인 BGM의 타입.
-previousBGMType: EBGMState    = EBGMState.NONE    # 이전에 재생 중이었던 BGM의 타입.
+class AudioManager(metaclass = Singleton):
+    def __init__(self) -> None:
+        pygame.mixer.init() # pygame.mixer 초기화.
 
-primaryChannel: pygame.mixer.Channel   = pygame.mixer.Channel(0)   # 메인 BGM의 재생 채널
-secondaryChannel: pygame.mixer.Channel = pygame.mixer.Channel(1)   # 서브 BGM의 재생 채널
-jingleChannel: pygame.mixer.Channel    = pygame.mixer.Channel(2)   # 징글 BGM의 재생 채널
+        self.DEFAULT_BGM_VOLUME: float = 0.5
+        self.bgmVolume: float = self.DEFAULT_BGM_VOLUME
 
-def UpdateBGMState():
-    global currentBGMType
-    global previousBGMType
+        self.currentBGMType: EBGMState     = EBGMState.NONE    # 현재 재생 중인 BGM의 타입.
+        self.previousBGMType: EBGMState    = EBGMState.NONE    # 이전에 재생 중이었던 BGM의 타입.
 
-    if currentBGMType is EBGMState.JINGLE and not jingleChannel.get_busy():
-        currentBGMType, previousBGMType = previousBGMType, currentBGMType
-        ReplayPrimaryBGM()
+        self.primaryChannel: pygame.mixer.Channel   = pygame.mixer.Channel(0)   # 메인 BGM의 재생 채널
+        self.secondaryChannel: pygame.mixer.Channel = pygame.mixer.Channel(1)   # 서브 BGM의 재생 채널
+        self.jingleChannel: pygame.mixer.Channel    = pygame.mixer.Channel(2)   # 징글 BGM의 재생 채널
 
-    # print(f"current: {currentBGMType}, previous: {previousBGMType}")
+        self.DEFAULT_SFX_VOLUME: float = 0.5
+        self.sfxVolume: float = self.DEFAULT_SFX_VOLUME
 
-def PlayPrimaryBGM(_bgm: pygame.mixer.Sound, _is_loop: bool = True, _fade_ms: int = 0):
-    global primaryChannel
-   
-    global currentBGMType
-    global previousBGMType
- 
-    currentBGMType, previousBGMType = EBGMState.PRIMARY, None 
+        self.maxConcurrentSFXCount = 5
+        self.startIdex = 4
 
-    primaryChannel.play(_bgm, -1 if _is_loop is True else 0, 0, _fade_ms)
-    primaryChannel.set_volume(0.5)
+        self.sfxChannels: list[pygame.mixer.Channel] = []  # 리스트로 초기화
 
-def StopPrimaryBGM(_fade_ms: float = 0.0):
-    global primaryChannel
+    def Update(self):
+        if self.currentBGMType is EBGMState.JINGLE and not self.jingleChannel.get_busy():
+            currentBGMType, previousBGMType = previousBGMType, currentBGMType
+            self.ReplayPrimaryBGM()
 
-    if not primaryChannel.get_busy():
-        return
+        # [디버그용 코드]
+        # print(f"current: {currentBGMType}, previous: {previousBGMType}")
+
+    def PlayPrimaryBGM(self, _bgm: pygame.mixer.Sound, _is_loop: bool = True, _fade_ms: int = 0):
+        self.currentBGMType, self.previousBGMType = EBGMState.PRIMARY, None 
+
+        self.primaryChannel.play(_bgm, -1 if _is_loop is True else 0, 0, _fade_ms)
+        self.primaryChannel.set_volume(0.5)
+
+    def StopPrimaryBGM(self, _fade_ms: float = 0.0):
+        if not self.primaryChannel.get_busy():
+            return
     
-    primaryChannel.stop(_fade_ms)
+        self.primaryChannel.stop(_fade_ms)
 
-def PausePrimaryBGM(_fade_ms: float = 0.0):
-    global primaryChannel
-
-    if not primaryChannel.get_busy():
-        return
+    def PausePrimaryBGM(self):
+        if not self.primaryChannel.get_busy():
+            return
     
-    primaryChannel.pause()
+        self.primaryChannel.pause()
 
-def ReplayPrimaryBGM(_fade_ms: float = 0.0):
-    global currentBGMType
-    global previousBGMType
+    def ReplayPrimaryBGM(self):
+        self.currentBGMType, self.previousBGMType = EBGMState.PRIMARY, None
+        self.primaryChannel.unpause()
 
-    currentBGMType, previousBGMType = EBGMState.PRIMARY, None
-    primaryChannel.unpause()
-
-def PlaySecondaryBGM(_bgm: pygame.mixer.Sound):
-    global primaryChannel
-    global secondaryChannel
+    def PlaySecondaryBGM(self, _bgm: pygame.mixer.Sound):
+        if self.primaryChannel.get_busy():
+            self.primaryChannel.pause()
     
-    global currentBGMType
-    global previousBGMType
+        self.currentBGMType, self.previousBGMType = EBGMState.SECONDARY, self.currentBGMType
     
-    if primaryChannel.get_busy():
-        primaryChannel.pause()
-    
-    currentBGMType, previousBGMType = EBGMState.SECONDARY, currentBGMType
-    
-    secondaryChannel.play(_bgm)
-    secondaryChannel.set_volume(0.5)
+        self.secondaryChannel.play(_bgm)
+        self.secondaryChannel.set_volume(0.5)
 
-def PlayJingle(_bgm: pygame.mixer.Sound):
-    global primaryChannel
-    global secondaryChannel
-    global jingleChannel
+    def PlayJingle(self, _bgm: pygame.mixer.Sound):
+        if self.primaryChannel.get_busy():
+            self.primaryChannel.pause()
 
-    global currentBGMType
-    global previousBGMType
-    
-    if primaryChannel.get_busy():
-        primaryChannel.pause()
+        if self.secondaryChannel.get_busy():
+            self.secondaryChannel.pause()
 
-    if secondaryChannel.get_busy():
-        secondaryChannel.pause()
+        self.currentBGMType, self.previousBGMType = EBGMState.JINGLE, self.currentBGMType
+        self.jingleChannel.play(_bgm)
+        self.jingleChannel.set_volume(0.5)
+        self.jingleChannel.set_endevent()
 
-    currentBGMType, previousBGMType = EBGMState.JINGLE, currentBGMType
-    jingleChannel.play(_bgm)
-    jingleChannel.set_volume(0.5)
-    jingleChannel.set_endevent()
 
-DEFAULT_SFX_VOLUME: float = 0.5
-g_sfxVolume: float = DEFAULT_SFX_VOLUME
+    def CreateSFXSource(self) -> pygame.mixer.Channel:
+        self.g_maxConcurrentSFXCount += 1
+        new_channel = pygame.mixer.Channel(self.maxConcurrentSFXCount)
+        self.sfxChannels.append(new_channel)  # 리스트에 추가
+        return new_channel  
 
-g_maxConcurrentSFXCount = 5
-g_startIdex = 4
+    def InitializeSFXSource(self) -> None:
+        for index in range(self.startIdex, self.startIdex + self.maxConcurrentSFXCount):
+            self.sfxChannels.append(pygame.mixer.Channel(index))
 
-g_sfxChannels: list[pygame.mixer.Channel] = []  # 리스트로 초기화
-
-def CreateSFXSource() -> pygame.mixer.Channel:
-    global g_sfxChannels
-    global g_maxConcurrentSFXCount
-
-    g_maxConcurrentSFXCount += 1
-    new_channel = pygame.mixer.Channel(g_maxConcurrentSFXCount)
-    g_sfxChannels.append(new_channel)  # 리스트에 추가
-    return new_channel
-
-def InitializeSFXSource() -> None:
-    global g_startIdex
-    global g_maxConcurrentSFXCount
-    global g_sfxChannels
-    
-    for index in range(g_startIdex, g_startIdex + g_maxConcurrentSFXCount):
-        g_sfxChannels.append(pygame.mixer.Channel(index))
-
-def PlaySFX(_sfx: pygame.mixer.Sound) -> None:
-    global g_sfxChannels
-    
-    available_channel = next((ch for ch in g_sfxChannels if not ch.get_busy()), CreateSFXSource())
-    available_channel.set_volume(g_sfxVolume)
-    available_channel.play(_sfx, 0, 0, 0)
-
-testBGM1 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Invincible.wav")
-testBGM2 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_Boss1.wav")
-testBGM3 = pygame.mixer.Sound("Resources/Audio/BGM/BGM_NewScore.wav")
-
-testSFX1 = pygame.mixer.Sound("Resources/Audio/SFX/SFX_EnemyDead1.wav")
-testSFX2 = pygame.mixer.Sound("Resources/Audio/SFX/SFX_EnemyDead2.wav")
-testSFX3 = pygame.mixer.Sound("Resources/Audio/SFX/SFX_EnemyDead3.wav")
+    def PlaySFX(self, _sfx: pygame.mixer.Sound) -> None:
+        sfxChannel = next((ch for ch in self.sfxChannels if not ch.get_busy()), self.CreateSFXSource())
+        sfxChannel.set_volume(self.sfxVolume)
+        sfxChannel.play(_sfx, 0, 0, 0)

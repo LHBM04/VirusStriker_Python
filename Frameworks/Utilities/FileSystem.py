@@ -1,23 +1,30 @@
+from pathlib import Path
 from pico2d import *
+from pygame import mixer
+from Utilities.Singleton import *
 
-g_sprite_bank: dict[str, Image] = { }
+class FileManager(metaclass = Singleton):
+    def __init__(self) -> None:
+        self.textureBank: dict[str, list[Image]] = { }
+        self.bgmBank: dict[str, mixer.Sound] = { }
+        self.sfxBank: dict[str, mixer.Sound] = { }
 
-def AddSprite(_filePath: str) -> None:
-    global g_sprite_bank
-    
-    try:
-        print(_filePath)
-        if _filePath in g_sprite_bank.keys():
+    def AddSprite(self, _filePath: str) -> None:
+        if str in self.textureBank:
+            assert(0)
             return
+    
+        filePaths: list[str] = []
+        for filePath in Path(_filePath).iterdir():
+            filePaths.append(str(filePath))
+        filePaths.sort(key = lambda fileName: int(''.join(filter(str.isdigit, fileName))))  # 숫자 기준으로 정렬
 
-        g_sprite_bank[_filePath] = load_image(_filePath)
-    except FileNotFoundError:
-        print(f"[Oops!] 파일을 찾지 못했습니다. 검색한 경로는 \"{_filePath}\"였습니다.")
-    except Exception as exception:
-        print(f"[Oops!] 파일을 불러오는 중 오류가 발생했습니다. :{exception}")
+        self.textureBank[_filePath] = []
+        for filePath in filePaths:
+            self.textureBank[_filePath].append(load_image(filePath))
 
-def GetSprite(_filePath: str) -> Image:
-    if _filePath not in g_sprite_bank.keys():
-        AddSprite(_filePath)
+    def GetSprite(self, _filePath: str) -> list[Image]:
+        if _filePath not in self.textureBank.keys():
+            self.AddSprite(_filePath)
 
-    return g_sprite_bank[_filePath]
+        return self.textureBank[_filePath]
