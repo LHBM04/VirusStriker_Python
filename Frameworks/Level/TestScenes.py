@@ -1,14 +1,16 @@
 import Level.Scene
+from Core.Actors.TestObject import *
 from Level.Scene import *
 from Utilities.InputSystem import *
 
 class TestScene1(Scene):
     def __init__(self, _sceneName: str = "Test Scene 1") -> None:
         super().__init__(_sceneName)
-        self.m_timer: float = 0.0
 
     def OnEnter(self) -> None:
-        print(f"Hello, World! This is Test Scene 1!")
+        print(f"Hello, World! This is {self.sceneName}")
+
+        self.m_objectManager.AddObject(TestObject())
 
     def OnUpdate(self, _deltaTime: float) -> None:
         if InputManager().GetKeyState(SDLK_RETURN) is EInputState.DOWN:
@@ -22,11 +24,11 @@ class TestScene2(Scene):
         super().__init__(_sceneName)
 
     def OnEnter(self) -> None:
-        print(f"Hello, World! This is Test Scene 2!")
+        print(f"Hello, World! This is {self.sceneName}")
 
     def OnUpdate(self, _deltaTime: float) -> None:
-        if InputManager().GetKeyState(SDLK_RETURN) == EInputState.DOWN:
-            SceneManager().LoadScene("Test 1")
+        if InputManager().GetKeyState(SDLK_BACKSPACE) == EInputState.DOWN:
+            SceneManager().UnloadScene()
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         print(f"Fixed Update on Test Scene 2")

@@ -26,16 +26,16 @@ class Color:
 class SpriteInfo:
     def __init__(self, 
                  _position: Vector2 = Vector2(), 
-                 _scale: Vector2    = Vector2(100, 100), 
+                 _scale: Vector2    = Vector2(), 
                  _rotate: float     = 0.0, 
                  _isFilpX: bool     = False, 
                  _isFlipY: bool     = False, 
-                 _color: Color      = None) -> None:
-        self.position: Vector2    = _position if _position is not None else Vector2(0.0, 0.0)   # 해당 스프라이트의 위치.
-        self.scale: Vector2       = _scale if _scale is not None else Vector2(100, 100)         # 해당 스프라이트의 크기.
-        self.rotate: float        = _rotate                                                     # 해당 스프라이트의 각도.
-        self.isFlip: list[bool]   = [_isFilpX, _isFlipY]                                        # 해당 스프라이트의 플립 여부.
-        self.color: Color         = _color if _color is not None else Color()
+                 _color: Color      = Color()) -> None:
+        self.position: Vector2    = _position               # 해당 스프라이트의 위치.
+        self.scale: Vector2       = _scale                  # 해당 스프라이트의 크기.
+        self.rotate: float        = _rotate                 # 해당 스프라이트의 각도.
+        self.isFlip: list[bool]   = [_isFilpX, _isFlipY]    # 해당 스프라이트의 뒤집기 여부.
+        self.color: Color         = _color                  # 해당 스프라이트의 R,G,B,A 값
 
 class Sprite:
     def __init__(self, 

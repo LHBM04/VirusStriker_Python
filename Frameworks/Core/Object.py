@@ -7,11 +7,14 @@ from Core.Sprite import *
 # 게임 내 사용되는 모든 오브젝트의 베이스 클래스.
 class Object(ABC):
     def __init__(self) -> None:
-        self.position = Vector2(0.0, 0.0)
-        self.collisionLayer = 0
-        self.renderLayer = 0
-        self.isDestroied = False
-        self.colisionTag = "None"
+        self.sprite: Sprite         = None
+        self.spriteInfo: SpriteInfo = None
+        
+        self.position: Vector2   = Vector2()
+        self.collisionLayer: int = 0
+        self.renderLayer: int    = 0
+        self.isDestroied: bool   = False
+        self.colisionTag: str    = "None"
 
     # -----------[추상 메서드]-------------- #
 
@@ -39,8 +42,8 @@ class Object(ABC):
 @ final
 class ObjectManager:
     def __init__(self) -> None:
-        self.m_addObjects: list[Object] = {}    # 추가할 오브젝트 리스트.
-        self.m_objects: list[Object] = {}       # 관리 중인 오브젝트 리스트.
+        self.m_addObjects: list[Object] = []  # 추가할 오브젝트 리스트.
+        self.m_objects: list[Object] = []     # 관리 중인 오브젝트 리스트.
 
     # 관리할 오브젝트를 추가합니다.
     def AddObject(self, _newObject: Object) -> None:
@@ -48,34 +51,36 @@ class ObjectManager:
 
     # 관리하는 오브젝트들의 Update()를 실행합니다.
     def Update(self, _deltaTime: float) -> None:
-        if len(self.m_addObjects) > 0:
-            self.m_objects.append(self.m_addObjects)
-            self.m_addObjects.clear()
+        # 추가할 오브젝트가 있을 경우 관리 중인 리스트에 추가
+        if self.m_addObjects:
+            self.m_objects.extend(self.m_addObjects)  # 올바른 방법으로 추가
+            self.m_addObjects.clear()  # 추가한 후 리스트 비우기
 
-        if len(self.m_objects) > 0:
-            self.m_objects.sort(lambda object : object.renderLayer)
-            for object in self.m_objects:
-                object.Update(_deltaTime)
+        # 관리 중인 오브젝트가 있을 경우 업데이트 실행
+        if self.m_objects:
+            self.m_objects.sort(key=lambda obj: obj.renderLayer)  # renderLayer에 따라 정렬
+            for obj in self.m_objects:
+                obj.Update(_deltaTime)  # 각 오브젝트의 Update 호출
 
-            for object in self.m_objects:
-                object.LateUpdate(_deltaTime)
+            for obj in self.m_objects:
+                obj.LateUpdate(_deltaTime)  # 각 오브젝트의 LateUpdate 호출
         
     # 관리하는 오브젝트들의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        if len(self.m_objects) > 0:
-            toRemove: list[Object] = []
-        
-            for object in self.m_objects:
-                object.FixedUpdate(_fixedDeltaTime) 
-            if object.isDestroied:
-                toRemove.append(object) 
+        if self.m_objects:
+            toRemove: list[Object] = []  # 제거할 오브젝트 리스트
+            
+            for obj in self.m_objects:
+                obj.FixedUpdate(_fixedDeltaTime)  # 각 오브젝트의 FixedUpdate 호출
+                if obj.isDestroied:  # 오브젝트가 파괴된 경우
+                    toRemove.append(obj)  # 제거할 리스트에 추가
 
-            for object in toRemove:
-                self.m_objects.remove(object)
+            for obj in toRemove:
+                self.m_objects.remove(obj)  # 파괴된 오브젝트 제거
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:
-        if len(self.m_objects) > 0:
-            for object in self.m_objects:
-                object.Render()
-                object.RenderDebug()
+        if self.m_objects:
+            for obj in self.m_objects:
+                obj.Render()  # 각 오브젝트의 Render 호출
+                obj.RenderDebug()  # 각 오브젝트의 RenderDebug 호출

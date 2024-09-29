@@ -25,24 +25,27 @@ def HandleEvents(_events: list[Event]) -> None:
                 InputManager().SetKeyState(int(event.key), EInputState.UP)
             return
 
-g_previousTime: float       = time.time()   # 이전 시간
-g_currentTime: float        = 0.0           # 현재 시간
-
-g_fps: float            = 0.0   # 현재 프레임
-g_fpsDeltaTime: float   = 0.0   # 프레임을 계산하기 위한 시간 변화량.
 
 if __name__ == "__main__":
+    previousTime: float       = time.time()   # 이전 시간
+    currentTime: float        = 0.0           # 현재 시간
+
+    fps: float            = 0.0   # 현재 프레임
+    fpsDeltaTime: float   = 0.0   # 프레임을 계산하기 위한 시간 변화량.
+
     SystemManager().Inintialize()
 
     while SystemManager().isRunning:
         HandleEvents(get_events())
         
+        update_canvas()
+
         if SceneManager().isResetDeltaTime:
-            g_previousTime = time.time()
+            previousTime = time.time()
 
         # Delta Time 계산
-        g_currentTime = time.time()
-        delteTime = g_currentTime - g_previousTime
+        currentTime = time.time()
+        delteTime = currentTime - previousTime
         
         # Fixed Delta Time 계산
         fixedUpdateTime = 1.0 / 50.0
@@ -56,17 +59,17 @@ if __name__ == "__main__":
             SystemManager().FixedUpdate(fixedUpdateTime)
 
         # 초당 프레임 계산
-        g_fps += 1
-        g_fpsDeltaTime += delteTime
+        fps += 1
+        fpsDeltaTime += delteTime
         
-        if g_fpsDeltaTime > 1.0:
-            SystemManager().gameFPS = g_fps
-            g_fps = 0
-            g_fpsDeltaTime = 0.0
+        if fpsDeltaTime > 1.0:
+            SystemManager().gameFPS = fps
+            fps = 0
+            fpsDeltaTime = 0.0
 
         SystemManager().Update(delteTime)
         
-        g_previousTime = g_currentTime  # 현재 시간으로 prevTime 업데이트
+        previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
         update_canvas()  # 캔버스 업데이트
 
     SystemManager().CleanUp()

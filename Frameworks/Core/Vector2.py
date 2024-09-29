@@ -8,19 +8,15 @@ class Vector2:
         self.m_x: float = _x
         self.m_y: float = _y
 
-    @property
     def Up() -> Vector2:
         return Vector2(1.0, 0.0)
     
-    @property
     def Down() -> Vector2:
         return Vector2(0.0, 1.0)
     
-    @property
     def Left() -> Vector2:
         return Vector2(-1.0, 0.0)
     
-    @property
     def Right() -> Vector2:
         return Vector2(1.0, 0.0)
 
@@ -34,6 +30,9 @@ class Vector2:
         return Vector2(self.m_x - _other.m_x, self.m_y - _other.m_y)
 
     def __mul__(self, _other: 'Vector2') -> 'Vector2':
+        return Vector2(self.m_x * _other, self.m_y * _other)
+    
+    def __mul__(self, _other: float) -> 'Vector2':
         return Vector2(self.m_x * _other, self.m_y * _other)
     
     def __truediv__(self, other):
