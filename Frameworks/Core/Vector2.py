@@ -9,13 +9,16 @@ class Vector2:
         self.m_y: float = _y
 
     def __neg__(self) -> 'Vector2':
-        return Vector2(-self.x, -self.y)
+        return Vector2(-self.m_x, -self.m_y)
 
     def __add__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.x + _other.x, self.y + _other.y)
+        return Vector2(self.m_x + _other.m_x, self.m_y + _other.m_y)
 
     def __sub__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.x - _other.x, self.y - _other.y)
+        return Vector2(self.m_x - _other.m_x, self.m_y - _other.m_y)
 
     def __mul__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.x * _other, self.y * _other)
+        return Vector2(self.m_x * _other, self.m_y * _other)
+    
+    def __truediv__(self, other):
+        return Vector2(self.m_x / other, self.m_y / other)
