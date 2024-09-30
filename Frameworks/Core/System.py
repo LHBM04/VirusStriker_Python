@@ -39,8 +39,10 @@ class SystemManager(metaclass = Singleton):
         LevelManager().FixedUpdate(_fixedDeltaTime);
 
     def Render(self) -> None:
+        clear_canvas()
         LevelManager().RenderObject();
         LevelManager().RenderUI();
+        update_canvas()  # 캔버스 업데이트
     
     # 프로그램 종료 시 캔버스를 정리합니다.
     def CleanUp(self) -> None:
