@@ -31,24 +31,19 @@ def SendEvent(_events: list[Event]) -> None:
     for event in _events:
         if event.type == SDL_QUIT:
             SystemManager().isRunning = False
-            continue
-        if event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:
+        elif event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:
             if event.type == SDL_KEYDOWN:
                 InputManager().isPressKey = True
                 InputManager().SetKeyState(event.key, InputManager.EInputState.DOWN)
-                continue
-            if event.type == SDL_KEYUP:
+            elif event.type == SDL_KEYUP:
                 InputManager().isPressKey = False
                 InputManager().SetKeyState(event.key, InputManager.EInputState.UP)
-                continue
-        if event.type == SDL_MOUSEMOTION:
+        elif event.type == SDL_MOUSEMOTION:
                 InputManager().mousePosition = Vector2(event.x, event.y)
-                continue
-        if event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:      
+        elif event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:      
                 InputManager().isPressKey = True
-                InputManager().SetKeyState(event.key, InputManager.EInputState.DOWN)
+                InputManager().SetMouseState(event.key, InputManager.EInputState.DOWN)
                 InputManager().mousePosition = Vector2(event.x, event.y)
-                continue
 
 if __name__ == "__main__":
     previousTime: float = Time.time()   # 이전 시간

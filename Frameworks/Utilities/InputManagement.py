@@ -12,15 +12,19 @@ class InputManager(metaclass = Singleton):
         PRESS   = 3
 
     def __init__(self) -> None:
-        self.keyState: dict[int : InputManager.EInputState]    = {}
-        self.isPressKey: bool                   = False
-        self.mousePosition: Vector2             = Vector2()
+        self.keyState: dict[int : InputManager.EInputState]     = {}
+        self.buttonState: dict[int : InputManager.EInputState]  = {}
+        self.isPressKey: bool                                   = False
+        self.mousePosition: Vector2                             = Vector2()
 
     def IsKeyPressed(self):
         self.isPressKey = True
 
     def SetKeyState(self, key: int, state: EInputState) -> None:
         self.keyState[key] = state
+
+    def SetMouseState(self, button: int, state: EInputState) -> None:
+        self.buttonState[button] = state
 
     def GetKeyState(self, key: int) -> EInputState:
         if key not in self.keyState:
@@ -47,11 +51,14 @@ class InputManager(metaclass = Singleton):
         return self.GetKeyState(_keyCode) == InputManager.EInputState.UP
 
     def Update(self) -> None:
-        #print(f"mouse x: {self.mousePosition.x} mouse y: {self.mousePosition.y}")
-        for key in self.keyState:
-            if key == InputManager.EInputState.DOWN:
-                key = InputManager.EInputState.PRESS
-                continue
-            if key == InputManager.EInputState.UP:
-                key = InputManager.EInputState.NONE
-                continue
+        for key in list(self.keyState.keys()):
+            if self.keyState[key] == InputManager.EInputState.DOWN:
+                self.keyState[key] = InputManager.EInputState.PRESS
+            elif self.keyState[key] == InputManager.EInputState.UP:
+                self.keyState[key] = InputManager.EInputState.NONE
+
+        for key in list(self.buttonState.keys()):
+            if self.buttonState[key] == InputManager.EInputState.DOWN:
+                self.buttonState[key] = InputManager.EInputState.PRESS
+            elif self.buttonState[key] == InputManager.EInputState.UP:
+                self.buttonState[key] = InputManager.EInputState.NONE
