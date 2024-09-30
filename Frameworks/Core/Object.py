@@ -49,6 +49,14 @@ class ObjectManager:
     def AddObject(self, _newObject: Object) -> None:
         self.m_addObjects.append(_newObject)
 
+    # 관리 중인 모든 오브젝트를 삭제합니다.
+    def ClearObjects(self) -> None:
+        if len(self.m_addObjects) > 0:
+            self.m_addObjects.clear()
+
+        if len(self.m_objects) > 0:
+            self.m_objects.clear()
+
     # 관리하는 오브젝트들의 Update()를 실행합니다.
     def Update(self, _deltaTime: float) -> None:
         if len(self.m_addObjects) > 0:

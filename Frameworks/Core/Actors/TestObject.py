@@ -1,9 +1,9 @@
 from Core.System import *
 from Core.Object import *
-from Level.Scene import *
+from Frameworks.Level.Level import *
 from Utilities.InputSystem import *
 
-class TestObject(Object):
+class TestPlayer(Object):
     def __init__(self) -> None:
         super().__init__()
 
@@ -21,16 +21,16 @@ class TestObject(Object):
         
     def Update(self, _deltaTime: float) -> None:
         if InputManager().GetKeyState(SDLK_w) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Up() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Up() * (self.moveSpeed * _deltaTime)
 
         if InputManager().GetKeyState(SDLK_s) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Down() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Down() * (self.moveSpeed * _deltaTime)
 
         if InputManager().GetKeyState(SDLK_a) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Left() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Left() * (self.moveSpeed * _deltaTime)
 
         if InputManager().GetKeyState(SDLK_d) == EInputState.PRESS:
-            self.moveDirection = self.moveDirection + Vector2.Right() * (self.moveSpeed * _deltaTime) # 속도 향상을 위한 스칼라 우선 계산
+            self.moveDirection = self.moveDirection + Vector2.Right() * (self.moveSpeed * _deltaTime)
 
         self.position += self.moveDirection
         self.moveDirection = Vector2()

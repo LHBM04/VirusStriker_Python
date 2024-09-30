@@ -3,10 +3,10 @@ from typing import final
 from pico2d import *
 
 from Core.Sprite import *
-from Level.Scene import *
 
-from Level.Scene import *
-from Level.TestScenes import *
+from Level.Level import *
+from Level.TestLevel_1 import *
+from Level.TestLevel_2 import *
 from Utilities.InputSystem import *
 from Utilities.AudioSystem import *
 from Utilities.Singleton import *
@@ -26,8 +26,8 @@ class SystemManager(metaclass = Singleton):
                     self.windowHeight) # 캔버스 열기
 
     def Inintialize(self) -> None:
-        LevelManager().AddLevel("Test 1", TestScene1())
-        LevelManager().AddLevel("Test 2", TestScene2())
+        LevelManager().AddLevel("Test 1", TestLevel_1())
+        LevelManager().AddLevel("Test 2", TestLevel_2())
 
         LevelManager().LoadLevel("Test 1")
 

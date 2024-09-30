@@ -100,17 +100,17 @@ class LevelManager(metaclass = Singleton):
     def LoadLevel(self, _levelName: str) -> None:
         if len(self.m_previousLevels) > 0:
             self.m_previousLevels[0].OnExit()
-
+        
         self.m_nextLevel = self.m_levels[_levelName]
         self.m_previousLevels.append(self.m_nextLevel)
         self.m_previousLevels[0].OnEnter()
 
     def UnloadLevel(self) -> None:
         if len(self.m_previousLevels) <= 0:
+            assert(0)
             return;
 
         self.m_previousLevels.pop().OnExit();
-
         if len(self.m_previousLevels) > 0:
             self.m_nextLevel = self.m_previousLevels[0]
 

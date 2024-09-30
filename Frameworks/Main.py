@@ -3,7 +3,7 @@ from pico2d import *
 
 from Core.System import *
 from Core.Sprite import *
-from Level.Scene import *
+from Level.Level import *
 from Utilities.InputSystem import *
 from Utilities.AudioSystem import *
 from Utilities.FileSystem import *
