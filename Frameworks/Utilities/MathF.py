@@ -1,8 +1,8 @@
 from typing import final
 import numpy as np
 
-import Core.Vector2 as Vector2
-from Core.Vector2 import *
+import Frameworks.Utilities.Vector2 as Vector2
+from Frameworks.Utilities.Vector2 import *
 
 # 수학 관련 유틸리티
 @final
