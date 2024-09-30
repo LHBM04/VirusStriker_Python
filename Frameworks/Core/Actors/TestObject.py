@@ -1,6 +1,7 @@
 from Core.System import *
-from Core.Object import *
-from Frameworks.Level.Level import *
+from Core.Actors.Object import *
+from Core.Actors.ColisionBody import *
+from Level.Level import *
 from Utilities.InputSystem import *
 
 class TestPlayer(Object):
@@ -41,6 +42,9 @@ class TestPlayer(Object):
     def LateUpdate(self, _deltaTime: float) -> None:
         pass
     
+    def OnCollision(self, _colider: CollisionBody) -> None:
+        pass
+
     def Render(self) -> None:
         self.spriteInfo.position = self.position
         self.sprite.Render(self.spriteInfo)

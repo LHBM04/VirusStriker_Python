@@ -3,24 +3,36 @@ from pathlib import Path
 
 from pico2d import *
 
-from Core.Vector2 import *
+from Frameworks.Utilities.Vector2 import *
 from Utilities.FileSystem import *
 
 # 게임 내 사용될 스프라이트의 컬러 데이터.
 @final
 class Color:
-    MIN_COLOR_VALUE: int = 0    # 컬러 최솟값.
-    MAX_COLOR_VALUE: int = 255  # 컬러 최댓값.
+    @staticmethod
+    def minValue() -> int:
+        return 0
+    
+    @staticmethod
+    def maxValue() -> int:
+        return 255
     
     def __init__(self, 
-                 _r: int = MAX_COLOR_VALUE, 
-                 _g: int = MAX_COLOR_VALUE, 
-                 _b: int = MAX_COLOR_VALUE, 
-                 _a: int = MAX_COLOR_VALUE) -> None:
-        self.r = max(self.MIN_COLOR_VALUE, min(_r, self.MAX_COLOR_VALUE))
-        self.g = max(self.MIN_COLOR_VALUE, min(_g, self.MAX_COLOR_VALUE))
-        self.b = max(self.MIN_COLOR_VALUE, min(_b, self.MAX_COLOR_VALUE))
-        self.a = max(self.MIN_COLOR_VALUE, min(_a, self.MAX_COLOR_VALUE))
+                 _r: int = maxValue(), 
+                 _g: int = maxValue(), 
+                 _b: int = maxValue(), 
+                 _a: int = maxValue()) -> None:
+        self.r = max(self.minValue(), min(_r, self.maxValue()))
+        self.g = max(self.minValue(), min(_g, self.maxValue()))
+        self.b = max(self.minValue(), min(_b, self.maxValue()))
+        self.a = max(self.minValue(), min(_a, self.maxValue()))
+    
+    def __eq__(self, _other: 'Color') -> bool:
+        return self.r == _other.r and self.g == _other.g and self.b == _other.b and self.a == _other.a
+
+    def __ne__(self, _other: 'Color') -> bool:
+        return not self.__eq__(_other)
+
 
 # 
 class SpriteInfo:
@@ -78,10 +90,10 @@ class Sprite:
         currentTexture: Image   = self.m_textures[self.m_currentTextureIndex]
         rotate: float           = _info.rotate
         isFilp: str             = f"{None if not _info.isFlip[0] else 'w'}{None if not _info.isFlip[1] else 'h'}"
-        x: float                = _info.position.m_x
-        y: float                = _info.position.m_y
-        scaleX                  = _info.scale.m_x
-        scaleY                  = _info.scale.m_y
+        x: float                = _info.position.x
+        y: float                = _info.position.y
+        scaleX                  = _info.scale.x
+        scaleY                  = _info.scale.y
 
         currentTexture.composite_draw(rotate, isFilp, x, y, scaleX, scaleY)
         SDL_SetTextureColorMod(currentTexture.texture, _info.color.r, _info.color.g, _info.color.b)

@@ -1,20 +1,24 @@
 from abc import ABC, abstractmethod
 from typing import final
 
-from Core.Vector2 import *
+from Utilities.Vector2 import *
 from Core.Sprite import *
+from Core.Actors.ColisionBody import *
 
 # 게임 내 사용되는 모든 오브젝트의 베이스 클래스.
 class Object(ABC):
     def __init__(self) -> None:
-        self.sprite: Sprite         = None
-        self.spriteInfo: SpriteInfo = None
+        self.position: Vector2 = Vector2()                                  # 오브젝트 위치.
         
-        self.position: Vector2   = Vector2()
-        self.collisionLayer: int = 0
-        self.renderLayer: int    = 0
-        self.isDestroied: bool   = False
-        self.colisionTag: str    = "None"
+        self.sprite: Sprite             = None                              # 오브젝트 스프라이트.
+        self.spriteInfo: SpriteInfo     = None                              # 오브젝트 스프라이트 정보.
+        self.renderLayer: int           = 0                                 # 오브젝트의 렌더링 순서.
+        
+        self.collisionLayer: int                = 0                         # 오브젝트의 충돌 레이어.
+        self.colisionTag: CollisionBody.ETag    = CollisionBody.ETag.NONE   # 오브젝트의 충돌 태그.
+        self.bodies: list[CollisionBody]        = []                        # 오브젝트의 콜라이더 리스트.
+        
+        self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
     # -----------[추상 메서드]-------------- #
 
@@ -31,12 +35,26 @@ class Object(ABC):
         pass
     
     @abstractmethod
-    def Render(self) -> None:
+    def OnCollision(self, _colider: CollisionBody) -> None:
+        pass
+    
+    @abstractmethod
+    def OnTrigger(self, _colider: CollisionBody) -> None:
         pass
 
     @abstractmethod
-    def RenderDebug(self) -> None:
+    def Render(self) -> None:
         pass
+
+    def RenderDebug(self) -> None:
+        for body in self.bodies:
+            if not MathF.Equalf(body.circle.radius, 0.0):
+                # TODO: Circle형 경계 그리기
+                pass
+
+            if body.aabb.min != Vector2.zero and body.aabb.max != Vector2.zero:
+                
+                pass
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final
@@ -80,12 +98,26 @@ class ObjectManager:
             
             for obj in self.m_objects:
                 obj.FixedUpdate(_fixedDeltaTime) 
-                if obj.isDestroied: 
+                if obj.isDestroy: 
                     toRemove.append(obj) 
 
             for obj in toRemove:
                 self.m_objects.remove(obj)
                 del obj
+
+        for object in self.m_objects:
+            if object.collisionLayer == 0: 
+                continue
+            
+            for object2 in self.m_objects:
+                if object.collisionLayer != object2.collisionLayer: 
+                    continue
+
+                for body in object.bodies:
+                    for body2 in object2.bodies:
+                        if IsCollision(body, body2):
+                            object.OnCollision()
+                            object2.OnCollision()
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:
