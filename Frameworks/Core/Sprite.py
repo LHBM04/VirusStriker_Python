@@ -3,8 +3,11 @@ from pathlib import Path
 
 from pico2d import *
 
+from sdl2 import *
+from sdl2dll import *
+
 from Utilities.Vector2 import *
-from Utilities.FileManagement import *
+from Utilities.ResourceManagement import *
 
 # 게임 내 사용될 스프라이트의 컬러 데이터.
 @final
@@ -62,7 +65,7 @@ class Sprite:
         
         for file in Path(_filePath).iterdir():
             if file.is_file():
-                self.m_textures = FileManager().GetSprite(_filePath)
+                self.m_textures = ResourceManager().GetSprite(_filePath)
 
         self.m_textureSize = len(self.m_textures)
 
