@@ -103,7 +103,6 @@ class LevelManager(metaclass = Singleton):
         
         self.m_nextLevel = self.m_levels[_levelName]
         self.m_previousLevels.append(self.m_nextLevel)
-        self.m_previousLevels[0].OnEnter()
 
     def UnloadLevel(self) -> None:
         if len(self.m_previousLevels) <= 0:
@@ -134,17 +133,17 @@ class LevelManager(metaclass = Singleton):
 
         self.m_loadingBackground.Update(_deltaTime)
         
-        if self.m_currentLevel:
+        if self.m_currentLevel != None:
             self.m_currentLevel.Update(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
-       if self.m_currentLevel:
+       if self.m_currentLevel != None:
             self.m_currentLevel.FixedUpdate(_fixedDeltaTime)
 
     def RenderObject(self):
-        if self.m_currentLevel:
+        if self.m_currentLevel != None:
             self.m_currentLevel.RenderObject()
 
     def RenderUI(self):
-        if self.m_currentLevel:
+        if self.m_currentLevel != None:
             self.m_currentLevel.RenderUI()

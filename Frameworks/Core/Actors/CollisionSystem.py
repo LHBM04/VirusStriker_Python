@@ -12,10 +12,6 @@ class Collider2D:
         HARMFUL = 1 # 플레이어에게 해로운 오브젝트의 태그
         LETHAL  = 2 # 플레이어에게 치명적인(즉사) 오브젝트의 태그
 
-    class ELayer(Enum):
-        NONE    = 0
-        PLAYER  = 1
-
     def __init__(self, _owner: Object,  _min: Vector2, _max: Vector2) -> None:
         self.owner  = _owner
         self.min    = _min
@@ -29,8 +25,8 @@ def IsCollision(_lhs: Collider2D, _rhs: Collider2D) -> bool:
     min2: Vector2 = _rhs.owner.position + _rhs.min
     max2: Vector2 = _rhs.owner.position + _rhs.max
 
-    if (min1.x <= max2.x and max1.x >= min2.x and 
-        min1.y <= max2.y and max1.y >= min2.y):
+    if (min1.x > max2.x and max1.x > min2.x and 
+        min1.y > max2.y and max1.y > min2.y):
         return True
 
     return False

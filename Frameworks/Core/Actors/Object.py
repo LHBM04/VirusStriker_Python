@@ -106,19 +106,20 @@ class ObjectManager:
                 self.m_objects.remove(obj)
                 del obj
 
-            for object in self.m_objects:
-                if object.collisionLayer == Collider2D.ELayer.NONE: 
+        if len(self.m_objects) > 0:
+            for iter in self.m_objects:
+                if iter.collisionLayer == 0:
                     continue
-            
-                for object2 in self.m_objects:
-                    if object.collisionLayer != object2.collisionLayer: 
+
+                for iter2 in self.m_objects:
+                    if iter == iter2 and iter.collisionLayer != iter2.collisionLayer:
                         continue
 
-                    for body in object.bodies:
-                        for body2 in object2.bodies:
+                    for body in iter.bodies:
+                        for body2 in iter.bodies:
                             if IsCollision(body, body2):
-                                object.OnCollision(object2)
-                                object2.OnCollision(object)
+                                iter.OnCollision(body2)
+                                iter2.OnCollision(body)
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:

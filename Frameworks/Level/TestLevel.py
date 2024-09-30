@@ -1,4 +1,4 @@
-import Core.System
+from Core.System import *
 from Core.Actors.TestObject import *
 from Level.LevelManagement import *
 from Utilities.InputManagement import *

@@ -50,7 +50,7 @@ class TestPlayer(Object):
         pass
     
     def OnCollision(self, _collider: Collider2D) -> None:
-        print(f"Collided {str((_collider.owner)}")
+        print(f"Collided {str(_collider.owner)}")
 
     def OnTrigger(self, _collider: Collider2D) -> None:
         print(f"Triggred {str(_collider.owner)}")
@@ -69,7 +69,7 @@ class TestObject2(Object):
 
         self.position = Vector2(0, 400)
 
-        self.sprite = Sprite("Resources/Sprites/Objects/Actors/Player/Dead")
+        self.sprite     = Sprite("Resources/Sprites/Objects/Actors/Player/Dead")
         self.spriteInfo = SpriteInfo(_position = Vector2(300, 200), 
                                      _scale = Vector2(100, 100),
                                      _rotate = 0.0,
