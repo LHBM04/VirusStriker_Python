@@ -1,4 +1,4 @@
-from Core.System import *
+import Core.System
 from Core.Actors.TestObject import *
 from Level.LevelManagement import *
 from Utilities.InputManagement import *
@@ -7,17 +7,16 @@ class TestLevel_1(Level):
     def __init__(self, _levelName: str = "Test Level 1") -> None:
         super().__init__(_levelName)
 
-        self.m_objectManager.AddObject(TestPlayer())
-
     def OnEnter(self) -> None:
+        self.m_objectManager.AddObject(TestPlayer())
         print(f"Hello, This is {self.levelName}!")
 
     def OnUpdate(self, _deltaTime: float) -> None:
         if InputManager().GetKeyState(SDLK_RETURN) is EInputState.DOWN:
-            LevelManager().LoadScene("Test 2")
+            LevelManager().LoadLevel("Test 2")
 
         if InputManager().GetKeyState(SDLK_ESCAPE) == EInputState.DOWN:
-            SystemManager().isRunning = False
+            Core.System.SystemManager().isRunning = False
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass

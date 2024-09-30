@@ -22,7 +22,7 @@ class TestPlayer(Object):
         
         self.collisionLayer = 1
         self.colisionTag = Collider2D.ETag.NONE
-        self.bodies.append(Collider2D(self, Vector2(0, 0), Vector2(5, 5)))
+        self.bodies.append(Collider2D(self, Vector2(0, 0), Vector2(50, 50)))
         
         self.moveDirection: Vector2 = Vector2()
         self.moveSpeed: float = 30.0
@@ -50,15 +50,15 @@ class TestPlayer(Object):
         pass
     
     def OnCollision(self, _colider: Collider2D) -> None:
-        return super().OnCollsion(_colider)
+        print("Collided")
 
     def OnTrigger(self, _colider: Collider2D) -> None:
-        return super().OnTrigger(_colider)
+        print("Triggered")
 
     def Render(self) -> None:
         self.spriteInfo.position = self.position
         self.sprite.Render(self.spriteInfo)
     
     def RenderDebug(self) -> None:
-        pass
+        return super().RenderDebug()
         

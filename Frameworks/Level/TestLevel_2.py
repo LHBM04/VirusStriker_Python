@@ -10,7 +10,7 @@ class TestLevel_2(Level):
 
     def OnUpdate(self, _deltaTime: float) -> None:
         if InputManager().GetKeyState(SDLK_BACKSPACE) == EInputState.DOWN:
-            LevelManager().UnloadScene()
+            LevelManager().UnloadLevel()
 
         if InputManager().GetKeyState(SDLK_ESCAPE) == EInputState.DOWN:
             SystemManager().isRunning = False

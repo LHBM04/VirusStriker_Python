@@ -51,7 +51,7 @@ class Object(ABC):
 
     def RenderDebug(self) -> None:
         for body in self.bodies:
-            if body.min != Vector2.zero and body.max != Vector2.zero:
+            if body.min != Vector2.Zero() and body.max != Vector2.Zero():
                 minp: Vector2 = body.min + body.owner.position
                 maxp: Vector2 = body.max + body.owner.position
 
@@ -117,8 +117,8 @@ class ObjectManager:
                 for body in object.bodies:
                     for body2 in object2.bodies:
                         if IsCollision(body, body2):
-                            object.OnCollision()
-                            object2.OnCollision()
+                            object.OnCollision(object2)
+                            object2.OnCollision(object)
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:

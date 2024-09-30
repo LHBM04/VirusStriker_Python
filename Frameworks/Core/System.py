@@ -27,7 +27,7 @@ class SystemManager(metaclass = Singleton):
     def Inintialize(self) -> None:
         LevelManager().AddLevel("Test 1", TestLevel_1())
         LevelManager().AddLevel("Test 2", TestLevel_2())
-
+    
         LevelManager().LoadLevel("Test 1")
 
     def Update(self, _deltaTime: float) -> None:

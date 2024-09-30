@@ -5,6 +5,8 @@ from pico2d import *
 from Core.System import *
 from Core.Sprite import *
 from Level.LevelManagement import *
+from Level.TestLevel_1 import *
+from Level.TestLevel_2 import *
 from Utilities.AudioManagement import *
 from Utilities.FileManagement import *
 from Utilities.InputManagement import *

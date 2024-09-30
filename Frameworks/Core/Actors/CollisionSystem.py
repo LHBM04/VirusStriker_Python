@@ -1,8 +1,7 @@
 from enum import Enum
 
-from Core.Actors.Object import *
-from Utilities.Vector2 import *
-from Utilities.MathF import *
+from Core.Actors import Object
+from Utilities import Vector2
 
 # AABB형 콜리전 바디
 class Collider2D:
@@ -14,9 +13,9 @@ class Collider2D:
         LETHAL  = 2 # 플레이어에게 치명적인(즉사) 오브젝트의 태그
 
     def __init__(self, _owner: Object,  _min: Vector2, _max: Vector2) -> None:
-        self.owner: Object  = _owner
-        self.min: Vector2   = _min
-        self.max: Vector2   = _max
+        self.owner  = _owner
+        self.min    = _min
+        self.max    = _max
 
 # 충돌 검사
 def IsCollision(_lhs: Collider2D, _rhs: Collider2D) -> bool:
