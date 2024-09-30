@@ -24,7 +24,6 @@ class Collider2D:
         self.min: Vector2    = _min
         self.max: Vector2    = _max
 
-# 충돌 검사
 def IsCollision(_lhs: Collider2D, _rhs: Collider2D) -> bool:
     # AABB 검사
     min1: Vector2 = _lhs.owner.position + _lhs.min
@@ -32,8 +31,9 @@ def IsCollision(_lhs: Collider2D, _rhs: Collider2D) -> bool:
     min2: Vector2 = _rhs.owner.position + _rhs.min
     max2: Vector2 = _rhs.owner.position + _rhs.max
 
-    if (min1.x > max2.x and max1.x > min2.x and 
-        min1.y > max2.y and max1.y > min2.y):
+    # AABB 충돌 검사: 두 사각형이 겹치는 경우
+    if (min1.x < max2.x and max1.x > min2.x and 
+        min1.y < max2.y and max1.y > min2.y):
         return True
 
     return False
@@ -85,21 +85,19 @@ class Object(ABC):
 
     def RenderDebug(self) -> None:
         for body in self.bodies:
-            if not (body.min != Vector2(0, 0) and body.max != Vector2(0, 0)):
+            if body.min != Vector2(0, 0) and body.max != Vector2(0, 0):
                 # 바디의 위치 계산
                 minp: Vector2 = body.min + body.owner.position
                 maxp: Vector2 = body.max + body.owner.position
-        
-                # 히트박스의 크기 계산
-                width = maxp.x - minp.x
-                height = maxp.y - minp.y
-        
-                min_x = minp.x - (width / 2)
-                min_y = minp.y - (height / 2)
-        
-                SDL_SetRenderDrawColor(pico2d.renderer, 255, 255, 0, 255)  # 색상 설정
-                SDL_RenderDrawRect(pico2d.renderer, SDL_Rect(int(min_x), int(min_y), int(width), int(height)))  # rect를 참조로 전달
+    
+                width = int(maxp.x - minp.x)
+                height = int(maxp.y - minp.y)
 
+                minx = int(minp.x - (width / 2)) 
+                miny = int(minp.y + (height / 2))  
+        
+                SDL_SetRenderDrawColor(pico2d.renderer, 255, 255, 0, 255) 
+                SDL_RenderDrawRect(pico2d.renderer, SDL_Rect(minx, miny, width, height))
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final

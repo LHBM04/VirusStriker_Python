@@ -20,7 +20,7 @@ class TestPlayer(Object):
         
         self.collisionLayer = 1
         self.colisionTag = Collider2D.ETag.NONE
-        self.bodies.append(Collider2D(self, Vector2(0, 0), Vector2(50, 50)))
+        self.bodies.append(Collider2D(self, Vector2(1, 1), Vector2(50, 50)))
         
         self.moveDirection: Vector2 = Vector2()
         self.moveSpeed: float = 300.0
@@ -77,7 +77,7 @@ class TestObject2(Object):
         
         self.collisionLayer = 1
         self.colisionTag = Collider2D.ETag.NONE
-        self.bodies.append(Collider2D(self, Vector2(0, 0), Vector2(50, 50)))
+        self.bodies.append(Collider2D(self, Vector2(1, 1), Vector2(50, 50)))
         
         self.moveDirection: Vector2 = Vector2()
         self.moveSpeed: float = 30.0
