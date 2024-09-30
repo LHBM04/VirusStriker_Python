@@ -1,4 +1,5 @@
 from typing import final
+from Utilities.MathF import *
 
 @final
 class Vector2:
@@ -44,7 +45,7 @@ class Vector2:
         return Vector2(self.x / _other, self.y / _other)
 
     def __eq__(self, _other: 'Vector2') -> bool:
-        return self.x == _other.x and self.y == _other.y
+        return MathF.Equalf(self.x, _other.x) and MathF.Equalf(self.y, _other.y)
 
     def __ne__(self, _other: 'Vector2') -> bool:
         return not self.__eq__(_other)
