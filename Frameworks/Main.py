@@ -8,12 +8,19 @@ from Utilities.AudioManagement import *
 from Utilities.FileManagement import *
 from Utilities.InputManagement import *
 
-def HandleEvents() -> bool:
-    events: list[Event] = get_events()
-    for event in events:
+def HandleEvents(_events: list[Event]) -> bool:
+    for event in _events:
         if event.type == SDL_QUIT:
             SystemManager().isRunning = False
-
+        if event.type == SDL_KEYDOWN:
+            if event.key is not None:
+                InputManager().isKeyPressed = True
+                InputManager().SetKeyState(int(event.key), EInputState.DOWN)
+        elif event.type == SDL_KEYUP:
+            if event.key is not None:
+                InputManager().isKeyPressed = False
+                InputManager().SetKeyState(int(event.key), EInputState.UP)
+    
     return SystemManager().isRunning
 
 if __name__ == "__main__":
@@ -23,7 +30,7 @@ if __name__ == "__main__":
     fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
 
     SystemManager().Inintialize()
-    while HandleEvents():
+    while HandleEvents(get_events()):
         if LevelManager().isResetDeltaTime:
             previousTime = Time.time()
 
