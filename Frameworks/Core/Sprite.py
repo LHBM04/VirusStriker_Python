@@ -3,8 +3,8 @@ from pathlib import Path
 
 from pico2d import *
 
-from Frameworks.Utilities.Vector2 import *
-from Utilities.FileSystem import *
+from Utilities.Vector2 import *
+from Utilities.FileManagement import *
 
 # 게임 내 사용될 스프라이트의 컬러 데이터.
 @final
@@ -26,15 +26,14 @@ class Color:
         self.g = max(self.minValue(), min(_g, self.maxValue()))
         self.b = max(self.minValue(), min(_b, self.maxValue()))
         self.a = max(self.minValue(), min(_a, self.maxValue()))
-    
+
     def __eq__(self, _other: 'Color') -> bool:
         return self.r == _other.r and self.g == _other.g and self.b == _other.b and self.a == _other.a
 
     def __ne__(self, _other: 'Color') -> bool:
         return not self.__eq__(_other)
 
-
-# 
+# 스프라이트 정보
 class SpriteInfo:
     def __init__(self, 
                  _position: Vector2 = Vector2(), 

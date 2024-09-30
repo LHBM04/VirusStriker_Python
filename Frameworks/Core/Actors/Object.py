@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import final
 
-from Utilities.Vector2 import *
+from pygame import *
+
 from Core.Sprite import *
-from Core.Actors.ColisionBody import *
+from Core.Actors.CollisionSystem import *
+from Utilities.Vector2 import *
+from Utilities.Vector3 import *
 
 # 게임 내 사용되는 모든 오브젝트의 베이스 클래스.
 class Object(ABC):
@@ -14,9 +17,9 @@ class Object(ABC):
         self.spriteInfo: SpriteInfo     = None                              # 오브젝트 스프라이트 정보.
         self.renderLayer: int           = 0                                 # 오브젝트의 렌더링 순서.
         
-        self.collisionLayer: int                = 0                         # 오브젝트의 충돌 레이어.
-        self.colisionTag: CollisionBody.ETag    = CollisionBody.ETag.NONE   # 오브젝트의 충돌 태그.
-        self.bodies: list[CollisionBody]        = []                        # 오브젝트의 콜라이더 리스트.
+        self.collisionLayer: int             = 0                            # 오브젝트의 충돌 레이어.
+        self.colisionTag: Collider2D.ETag    = Collider2D.ETag.NONE         # 오브젝트의 충돌 태그.
+        self.bodies: list[Collider2D]        = []                           # 오브젝트의 콜라이더 리스트.
         
         self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
@@ -35,11 +38,11 @@ class Object(ABC):
         pass
     
     @abstractmethod
-    def OnCollision(self, _colider: CollisionBody) -> None:
+    def OnCollision(self, _colider: Collider2D) -> None:
         pass
     
     @abstractmethod
-    def OnTrigger(self, _colider: CollisionBody) -> None:
+    def OnTrigger(self, _colider: Collider2D) -> None:
         pass
 
     @abstractmethod
@@ -48,13 +51,11 @@ class Object(ABC):
 
     def RenderDebug(self) -> None:
         for body in self.bodies:
-            if not MathF.Equalf(body.circle.radius, 0.0):
-                # TODO: Circle형 경계 그리기
-                pass
+            if body.min != Vector2.zero and body.max != Vector2.zero:
+                minp: Vector2 = body.min + body.owner.position
+                maxp: Vector2 = body.max + body.owner.position
 
-            if body.aabb.min != Vector2.zero and body.aabb.max != Vector2.zero:
-                
-                pass
+                draw_rectangle(minp.x, minp.y, maxp.x, maxp.y)
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final

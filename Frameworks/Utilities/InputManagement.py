@@ -11,7 +11,7 @@ class EInputState(Enum):
 # 해당 게임의 키 입력을 감시하고 관리하는 매니저.
 class InputManager(metaclass = Singleton):
     def __init__(self) -> None:
-        self.keyState: list[EInputState]    = [None] * 256 
+        self.keyState: list[EInputState]    = [None] * 256
         self.isPressKey: bool               = False
 
     def IsKeyPressed(self):

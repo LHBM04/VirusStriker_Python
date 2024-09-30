@@ -3,14 +3,13 @@ from typing import final
 from pico2d import *
 
 from Core.Sprite import *
-
-from Level.Level import *
+from Level.LevelManagement import *
 from Level.TestLevel_1 import *
 from Level.TestLevel_2 import *
-from Utilities.InputSystem import *
-from Utilities.AudioSystem import *
 from Utilities.Singleton import *
-from Utilities.FileSystem import *
+from Utilities.InputManagement import *
+from Utilities.AudioManagement import *
+from Utilities.FileManagement import *
 
 @final
 class SystemManager(metaclass = Singleton):

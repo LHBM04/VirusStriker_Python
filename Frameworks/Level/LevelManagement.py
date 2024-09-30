@@ -3,10 +3,10 @@ from typing import final
 from collections import deque
 
 from Core.System import *
-from Frameworks.Core.Actors.Object import *
+from Core.Actors.Object import *
 from Utilities.Singleton import *
 
-class Level:
+class Level(ABC):
     def __init__(self, _levelName: str) -> None:
         self.levelName: str                 = _levelName        # 해당 Scene의 이름. (나중에 Key로 사용할 것임.)
 
@@ -120,8 +120,8 @@ class LevelManager(metaclass = Singleton):
         self.isResetDeltaTime = False
         if self.m_nextLevel != None:
             self.m_loadingBackgroundInfo.color.a = self.m_loadingBackgroundInfo.color.a + _deltaTime * 2.0
-            if self.m_loadingBackgroundInfo.color.a >= Color.MAX_COLOR_VALUE:
-                self.m_loadingBackgroundInfo.color.a = Color.MAX_COLOR_VALUE
+            if self.m_loadingBackgroundInfo.color.a >= Color.maxValue():
+                self.m_loadingBackgroundInfo.color.a = Color.maxValue()
 
                 self.m_currentLevel , self.m_nextLevel = self.m_nextLevel, None
                 self.m_currentLevel.OnEnter()
@@ -129,8 +129,8 @@ class LevelManager(metaclass = Singleton):
 
         else:
             self.m_loadingBackgroundInfo.a = self.m_loadingBackgroundInfo.color.a - _deltaTime * 2.0
-            if self.m_loadingBackgroundInfo.a <= Color.MIN_COLOR_VALUE:
-                self.m_loadingBackgroundInfo.a = Color.MIN_COLOR_VALUE
+            if self.m_loadingBackgroundInfo.a <= Color.minValue():
+                self.m_loadingBackgroundInfo.a = Color.minValue()
 
         self.m_loadingBackground.Update(_deltaTime)
         

@@ -1,12 +1,13 @@
-import time
+import time as Timer
+
 from pico2d import *
 
 from Core.System import *
 from Core.Sprite import *
-from Level.Level import *
-from Utilities.InputSystem import *
-from Utilities.AudioSystem import *
-from Utilities.FileSystem import *
+from Level.LevelManagement import *
+from Utilities.AudioManagement import *
+from Utilities.FileManagement import *
+from Utilities.InputManagement import *
 
 def HandleEvents(_events: list[Event]) -> None:
     for event in _events:
@@ -25,7 +26,7 @@ def HandleEvents(_events: list[Event]) -> None:
             return
 
 if __name__ == "__main__":
-    previousTime: float = time.time()   # 이전 시간
+    previousTime: float = Timer.time()   # 이전 시간
     currentTime: float = 0.0             # 현재 시간
 
     fps: float = 0.0                      # 현재 프레임
@@ -35,9 +36,11 @@ if __name__ == "__main__":
 
     while SystemManager().isRunning:
         HandleEvents(get_events())
+        if LevelManager().isResetDeltaTime:
+            previousTime = Timer.time()
 
         # Delta Time 계산
-        currentTime = time.time()
+        currentTime = Timer.time()
         deltaTime = currentTime - previousTime
         
         # Fixed Delta Time 계산
