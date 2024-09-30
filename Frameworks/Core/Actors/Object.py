@@ -17,9 +17,9 @@ class Object(ABC):
         self.spriteInfo: SpriteInfo     = None                              # 오브젝트 스프라이트 정보.
         self.renderLayer: int           = 0                                 # 오브젝트의 렌더링 순서.
         
-        self.collisionLayer: int             = 0                            # 오브젝트의 충돌 레이어.
-        self.colisionTag: Collider2D.ETag    = Collider2D.ETag.NONE         # 오브젝트의 충돌 태그.
-        self.bodies: list[Collider2D]        = []                           # 오브젝트의 콜라이더 리스트.
+        self.collisionLayer: Collider2D.ELayer  = Collider2D.ETag.NONE      # 오브젝트의 충돌 레이어.
+        self.colisionTag: Collider2D.ETag       = Collider2D.ETag.NONE      # 오브젝트의 충돌 태그.
+        self.bodies: list[Collider2D]           = []                        # 오브젝트의 콜라이더 리스트.
         
         self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
@@ -38,11 +38,11 @@ class Object(ABC):
         pass
     
     @abstractmethod
-    def OnCollision(self, _colider: Collider2D) -> None:
+    def OnCollision(self, _collider: Collider2D) -> None:
         pass
     
     @abstractmethod
-    def OnTrigger(self, _colider: Collider2D) -> None:
+    def OnTrigger(self, _collider: Collider2D) -> None:
         pass
 
     @abstractmethod
@@ -106,19 +106,19 @@ class ObjectManager:
                 self.m_objects.remove(obj)
                 del obj
 
-        for object in self.m_objects:
-            if object.collisionLayer == 0: 
-                continue
-            
-            for object2 in self.m_objects:
-                if object.collisionLayer != object2.collisionLayer: 
+            for object in self.m_objects:
+                if object.collisionLayer == Collider2D.ELayer.NONE: 
                     continue
+            
+                for object2 in self.m_objects:
+                    if object.collisionLayer != object2.collisionLayer: 
+                        continue
 
-                for body in object.bodies:
-                    for body2 in object2.bodies:
-                        if IsCollision(body, body2):
-                            object.OnCollision(object2)
-                            object2.OnCollision(object)
+                    for body in object.bodies:
+                        for body2 in object2.bodies:
+                            if IsCollision(body, body2):
+                                object.OnCollision(object2)
+                                object2.OnCollision(object)
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:

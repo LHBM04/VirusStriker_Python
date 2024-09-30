@@ -61,7 +61,7 @@ if __name__ == "__main__":
         SystemManager().Render()
 
         # [디버그 코드]
-        print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().gameFPS}")
+        #print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().gameFPS}")
         
         previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
         

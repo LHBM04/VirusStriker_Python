@@ -12,6 +12,10 @@ class Collider2D:
         HARMFUL = 1 # 플레이어에게 해로운 오브젝트의 태그
         LETHAL  = 2 # 플레이어에게 치명적인(즉사) 오브젝트의 태그
 
+    class ELayer(Enum):
+        NONE    = 0
+        PLAYER  = 1
+
     def __init__(self, _owner: Object,  _min: Vector2, _max: Vector2) -> None:
         self.owner  = _owner
         self.min    = _min

@@ -4,8 +4,8 @@ from pico2d import *
 
 from Core.Sprite import *
 from Level.LevelManagement import *
-from Level.TestLevel_1 import *
-from Level.TestLevel_2 import *
+from Level.TestLevel import *
+from Level.TestLevel import *
 from Utilities.Singleton import *
 from Utilities.InputManagement import *
 from Utilities.AudioManagement import *

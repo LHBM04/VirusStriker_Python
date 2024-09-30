@@ -25,7 +25,7 @@ class TestPlayer(Object):
         self.bodies.append(Collider2D(self, Vector2(0, 0), Vector2(50, 50)))
         
         self.moveDirection: Vector2 = Vector2()
-        self.moveSpeed: float = 30.0
+        self.moveSpeed: float = 300.0
         
     def Update(self, _deltaTime: float) -> None:
         if InputManager().GetKeyState(SDLK_w) == EInputState.PRESS:
@@ -49,11 +49,12 @@ class TestPlayer(Object):
     def LateUpdate(self, _deltaTime: float) -> None:
         pass
     
-    def OnCollision(self, _colider: Collider2D) -> None:
-        print("Collided")
+    def OnCollision(self, _collider: Collider2D) -> None:
+        print(f"Collided {str((_collider.owner)}")
 
-    def OnTrigger(self, _colider: Collider2D) -> None:
-        print("Triggered")
+    def OnTrigger(self, _collider: Collider2D) -> None:
+        print(f"Triggred {str(_collider.owner)}")
+
 
     def Render(self) -> None:
         self.spriteInfo.position = self.position
@@ -62,3 +63,46 @@ class TestPlayer(Object):
     def RenderDebug(self) -> None:
         return super().RenderDebug()
         
+class TestObject2(Object):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.position = Vector2(0, 400)
+
+        self.sprite = Sprite("Resources/Sprites/Objects/Actors/Player/Dead")
+        self.spriteInfo = SpriteInfo(_position = Vector2(300, 200), 
+                                     _scale = Vector2(100, 100),
+                                     _rotate = 0.0,
+                                     _isFlipX = False,
+                                     _isFlipY = False,
+                                     _color = Color(255, 255, 255, 255))
+        self.renderLayer = 1 
+        
+        self.collisionLayer = 1
+        self.colisionTag = Collider2D.ETag.NONE
+        self.bodies.append(Collider2D(self, Vector2(0, 0), Vector2(50, 50)))
+        
+        self.moveDirection: Vector2 = Vector2()
+        self.moveSpeed: float = 30.0
+        
+    def Update(self, _deltaTime: float) -> None:
+        pass
+
+    def FixedUpdate(self, _fixedDeltaTime: float) -> None:
+        pass
+    
+    def LateUpdate(self, _deltaTime: float) -> None:
+        pass
+    
+    def OnCollision(self, _collider: Collider2D) -> None:
+        print(f"Collided {str(_collider.owner)}")
+
+    def OnTrigger(self, _collider: Collider2D) -> None:
+        print(f"Triggred {str(_collider.owner)}")
+
+    def Render(self) -> None:
+        self.spriteInfo.position = self.position
+        self.sprite.Render(self.spriteInfo)
+    
+    def RenderDebug(self) -> None:
+        return super().RenderDebug()
