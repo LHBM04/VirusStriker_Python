@@ -14,11 +14,11 @@ class TestLevel_1(Level):
         print(f"Hello, This is {self.levelName}!")
 
     def OnUpdate(self, _deltaTime: float) -> None:
-        if InputManager().GetKeyState(SDLK_RETURN) is EInputState.DOWN:
+        if InputManager().GetKeyDown(SDLK_ESCAPE):
+            SystemManager().isRunning = False
+    
+        if InputManager().GetKeyDown(SDLK_RETURN):
             LevelManager().LoadLevel("Test 2")
-
-        if InputManager().GetKeyState(SDLK_ESCAPE) == EInputState.DOWN:
-            Core.System.SystemManager().isRunning = False
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
@@ -43,11 +43,11 @@ class TestLevel_2(Level):
         print(f"Hello, This is {self.levelName}!")
 
     def OnUpdate(self, _deltaTime: float) -> None:
-        if InputManager().GetKeyState(SDLK_BACKSPACE) == EInputState.DOWN:
-            LevelManager().UnloadLevel()
-
-        if InputManager().GetKeyState(SDLK_ESCAPE) == EInputState.DOWN:
+        if InputManager().GetKeyDown(SDLK_ESCAPE):
             SystemManager().isRunning = False
+
+        if InputManager().GetKeyDown(SDLK_BACKSPACE):
+            LevelManager().UnloadLevel()
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass

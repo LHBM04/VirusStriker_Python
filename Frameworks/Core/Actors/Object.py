@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from typing import final
 from enum import Enum
 
+from sdl2 import *
+from sdl2dll import *
+
 from Core.Sprite import *
 from Core.Actors.Object import *
 from Utilities.Vector2 import *
@@ -82,12 +85,21 @@ class Object(ABC):
 
     def RenderDebug(self) -> None:
         for body in self.bodies:
-            if body.min != Vector2.Zero() and body.max != Vector2.Zero():
+            if not (body.min != Vector2(0, 0) and body.max != Vector2(0, 0)):
+                # 바디의 위치 계산
                 minp: Vector2 = body.min + body.owner.position
                 maxp: Vector2 = body.max + body.owner.position
+        
+                # 히트박스의 크기 계산
+                width = maxp.x - minp.x
+                height = maxp.y - minp.y
+        
+                min_x = minp.x - (width / 2)
+                min_y = minp.y - (height / 2)
+        
+                SDL_SetRenderDrawColor(pico2d.renderer, 255, 255, 0, 255)  # 색상 설정
+                SDL_RenderDrawRect(pico2d.renderer, SDL_Rect(int(min_x), int(min_y), int(width), int(height)))  # rect를 참조로 전달
 
-                SDL_SetRenderDrawColor(renderer.sdlrenderer, 255, 0, 0, 255)
-                SDL_RenderDrawRect(renderer.sdlrenderer, int(minp.x), int(minp.y), int(maxp.x - minp.x), int(maxp.y - minp.y))
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final

@@ -26,16 +26,16 @@ class TestPlayer(Object):
         self.moveSpeed: float = 300.0
         
     def Update(self, _deltaTime: float) -> None:
-        if InputManager().GetKeyState(SDLK_w) == EInputState.PRESS:
+        if InputManager().GetKeyDown(SDLK_UP):
             self.moveDirection = self.moveDirection + Vector2.Up() * (self.moveSpeed * _deltaTime)
 
-        if InputManager().GetKeyState(SDLK_s) == EInputState.PRESS:
+        if InputManager().GetKeyDown(SDLK_DOWN):
             self.moveDirection = self.moveDirection + Vector2.Down() * (self.moveSpeed * _deltaTime)
 
-        if InputManager().GetKeyState(SDLK_a) == EInputState.PRESS:
+        if InputManager().GetKeyDown(SDLK_LEFT):
             self.moveDirection = self.moveDirection + Vector2.Left() * (self.moveSpeed * _deltaTime)
 
-        if InputManager().GetKeyState(SDLK_d) == EInputState.PRESS:
+        if InputManager().GetKeyDown(SDLK_RIGHT):
             self.moveDirection = self.moveDirection + Vector2.Right() * (self.moveSpeed * _deltaTime)
 
         self.position += self.moveDirection
@@ -53,13 +53,12 @@ class TestPlayer(Object):
     def OnTrigger(self, _collider: Collider2D) -> None:
         print(f"Triggred {str(_collider.owner)}")
 
-
     def Render(self) -> None:
         self.spriteInfo.position = self.position
         self.sprite.Render(self.spriteInfo)
     
     def RenderDebug(self) -> None:
-        return super().RenderDebug()
+        super().RenderDebug()
         
 class TestObject2(Object):
     def __init__(self) -> None:
