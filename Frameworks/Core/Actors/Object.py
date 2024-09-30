@@ -1,12 +1,43 @@
 from abc import ABC, abstractmethod
 from typing import final
-
-from pygame import *
+from enum import Enum
 
 from Core.Sprite import *
-from Core.Actors.CollisionSystem import *
+from Core.Actors.Object import *
 from Utilities.Vector2 import *
 from Utilities.Vector3 import *
+
+# AABB형 콜리전 바디
+class Collider2D:
+    # 충돌 검사를 위한 열거형.
+    # 필요한 게 있을 때마다 추가하여 쓰도록 하자
+    class ETag(Enum):
+        NONE    = 0 # 더미 태그(기본).
+        HARMFUL = 1 # 플레이어에게 해로운 오브젝트의 태그
+        LETHAL  = 2 # 플레이어에게 치명적인(즉사) 오브젝트의 태그
+
+    def __init__(self, _owner: 'Object',  _min: Vector2, _max: Vector2) -> None:
+        self.owner: 'Object' = _owner
+        self.min: Vector2    = _min
+        self.max: Vector2    = _max
+
+# 충돌 검사
+def IsCollision(_lhs: Collider2D, _rhs: Collider2D) -> bool:
+    # AABB 검사
+    min1: Vector2 = _lhs.owner.position + _lhs.min
+    max1: Vector2 = _lhs.owner.position + _lhs.max
+    min2: Vector2 = _rhs.owner.position + _rhs.min
+    max2: Vector2 = _rhs.owner.position + _rhs.max
+
+    if (min1.x > max2.x and max1.x > min2.x and 
+        min1.y > max2.y and max1.y > min2.y):
+        return True
+
+    return False
+
+# TODO: 트리거 판정도 만들기
+def IsTrigger(_lhs: Collider2D, _rhs: Collider2D) -> bool:
+    pass
 
 # 게임 내 사용되는 모든 오브젝트의 베이스 클래스.
 class Object(ABC):
@@ -55,7 +86,8 @@ class Object(ABC):
                 minp: Vector2 = body.min + body.owner.position
                 maxp: Vector2 = body.max + body.owner.position
 
-                draw_rectangle(minp.x, minp.y, maxp.x, maxp.y)
+                SDL_SetRenderDrawColor(renderer.sdlrenderer, 255, 0, 0, 255)
+                SDL_RenderDrawRect(renderer.sdlrenderer, int(minp.x), int(minp.y), int(maxp.x - minp.x), int(maxp.y - minp.y))
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final
@@ -96,15 +128,14 @@ class ObjectManager:
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         if len(self.m_objects) > 0:
             toRemove: list[Object] = []  # 제거할 오브젝트 리스트
-            
             for obj in self.m_objects:
                 obj.FixedUpdate(_fixedDeltaTime) 
                 if obj.isDestroy: 
                     toRemove.append(obj) 
 
-            for obj in toRemove:
-                self.m_objects.remove(obj)
-                del obj
+            if len(toRemove) > 0:
+                for obj in toRemove:
+                    self.m_objects.remove(obj)
 
         if len(self.m_objects) > 0:
             for iter in self.m_objects:

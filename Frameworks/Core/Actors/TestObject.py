@@ -1,7 +1,5 @@
 from Core.System import *
 from Core.Actors.Object import *
-from Core.Actors.CollisionSystem import *
-from Core.Actors.CollisionSystem import Collider2D
 from Level.LevelManagement import *
 from Utilities.InputManagement import *
 
