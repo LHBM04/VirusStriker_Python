@@ -2,14 +2,13 @@ from typing import final
 
 from pico2d import *
 
-from Core.Sprite import *
 from Level.LevelManagement import *
 from Level.TestLevel import *
 from Level.TestLevel import *
 from Utilities.Singleton import *
 from Utilities.InputManagement import *
 from Utilities.AudioManagement import *
-from Utilities.FileManagement import *
+from Utilities.ResourceManagement import *
 
 @final
 class SystemManager(metaclass = Singleton):
@@ -20,11 +19,10 @@ class SystemManager(metaclass = Singleton):
         self.isRunning: bool    = True              # 프로그램 구동 여부.
         self.gameFPS: float     = 0.0               # 게임 초당 프레임.
 
-        
-        open_canvas(self.windowWidth, 
-                    self.windowHeight) # 캔버스 열기
-
     def Inintialize(self) -> None:
+        open_canvas(self.windowWidth, self.windowHeight) # 캔버스 열기
+        SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))
+        
         LevelManager().AddLevel("Test 1", TestLevel_1())
         LevelManager().AddLevel("Test 2", TestLevel_2())
     
@@ -33,7 +31,7 @@ class SystemManager(metaclass = Singleton):
     def Update(self, _deltaTime: float) -> None:
         LevelManager().Update(_deltaTime);
         InputManager().Update()
-        AudioManager().Update()
+        #AudioManager().Update()
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         LevelManager().FixedUpdate(_fixedDeltaTime);
