@@ -1,36 +1,65 @@
 import time as Time
-
+from msvcrt import *
 from pico2d import *
 
 from Core.System import *
 from Level.LevelManagement import *
 from Utilities.AudioManagement import *
-from Utilities.FileManagement import *
+from Utilities.ResourceManagement import *
 from Utilities.InputManagement import *
 
-def HandleEvents(_events: list[Event]) -> bool:
+def ReceiveEvent() -> list[Event]:
+    gotEvent: SDL_Event = SDL_Event()
+    events: list[Event] = []
+
+    while SDL_PollEvent(ctypes.byref(gotEvent)):
+        event = Event(gotEvent.type)
+        if event.type in (SDL_QUIT, SDL_KEYDOWN, SDL_KEYUP, SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP):
+            if event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:                                            # 키보드 입력
+                if not gotEvent.key.repeat:
+                    event.key = gotEvent.key.keysym.sym
+            elif event.type == SDL_MOUSEMOTION:                                                                 # 마우스 조작
+                event.x, event.y = gotEvent.motion.x, gotEvent.motion.y
+            elif event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:                          # 마우스 클릭
+                event.button, event.x, event.y = gotEvent.button.button, gotEvent.button.x, gotEvent.button.y
+            
+            events.append(event)
+
+    return events
+
+def SendEvent(_events: list[Event]) -> None:
     for event in _events:
         if event.type == SDL_QUIT:
             SystemManager().isRunning = False
-        if event.type == SDL_KEYDOWN:
-            if event.key is not None:
-                InputManager().isKeyPressed = True
-                InputManager().SetKeyState(int(event.key), EInputState.DOWN)
-        elif event.type == SDL_KEYUP:
-            if event.key is not None:
-                InputManager().isKeyPressed = False
-                InputManager().SetKeyState(int(event.key), EInputState.UP)
-    
-    return SystemManager().isRunning
+            continue
+        if event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:
+            if event.type == SDL_KEYDOWN:
+                InputManager().isPressKey = True
+                InputManager().SetKeyState(event.key, InputManager.EInputState.DOWN)
+                continue
+            if event.type == SDL_KEYUP:
+                InputManager().isPressKey = False
+                InputManager().SetKeyState(event.key, InputManager.EInputState.UP)
+                continue
+        if event.type == SDL_MOUSEMOTION:
+                InputManager().mousePosition = Vector2(event.x, event.y)
+                continue
+        if event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:      
+                InputManager().isPressKey = True
+                InputManager().SetKeyState(event.key, InputManager.EInputState.DOWN)
+                InputManager().mousePosition = Vector2(event.x, event.y)
+                continue
 
 if __name__ == "__main__":
-    previousTime: float = Time.time()  # 이전 시간
+    previousTime: float = Time.time()   # 이전 시간
     currentTime: float  = 0.0           # 현재 시간
 
     fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
 
     SystemManager().Inintialize()
-    while HandleEvents(get_events()):
+    while SystemManager().isRunning:
+        SendEvent(ReceiveEvent())
+
         if LevelManager().isResetDeltaTime:
             previousTime = Time.time()
 
@@ -53,7 +82,7 @@ if __name__ == "__main__":
         SystemManager().gameFPS += 1
         fpsDeltaTime += deltaTime
         
-        if fpsDeltaTime > 1.0:
+        if fpsDeltaTime > 1.0:  
             SystemManager().gameFPS = 0
             fpsDeltaTime = 0.0
 

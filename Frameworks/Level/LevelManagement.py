@@ -71,13 +71,13 @@ class LevelManager(metaclass = Singleton):
         self.m_nextLevel: Level             = None                  # 이동 중인 Scene
         self.m_previousLevels: deque[Level] = deque()               # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
         
-        self.m_loadingBackground: Sprite            = Sprite("Resources/Sprites/Backgrounds/Loading/Logo")    # 로딩 백그라운드
+        self.m_loadingBackground: Sprite            = Sprite("Resources\\Sprites\\Backgrounds\\Loading\\Logo")    # 로딩 백그라운드
         self.m_loadingBackgroundInfo: SpriteInfo    = SpriteInfo(Vector2(0, 0), 
-                                                                 Vector2(1280, 800),
+                                                                 Vector2(get_canvas_width(), get_canvas_height()),
                                                                  0.0,
                                                                  False,
                                                                  False,
-                                                                 Color())  # 로딩 백그라운드 스프라이트 정보
+                                                                 Color(255, 255, 255, 255))  # 로딩 백그라운드 스프라이트 정보
 
         self.isResetDeltaTime: bool = False                       # 델타 타임 리셋 여부.
 
@@ -118,7 +118,7 @@ class LevelManager(metaclass = Singleton):
     def Update(self, _deltaTime: float):
         self.isResetDeltaTime = False
         if self.m_nextLevel != None:
-            self.m_loadingBackgroundInfo.color.a = self.m_loadingBackgroundInfo.color.a + _deltaTime * 2.0
+            self.m_loadingBackgroundInfo.color.a += _deltaTime * 2.0
             if self.m_loadingBackgroundInfo.color.a >= Color.maxValue():
                 self.m_loadingBackgroundInfo.color.a = Color.maxValue()
 
@@ -127,9 +127,9 @@ class LevelManager(metaclass = Singleton):
                 self.isResetDeltaTime = True
 
         else:
-            self.m_loadingBackgroundInfo.a = self.m_loadingBackgroundInfo.color.a - _deltaTime * 2.0
-            if self.m_loadingBackgroundInfo.a <= Color.minValue():
-                self.m_loadingBackgroundInfo.a = Color.minValue()
+            self.m_loadingBackgroundInfo.color.a -= _deltaTime * 2.0
+            if self.m_loadingBackgroundInfo.color.a <= Color.minValue():
+                self.m_loadingBackgroundInfo.color.a = Color.minValue()
 
         self.m_loadingBackground.Update(_deltaTime)
         
