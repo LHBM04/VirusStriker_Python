@@ -3,19 +3,38 @@ from typing import final
 
 @final
 class Vector3:
-    def __init__(self, _x: float = 0, _y: float = 0, _z: float = 0) -> None:
+    def __init__(self, _x: float, _y: float, _z: float) -> None:
         self.x = _x
         self.y = _y
         self.z = _z
     
-    # 방향벡터
-    ZERO: 'Vector3'     = 'Vector3'(0.0, 0.0, 0.0)
-    UP: 'Vector3'       = 'Vector3'(0.0, 1.0, 0.0)
-    DOWN: 'Vector3'     = 'Vector3'(0.0, -1.0, 0.0)
-    LEFT: 'Vector3'     = 'Vector3'(-1.0, 0.0, 0.0)
-    RIGHT: 'Vector3'    = 'Vector3'(1.0, 0.0, 0.0)
-    FORWARD:'Vector3'   = 'Vector3'(0.0, 0.0, 1.0)
-    BACKWARD: 'Vector3' = 'Vector3'(0.0, 0.0, -1.0)
+    @staticmethod
+    def Zero() -> 'Vector3':
+        return Vector3(0.0, 0.0, 0.0)
+
+    @staticmethod
+    def Up() -> 'Vector3':
+        return Vector3(0.0, 1.0, 0.0)
+    
+    @staticmethod
+    def Down() -> 'Vector3':
+        return Vector3(0.0, -1.0, 0.0)
+    
+    @staticmethod
+    def Left() -> 'Vector3':
+        return Vector3(-1.0, 0.0, 0.0)
+    
+    @staticmethod
+    def Right() -> 'Vector3':
+        return Vector3(1.0, 0.0, 0.0)
+
+    @staticmethod
+    def Forward() -> 'Vector3':
+        return Vector3(0.0, 0.0, 1.0)
+    
+    @staticmethod
+    def Backward() -> 'Vector3':
+        return Vector3(0.0, 0.0, -1.0)
 
     def __neg__(self) -> 'Vector3':
         return Vector3(-self.x, -self.y, -self.z)
