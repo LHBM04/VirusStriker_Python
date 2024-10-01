@@ -3,33 +3,34 @@ from pico2d import *
 from Frameworks.Core.Sprite import *
 from Frameworks.Core.Utilities.Mathematics.Vector2 import *
 from Frameworks.Core.Utilities.InputManagement.InputManager import *
+from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import *
 from Frameworks.Level.Scene import *
 
 class TitleScene(Scene):
     def __init__(self):
         super().__init__()
 
-        self.m_titleBackground: Sprite = Sprite("Resources\\Sprites\\Backgrounds\\Title\\Main Title")
-        self.m_titleBackground.info.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        self.m_titleBackground.info.scale = Vector2(get_canvas_width(), get_canvas_height())
-        self.m_titleBackground.info.color = Color(255, 255, 255, 255)
+        self.m_titleBackground: Sprite = Sprite(ResourceManager.LoadSprite("Resources\\Sprites\\Backgrounds\\Title\\Main Title"))
+        self.m_titleBackground.renderInfo.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.m_titleBackground.renderInfo.scale = Vector2(get_canvas_width(), get_canvas_height())
+        self.m_titleBackground.renderInfo.color = Color(255, 255, 255, 255)
         self.m_titleBackground.isLoop = True
-        self.m_titleBackground.info.layerLevel = ELayerLevel.BACKGROUND
-        self.m_titleBackground.info.renderLayer = 0
+        self.m_titleBackground.renderInfo.layerLevel = ELayerLevel.BACKGROUND
+        self.m_titleBackground.renderInfo.renderLayer = 0
 
-        self.m_titleLogo: Sprite = Sprite("Resources\\Sprites\\GUI\\Logo")
-        self.m_titleLogo.info.position = Vector2(390.0, 525.0)
-        self.m_titleLogo.info.scale = Vector2(578 / 1.25, 504 / 1.25)
-        self.m_titleLogo.info.color = Color(255, 255, 255, 255)
-        self.m_titleLogo.info.layerLevel = ELayerLevel.UI
-        self.m_titleLogo.info.renderLayer = 0
+        self.m_titleLogo: Sprite = Sprite(ResourceManager.LoadSprite("Resources\\Sprites\\GUI\\Logo", 0))
+        self.m_titleLogo.renderInfo.position = Vector2(390.0, 525.0)
+        self.m_titleLogo.renderInfo.scale = Vector2(578 / 1.25, 504 / 1.25)
+        self.m_titleLogo.renderInfo.color = Color(255, 255, 255, 255)
+        self.m_titleLogo.renderInfo.layerLevel = ELayerLevel.UI
+        self.m_titleLogo.renderInfo.renderLayer = 0
 
-        self.m_actionCue: Sprite = Sprite("Resources\\Sprites\\GUI\\Press Any Key")
-        self.m_actionCue.info.position = Vector2(375.0, 180.0)
-        self.m_actionCue.info.scale = Vector2(600 / 1.5, 90 / 1.5)
-        self.m_actionCue.info.color = Color(255, 255, 255, 255)
-        self.m_actionCue.info.layerLevel = ELayerLevel.UI
-        self.m_actionCue.info.renderLayer = 1
+        self.m_actionCue: Sprite = Sprite(ResourceManager().LoadSprite("Resources\\Sprites\\GUI\\Press Any Key", 0))
+        self.m_actionCue.renderInfo.position = Vector2(375.0, 180.0)
+        self.m_actionCue.renderInfo.scale = Vector2(600 / 1.5, 90 / 1.5)
+        self.m_actionCue.renderInfo.color = Color(255, 255, 255, 255)
+        self.m_actionCue.renderInfo.layerLevel = ELayerLevel.UI
+        self.m_actionCue.renderInfo.renderLayer = 1
 
     def OnEnter(self) -> None:
         pass

@@ -61,10 +61,10 @@ class ObjectManager:
         # 추가할 오브젝트가 있을 경우 추가합니다.
         if len(self.m_addObjects) > 0:
             for layerLevel in self.m_addObjects:
-                if layerLevel.sprite.info.layerLevel not in self.m_objects.keys():
-                    self.m_objects[layerLevel.sprite.info.layerLevel] = []
+                if layerLevel.sprite.renderInfo.layerLevel not in self.m_objects.keys():
+                    self.m_objects[layerLevel.sprite.renderInfo.layerLevel] = []
 
-                self.m_objects[layerLevel.sprite.info.layerLevel].append(layerLevel)
+                self.m_objects[layerLevel.sprite.renderInfo.layerLevel].append(layerLevel)
 
             self.m_addObjects.clear()
 

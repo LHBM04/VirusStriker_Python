@@ -8,6 +8,7 @@ from Frameworks.Core.Sprite import Sprite, ELayerLevel
 from Frameworks.Core.Utilities.InputManagement.InputManager import InputManager
 from Frameworks.Core.Utilities.Mathematics.Color import Color
 from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
+from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
 from Frameworks.Level.Scene import Scene
 from Frameworks.Level.SceneManager import SceneManager
 
@@ -17,12 +18,12 @@ class OpeningScene(Scene):
     def __init__(self):
         super().__init__()
 
-        self.m_openingBackground: Sprite = Sprite("Resources\\Sprites\\Backgrounds\\Title\\Opening")
-        self.m_openingBackground.info.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        self.m_openingBackground.info.scale = Vector2(get_canvas_width(), get_canvas_height())
-        self.m_openingBackground.info.color = Color(255, 255, 255, 255)
-        self.m_openingBackground.info.layerLevel = ELayerLevel.BACKGROUND
-        self.m_openingBackground.info.renderLayer = 0
+        self.m_openingBackground: Sprite = Sprite(ResourceManager().GetSprites("Resources\\Sprites\\Background\\Loading\\Logo"))
+        self.m_openingBackground.renderInfo.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.m_openingBackground.renderInfo.scale = Vector2(get_canvas_width(), get_canvas_height())
+        self.m_openingBackground.renderInfo.color = Color(255, 255, 255, 255)
+        self.m_openingBackground.renderInfo.layerLevel = ELayerLevel.BACKGROUND
+        self.m_openingBackground.renderInfo.renderLayer = 0
         self.m_openingBackground.isLoop = False
 
     def OnEnter(self) -> None:

@@ -1,12 +1,11 @@
 from enum import Enum
-from pathlib import Path
+from multipledispatch import dispatch
+from typing import List
 
 from pico2d import *
 
 from Frameworks.Core.Utilities.Mathematics.Color import Color
 from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
-from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
-
 
 class ELayerLevel(Enum):
     NONE        = 0
@@ -34,25 +33,31 @@ class SpriteRI:
         self.renderLayer: int               = 0                             # 해당 스프라이트의 렌더링 순서
 
 class Sprite:
-    def __init__(self,
-                 _filePath: str,  
-                 _isLoop: bool = True) -> None:
-        self.info = SpriteRI()                   # 스프라이트 정보
+    @dispatch(Image, _isLoop = bool)
+    def __init__(self, _texture: Image, _isLoop: bool = True) -> None:
+        self.m_textures: list[Image]    = []                    # 해당 스프라이트의 텍스쳐들
+        self.m_currentTextureIndex: int = 0                     # 해당 스프라이트의 현재 텍스쳐 인덱스.
+        self.renderInfo = SpriteRI()                            # 스프라이트 정보
 
-        self.m_textures: list[Image]    = []        # 해당 스프라이트의 텍스쳐들
-        self.m_textureSize: int         = 0         # 해당 스프라이트의 텍스쳐 개수.
-        self.m_currentTextureIndex: int = 0         # 해당 스프라이트의 현재 텍스쳐.
+        self.isLoop: bool                   = _isLoop           # 해당 스프라이트의 루프 여부.
+        self.isEnd: bool                    = False             # 해당 스프라이트의 루프 종료 여부.
+        self.m_currentAnimateTime: float    = 0.1               # 해당 스프라이트의 애니메이션 시간.
+        self.m_animationDeltaTime: float    = 0.0               # 해당 스프라이트의 애니메이션 루프에 사용될 타이머.
 
-        self.isLoop: bool                 = _isLoop   # 해당 스프라이트의 루프 여부.
-        self.isEnd: bool                  = False     # 해당 스프라이트의 루프 종료 여부.
-        self.m_currentAnimateTime: float    = 0.1       # 해당 스프라이트의 애니메이션 시간.
-        self.m_animationDeltaTime: float    = 0.0       # 해당 스프라이트의 애니메이션 루프에 사용될 타이머.
+        self.m_textures.append(_texture)
+        self.m_textureSize: int         = len(self.m_textures)  # 해당 스프라이트의 텍스쳐 개수.
 
-        for file in Path(_filePath).iterdir():
-            if file.is_file():
-                self.m_textures = ResourceManager().GetSprite(_filePath)
+    @dispatch(object, _isLoop = bool)
+    def __init__(self, _textures: list[Image], _isLoop: bool = True) -> None:
+        self.m_textures: list[Image]        = _textures             # 해당 스프라이트의 텍스쳐들
+        self.m_textureSize: int             = len(_textures)  # 해당 스프라이트의 텍스쳐 개수.
+        self.m_currentTextureIndex: int     = 0                     # 해당 스프라이트의 현재 텍스쳐 인덱스.
+        self.renderInfo                     = SpriteRI()            # 스프라이트 정보
 
-        self.m_textureSize = len(self.m_textures)
+        self.isLoop: bool                   = _isLoop               # 해당 스프라이트의 루프 여부.
+        self.isEnd: bool                    = False                 # 해당 스프라이트의 루프 종료 여부.
+        self.m_currentAnimateTime: float    = 0.1                   # 해당 스프라이트의 애니메이션 시간.
+        self.m_animationDeltaTime: float    = 0.0                   # 해당 스프라이트의 애니메이션 루프에 사용될 타이머.
 
     # 스프라이트 애니메이션을 업데이트 합니다.
     def Update(self, _deltaTime: float):
@@ -75,20 +80,20 @@ class Sprite:
             return
 
         currentTexture: Image   = self.m_textures[self.m_currentTextureIndex]
-        x: float                = self.info.position.x
-        y: float                = self.info.position.y
-        scaleX: float           = self.info.scale.x
-        scaleY: float           = self.info.scale.y
+        x: float                = self.renderInfo.position.x
+        y: float                = self.renderInfo.position.y
+        scaleX: float           = self.renderInfo.scale.x
+        scaleY: float           = self.renderInfo.scale.y
         
         # 나중에 3차원 단위 벡터로 해결할 수 있을 듯.
-        rotate: float           = self.info.rotate
-        isFilp: str             = f"{None if not self.info.isFlipX else 'w'}{None if not self.info.isFlipY else 'h'}"
+        rotate: float           = self.renderInfo.rotate
+        isFilp: str             = f"{None if not self.renderInfo.isFlipX else 'w'}{None if not self.renderInfo.isFlipY else 'h'}"
         
-        if (self.info.color.r > 255 or self.info.color.g > 255 or
-            self.info.color.b > 255 or self.info.color.a > 255):
+        if (self.renderInfo.color.r > 255 or self.renderInfo.color.g > 255 or
+            self.renderInfo.color.b > 255 or self.renderInfo.color.a > 255):
             raise ValueError
 
         currentTexture.composite_draw(rotate, isFilp, x, y, scaleX, scaleY)
-        SDL_SetTextureColorMod(currentTexture.texture, int(self.info.color.r), int(self.info.color.g), int(self.info.color.b))
+        SDL_SetTextureColorMod(currentTexture.texture, int(self.renderInfo.color.r), int(self.renderInfo.color.g), int(self.renderInfo.color.b))
         SDL_SetTextureBlendMode(currentTexture.texture, SDL_BLENDMODE_BLEND)
-        SDL_SetTextureAlphaMod(currentTexture.texture, int(self.info.color.a))
+        SDL_SetTextureAlphaMod(currentTexture.texture, int(self.renderInfo.color.a))

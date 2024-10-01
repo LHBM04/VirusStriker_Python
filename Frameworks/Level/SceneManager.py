@@ -5,6 +5,7 @@ from typing import final
 from pico2d import *
 
 from Frameworks.Core.Sprite import Sprite
+from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
 from Frameworks.Core.Utilities.Singleton import Singleton
 from Frameworks.Core.Utilities.Mathematics.Color import Color
 from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
@@ -19,10 +20,10 @@ class SceneManager(metaclass = Singleton):
         self.m_nextLevel: Scene             = None  # 이동 중인 Level
         self.m_previousLevels: stack[Scene] = stack()  # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
 
-        self.m_loadingBackground: Sprite = Sprite("Resources\\Sprites\\Backgrounds\\Loading\\Logo")
-        self.m_loadingBackground.info.position  = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        self.m_loadingBackground.info.scale     = Vector2(get_canvas_width(), get_canvas_height())
-        self.m_loadingBackground.info.color     = Color(255, 255, 255, 0)
+        self.m_loadingBackground: Sprite        = Sprite(ResourceManager().LoadSprites("Resources\\Sprites\\Backgrounds\\Loading\\Logo"))
+        self.m_loadingBackground.renderInfo.position  = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.m_loadingBackground.renderInfo.scale     = Vector2(get_canvas_width(), get_canvas_height())
+        self.m_loadingBackground.renderInfo.color     = Color(255, 255, 255, 0)
 
         self.isResetDeltaTime: bool = False  # 델타 타임 리셋 여부.
     # -------------------[Level Attributes]------------------- #
@@ -66,18 +67,18 @@ class SceneManager(metaclass = Singleton):
         self.isResetDeltaTime = False
         if self.m_nextLevel is not None:
             self.m_loadingBackground.Update(_deltaTime)
-            self.m_loadingBackground.info.color.a += _deltaTime * 200.0
-            if self.m_loadingBackground.info.color.a >= Color.maxValue():
-                self.m_loadingBackground.info.color.a = Color.maxValue()
+            self.m_loadingBackground.renderInfo.color.a += _deltaTime * 200.0
+            if self.m_loadingBackground.renderInfo.color.a >= Color.maxValue():
+                self.m_loadingBackground.renderInfo.color.a = Color.maxValue()
 
                 self.m_currentLevel, self.m_nextLevel = self.m_nextLevel, None
                 self.m_currentLevel.OnEnter()
 
                 self.isResetDeltaTime = True
         else:
-            self.m_loadingBackground.info.color.a -= _deltaTime * 200.0
-            if self.m_loadingBackground.info.color.a <= Color.minValue():
-                self.m_loadingBackground.info.color.a = Color.minValue()
+            self.m_loadingBackground.renderInfo.color.a -= _deltaTime * 200.0
+            if self.m_loadingBackground.renderInfo.color.a <= Color.minValue():
+                self.m_loadingBackground.renderInfo.color.a = Color.minValue()
                 self.m_loadingBackground.isActive = False
 
         if self.m_currentLevel is not None:
