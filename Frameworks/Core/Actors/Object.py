@@ -8,7 +8,6 @@ from sdl2dll import *
 from Core.Sprite import *
 from Core.Actors.Object import *
 from Utilities.Vector2 import *
-from Utilities.Vector3 import *
 
 # AABB형 콜리전 바디
 class Collider2D:
@@ -85,19 +84,12 @@ class Object(ABC):
 
     def RenderDebug(self) -> None:
         for body in self.bodies:
-            if body.min != Vector2(0, 0) and body.max != Vector2(0, 0):
+            if body.min != Vector2.Zero() and body.max != Vector2.Zero():
                 # 바디의 위치 계산
                 minp: Vector2 = body.min + body.owner.position
                 maxp: Vector2 = body.max + body.owner.position
-    
-                width = int(maxp.x - minp.x)
-                height = int(maxp.y - minp.y)
-
-                minx = int(minp.x - (width / 2)) 
-                miny = int(minp.y + (height / 2))  
         
-                SDL_SetRenderDrawColor(pico2d.renderer, 255, 255, 0, 255) 
-                SDL_RenderDrawRect(pico2d.renderer, SDL_Rect(minx, miny, width, height))
+                draw_rectangle(minp.x, minp.y, maxp.x, maxp.y)
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final
