@@ -1,6 +1,6 @@
-from typing import final
+from dataclasses import dataclass
 
-@final
+@dataclass(frozen = True)
 class Color:
     @staticmethod
     def minValue() -> int:
