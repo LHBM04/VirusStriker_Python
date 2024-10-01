@@ -1,24 +1,20 @@
 from Core.System import *
-from Core.Actors.Player import *
+from Core.Actors.TestObject import *
 from Level.LevelManagement import *
 from Utilities.InputManagement import *
 
 class TestLevel_1(Level):
     def __init__(self, _levelName: str = "Test Level 1") -> None:
         super().__init__(_levelName)
-        # 테스트 백그라운드
         self.background: Object = Object();
-        
+        self.background.sprite = Sprite(self.background, "Resources\\Sprites\\Backgrounds\\Stages\\Stage 1")
         self.background.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
         self.background.scale = Vector2(1.0, 1.0)
-        
-        self.background.sprite = Sprite(self.background, "Resources\\Sprites\\Backgrounds\\Stages\\Stage 1")
-        self.background.sprite.info.layerLevel = Sprite.Info.ELevel.BACKGROUND
-        self.background.sprite.info.renderLayer = 0
-        
-        # 테스트 플레이어
-        self.testPlayer: Player = Player()
+        self.background.collider = None
+
+        self.testPlayer: Object = TestPlayer()
         self.testPlayer.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.testPlayer.scale = Vector2(100, 100)
 
     def OnEnter(self) -> None:
         self.objectManager.AddObject(self.background)

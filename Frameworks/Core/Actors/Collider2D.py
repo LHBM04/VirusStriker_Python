@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from Core.Object import *
+from Core.Actors.Object import *
 from Utilities.Vector2 import *
 from Utilities.Vector3 import *
 

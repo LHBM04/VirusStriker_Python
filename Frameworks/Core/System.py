@@ -22,8 +22,9 @@ class SystemManager(metaclass = Singleton):
         self.fpsRate            = 60
 
     def Inintialize(self) -> None:
-        open_canvas(self.windowWidth, self.windowHeight, False, False)
-    
+        open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
+        SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))
+
         displayMode                = SDL_DisplayMode()
         displayMode.format         = SDL_PIXELFORMAT_RGBA8888  # 픽셀 포맷
         displayMode.w              = self.windowWidth  # 너비
@@ -31,7 +32,6 @@ class SystemManager(metaclass = Singleton):
         displayMode.refresh_rate   = self.fpsRate  # 리프레시 레이트
 
         SDL_SetWindowDisplayMode(pico2d.window, displayMode)
-        SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))
         
         LevelManager().AddLevel("Test 1", TestLevel_1())
         LevelManager().AddLevel("Test 2", TestLevel_2())
@@ -53,7 +53,6 @@ class SystemManager(metaclass = Singleton):
         LevelManager().FixedUpdate(_fixedDeltaTime);
 
     def Render(self) -> None:
-        clear_canvas()
         LevelManager().RenderObject();
         LevelManager().RenderUI();
         update_canvas()  # 캔버스 업데이트
