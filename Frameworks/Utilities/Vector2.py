@@ -6,27 +6,13 @@ class Vector2:
     def __init__(self, _x: float = 0.0, _y: float = 0.0) -> None:
         self.x: float = _x
         self.y: float = _y
-    
-    # 방향 벡터 (클래스 메서드로 변경)
-    @staticmethod
-    def Zero() -> 'Vector2':
-        return Vector2(0.0, 0.0)
 
-    @staticmethod
-    def Up() -> 'Vector2':
-        return Vector2(0.0, 1.0)
-    
-    @staticmethod
-    def Down() -> 'Vector2':
-        return Vector2(0.0, -1.0)
-    
-    @staticmethod
-    def Left() -> 'Vector2':
-        return Vector2(-1.0, 0.0)
-    
-    @staticmethod
-    def Right() -> 'Vector2':
-        return Vector2(1.0, 0.0)
+    # 방향벡터
+    ZERO: Vector2 = Vector2(0.0, 0.0)
+    UP: Vector2 = Vector2(0.0, 1.0)
+    DOWN: Vector2 = Vector2(0.0, -1.0)
+    LEFT: Vector2 = Vector2(-1.0, 0.0)
+    RIGHT: Vector2 = Vector2(1.0, 0.0)
 
     # 연산자 오버로딩
     def __neg__(self) -> 'Vector2':
