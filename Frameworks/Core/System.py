@@ -5,7 +5,8 @@ from pico2d import *
 from Level.LevelManagement import *
 from Level.TestLevel import *
 from Level.TestLevel import *
-from Utilities.Singleton import *
+
+import Utilities.Singleton as Singleton
 from Utilities.InputManagement import *
 from Utilities.AudioManagement import *
 from Utilities.ResourceManagement import *
@@ -14,8 +15,8 @@ from Utilities.ResourceManagement import *
 class SystemManager(metaclass = Singleton):
     def __init__(self) -> None:
         self.windowName: str    = "Virus Striker"   # 프로그램(윈도우) 이름.
-        self.windowWidth: int   = 1280              # 가로 해상도 (테스트).
-        self.windowHeight: int  = 800               # 세로 해상도 (테스트).
+        self.windowWidth: int   = 1920              # 가로 해상도 (테스트).
+        self.windowHeight: int  = 1080              # 세로 해상도 (테스트).
         self.isRunning: bool    = True              # 프로그램 구동 여부.
         self.gameFPS: float     = 0.0               # 게임 초당 프레임.
 
@@ -32,6 +33,12 @@ class SystemManager(metaclass = Singleton):
         LevelManager().Update(_deltaTime);
         InputManager().Update()
         #AudioManager().Update()
+        
+        if InputManager().GetKeyDown(SDLK_SPACE):
+            SDL_SetWindowFullscreen(pico2d.window, SDL_WINDOW_FULLSCREEN_DESKTOP)
+
+        if InputManager().GetKeyDown(SDLK_ESCAPE):
+            self.isRunning = False
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         LevelManager().FixedUpdate(_fixedDeltaTime);

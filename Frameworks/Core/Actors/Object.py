@@ -1,93 +1,69 @@
 from abc import ABC, abstractmethod
-from typing import final
 from enum import Enum
+from typing import final
 
 from sdl2 import *
 from sdl2dll import *
 
 from Core.Sprite import *
-from Core.Actors.Object import *
+from Core.Actors.Collider2D import *
 from Utilities.Vector2 import *
-
-# AABB형 콜리전 바디
-class Collider2D:
-    # 충돌 검사를 위한 열거형.
-    # 필요한 게 있을 때마다 추가하여 쓰도록 하자
-    class ETag(Enum):
-        NONE    = 0 # 더미 태그(기본).
-        HARMFUL = 1 # 플레이어에게 해로운 오브젝트의 태그
-        LETHAL  = 2 # 플레이어에게 치명적인(즉사) 오브젝트의 태그
-
-    def __init__(self, _owner: 'Object',  _min: Vector2, _max: Vector2) -> None:
-        self.owner: 'Object' = _owner
-        self.min: Vector2    = _min
-        self.max: Vector2    = _max
-
-def IsCollision(_lhs: Collider2D, _rhs: Collider2D) -> bool:
-    # AABB 검사
-    min1: Vector2 = _lhs.owner.position + _lhs.min
-    max1: Vector2 = _lhs.owner.position + _lhs.max
-    min2: Vector2 = _rhs.owner.position + _rhs.min
-    max2: Vector2 = _rhs.owner.position + _rhs.max
-
-    # AABB 충돌 검사: 두 사각형이 겹치는 경우
-    if (min1.x < max2.x and max1.x > min2.x and 
-        min1.y < max2.y and max1.y > min2.y):
-        return True
-
-    return False
-
-# TODO: 트리거 판정도 만들기
-def IsTrigger(_lhs: Collider2D, _rhs: Collider2D) -> bool:
-    pass
+from Utilities.Vector3 import *
 
 # 게임 내 사용되는 모든 오브젝트의 베이스 클래스.
 class Object(ABC):
     def __init__(self) -> None:
-        self.position: Vector2 = Vector2()                                  # 오브젝트 위치.
+        self.position: Vector2  = Vector2()                         # 오브젝트 위치.
+        self.scale: Vector2     = Vector2()                         # 오브젝트 크기
+        self.rotate: float      = 0                                 # 오브젝트 회전 각도.
         
-        self.sprite: Sprite             = None                              # 오브젝트 스프라이트.
-        self.spriteInfo: SpriteInfo     = None                              # 오브젝트 스프라이트 정보.
-        self.renderLayer: int           = 0                                 # 오브젝트의 렌더링 순서.
+        self.sprite: Sprite     = None                              # 오브젝트 스프라이트.
         
         self.collisionLayer: Collider2D.ELayer  = Collider2D.ETag.NONE      # 오브젝트의 충돌 레이어.
         self.colisionTag: Collider2D.ETag       = Collider2D.ETag.NONE      # 오브젝트의 충돌 태그.
-        self.bodies: list[Collider2D]           = []                        # 오브젝트의 콜라이더 리스트.
+        self.collider: Collider2D               = None                     # 오브젝트의 콜라이더.
         
         self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
     # -----------[추상 메서드]-------------- #
 
-    @abstractmethod
     def Update(self, _deltaTime: float) -> None:
         pass
     
-    @abstractmethod
     def LateUpdate(self, _deltaTime: float) -> None:
         pass
     
-    @abstractmethod
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
     
-    @abstractmethod
-    def OnCollision(self, _collider: Collider2D) -> None:
+    def OnCollisionEnter(self, _collider: Collider2D) -> None:
         pass
     
-    @abstractmethod
-    def OnTrigger(self, _collider: Collider2D) -> None:
+    def OnCollisionExit(self, _collider: Collider2D) -> None:
         pass
 
-    @abstractmethod
+    def OnTriggerEnter(self, _collider: Collider2D) -> None:
+        pass
+
+    def OnTriggerStay(self, _collider: Collider2D) -> None:
+        pass
+
+    def OnTriggerExit(self, _collider: Collider2D) -> None:
+        pass
+
+    @final
     def Render(self) -> None:
-        pass
+        self.sprite.Render()
 
+    @final
     def RenderDebug(self) -> None:
-        for body in self.bodies:
-            if body.min != Vector2.Zero() and body.max != Vector2.Zero():
+        if self.collider == None:
+            return
+        
+        if self.collider.min != Vector2.Zero() and self.collider.max != Vector2.Zero():
                 # 바디의 위치 계산
-                minp: Vector2 = body.min + body.owner.position
-                maxp: Vector2 = body.max + body.owner.position
+                minp: Vector2 = self.collider.min + self.collider.owner.position
+                maxp: Vector2 = self.collider.max + self.collider.owner.position
         
                 draw_rectangle(minp.x, minp.y, maxp.x, maxp.y)
 
@@ -96,7 +72,7 @@ class Object(ABC):
 class ObjectManager:
     def __init__(self) -> None:
         self.m_addObjects: list[Object] = []  # 추가할 오브젝트 리스트.
-        self.m_objects: list[Object] = []     # 관리 중인 오브젝트 리스트.
+        self.m_objects: dict[Sprite.Info.ELevel:list[Object]] = {}  # 관리 중인 오브젝트 리스트.
 
     # 관리할 오브젝트를 추가합니다.
     def AddObject(self, _newObject: Object) -> None:
@@ -112,51 +88,67 @@ class ObjectManager:
 
     # 관리하는 오브젝트들의 Update()를 실행합니다.
     def Update(self, _deltaTime: float) -> None:
+        # 추가할 오브젝트가 있을 경우 추가합니다.
         if len(self.m_addObjects) > 0:
-            self.m_objects.extend(self.m_addObjects) 
-            self.m_addObjects.clear() 
+            for layerLevel in self.m_addObjects:
+                if layerLevel.sprite.info.layerLevel not in self.m_objects.keys():
+                    self.m_objects[layerLevel.sprite.info.layerLevel] = []
+
+                self.m_objects[layerLevel.sprite.info.layerLevel].append(layerLevel)
+
+            self.m_addObjects.clear()
 
         # 관리 중인 오브젝트가 있을 경우 업데이트 실행
         if len(self.m_objects) > 0:
-            self.m_objects.sort(key=lambda obj: obj.renderLayer)  
-            for obj in self.m_objects:
-                obj.Update(_deltaTime)
-                obj.sprite.Update(_deltaTime)
-
-            for obj in self.m_objects:
-                obj.LateUpdate(_deltaTime)
+            for layerLevel in self.m_objects:
+                for object in self.m_objects[layerLevel]:
+                    object.Update(_deltaTime)
+                    object.sprite.Update(_deltaTime)
+                        
+            for layerLevel in self.m_objects:
+                for object in self.m_objects[layerLevel]:
+                    object.LateUpdate(_deltaTime)
         
     # 관리하는 오브젝트들의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         if len(self.m_objects) > 0:
             toRemove: list[Object] = []  # 제거할 오브젝트 리스트
-            for obj in self.m_objects:
-                obj.FixedUpdate(_fixedDeltaTime) 
-                if obj.isDestroy: 
-                    toRemove.append(obj) 
+            for layerLevel in self.m_objects:
+                for object in self.m_objects[layerLevel]:
+                    object.FixedUpdate(_fixedDeltaTime) 
+                    if object.isDestroy: 
+                        toRemove.append(object) 
 
             if len(toRemove) > 0:
                 for obj in toRemove:
                     self.m_objects.remove(obj)
 
         if len(self.m_objects) > 0:
-            for iter in self.m_objects:
-                if iter.collisionLayer == 0:
-                    continue
-
-                for iter2 in self.m_objects:
-                    if iter == iter2 and iter.collisionLayer != iter2.collisionLayer:
+            for objects in self.m_objects.values():
+                for object in objects:
+                    if object.collisionLayer == 0:
                         continue
 
-                    for body in iter.bodies:
-                        for body2 in iter.bodies:
-                            if IsCollision(body, body2):
-                                iter.OnCollision(body2)
-                                iter2.OnCollision(body)
+                for object2 in objects:
+                    if object == object2:
+                        continue
+                    
+                    if (object == object2 and 
+                        object.collisionLayer != object2.collisionLayer):
+                        continue
+
+                    if (object.collider != None and 
+                        object2.collider != None):
+                            if object.collider.IsCollision(object2.collider) and object2.IsCollision(object.collider):
+                                if not object.collider.useTrigger:
+                                    object.OnCollision(object2.collider)
+                                if not object2.collider.useTrigger:
+                                    object2.OnCollision(object.collider)
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:
         if len(self.m_objects) > 0:
-            for obj in self.m_objects:
-                obj.Render()  # 각 오브젝트의 Render 호출
-                obj.RenderDebug()  # 각 오브젝트의 RenderDebug 호출
+            for layerLevel in sorted(self.m_objects.keys(), key=lambda x: x.value):
+                for object in self.m_objects[layerLevel]:
+                    object.Render()  # 각 오브젝트의 Render 호출
+                    object.RenderDebug()  # 각 오브젝트의 RenderDebug 호출

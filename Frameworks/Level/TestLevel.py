@@ -8,8 +8,18 @@ class TestLevel_1(Level):
         super().__init__(_levelName)
 
     def OnEnter(self) -> None:
-        self.m_objectManager.AddObject(TestPlayer())
-        self.m_objectManager.AddObject(TestObject2())
+        background: Object = Object();
+        background.sprite = Sprite(background, "Resources\\Sprites\\Backgrounds\\Stages\\Stage 1")
+        background.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        background.scale = Vector2(1.0, 1.0)
+        background.collider = None
+
+        testPlayer: Object = TestPlayer()
+        testPlayer.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        testPlayer.scale = Vector2(100, 100)
+
+        self.objectManager.AddObject(background)
+        self.objectManager.AddObject(testPlayer)
 
         print(f"Hello, This is {self.levelName}!")
 
@@ -24,14 +34,14 @@ class TestLevel_1(Level):
         pass
 
     def OnRender(self) -> None:
-        self.m_objectManager.Render()
+        self.objectManager.Render()
     
     def OnUIRender(self) -> None:
         pass
 
     def OnExit(self) -> None:
-        self.m_objectManager.ClearObjects()
-        self.m_uiManager.ClearObjects()
+        self.objectManager.ClearObjects()
+        self.uiManager.ClearObjects()
 
         print(f"Good bye, This is {self.levelName}!")
 
@@ -59,7 +69,7 @@ class TestLevel_2(Level):
         pass
 
     def OnExit(self) -> None:
-        self.m_objectManager.ClearObjects()
-        self.m_uiManager.ClearObjects()
+        self.objectManager.ClearObjects()
+        self.uiManager.ClearObjects()
 
         print(f"Good bye, This is {self.levelName}!")
