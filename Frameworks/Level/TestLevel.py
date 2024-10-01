@@ -26,9 +26,6 @@ class TestLevel_1(Level):
         if InputManager().GetKeyDown(SDLK_RETURN):
             LevelManager().LoadLevel("Test 2")
 
-        if InputManager().GetKeyDown(SDLK_ESCAPE):
-            SystemManager().isRunning = False
-
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
 
@@ -54,9 +51,6 @@ class TestLevel_2(Level):
     def OnUpdate(self, _deltaTime: float) -> None:
         if InputManager().GetKeyDown(SDLK_BACKSPACE):
             LevelManager().UnloadLevel()
-
-        if InputManager().GetKeyDown(SDLK_ESCAPE):
-            SystemManager().isRunning = False
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass

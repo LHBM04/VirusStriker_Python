@@ -23,7 +23,7 @@ class Object(ABC):
         self.colisionTag: Collider2D.ETag       = Collider2D.ETag.NONE      # 오브젝트의 충돌 태그.
         self.collider: Collider2D               = None                     # 오브젝트의 콜라이더.
         
-        self.isActive: bool = False
+        self.isActive: bool = True
         self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
     # -----------[추상 메서드]-------------- #
