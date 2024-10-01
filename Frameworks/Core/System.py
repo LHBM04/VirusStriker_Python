@@ -15,14 +15,23 @@ from Utilities.ResourceManagement import *
 class SystemManager(metaclass = Singleton):
     def __init__(self) -> None:
         self.windowName: str    = "Virus Striker"   # 프로그램(윈도우) 이름.
-        self.windowWidth: int   = 1920              # 가로 해상도 (테스트).
-        self.windowHeight: int  = 1080              # 세로 해상도 (테스트).
+        self.windowWidth: int   = 1280              # 가로 해상도 (테스트).
+        self.windowHeight: int  = 800               # 세로 해상도 (테스트).
         self.isRunning: bool    = True              # 프로그램 구동 여부.
         self.gameFPS: float     = 0.0               # 게임 초당 프레임.
+        self.fpsRate            = 60
 
     def Inintialize(self) -> None:
-        open_canvas(self.windowWidth, self.windowHeight) # 캔버스 열기
+        open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
         SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))
+
+        displayMode                = SDL_DisplayMode()
+        displayMode.format         = SDL_PIXELFORMAT_RGBA8888  # 픽셀 포맷
+        displayMode.w              = self.windowWidth  # 너비
+        displayMode.h              = self.windowHeight  # 높이
+        displayMode.refresh_rate   = self.fpsRate  # 리프레시 레이트
+
+        SDL_SetWindowDisplayMode(pico2d.window, displayMode)
         
         LevelManager().AddLevel("Test 1", TestLevel_1())
         LevelManager().AddLevel("Test 2", TestLevel_2())
@@ -44,7 +53,6 @@ class SystemManager(metaclass = Singleton):
         LevelManager().FixedUpdate(_fixedDeltaTime);
 
     def Render(self) -> None:
-        clear_canvas()
         LevelManager().RenderObject();
         LevelManager().RenderUI();
         update_canvas()  # 캔버스 업데이트

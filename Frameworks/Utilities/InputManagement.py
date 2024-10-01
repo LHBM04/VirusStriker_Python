@@ -32,6 +32,12 @@ class InputManager(metaclass = Singleton):
 
         return self.keyState[key]
     
+    def GetMouseState(self, key: int) -> EInputState:
+        if key not in self.buttonState:
+            return InputManager.EInputState.NONE
+
+        return self.buttonState[key]
+    
     def GetKey(self, _keyCode: int) -> bool:
         if _keyCode not in self.keyState:
             return False
@@ -49,6 +55,28 @@ class InputManager(metaclass = Singleton):
             return False
         
         return self.GetKeyState(_keyCode) == InputManager.EInputState.UP
+    
+    def GetButton(self, _buttonCode: int) -> bool:
+        if _buttonCode not in self.keyState:
+            return False
+        
+        return self.GetMouseState(_buttonCode) == InputManager.EInputState.DOWN
+    
+    def GetButtonDown(self, _keyCode: int) -> bool:
+        if _keyCode not in self.keyState:
+            return False
+        
+        return self.GetMouseState(_keyCode) == InputManager.EInputState.PRESS
+    
+    def GetButtonUp(self, _keyCode: int) -> bool:
+        if _keyCode not in self.keyState:
+            return False
+        
+        return self.GetMouseState(_keyCode) == InputManager.EInputState.UP
+    
+    def GetMousePosition(self) -> Vector2:
+        SDL_GetMouseState(self.mousePosition.x, self.mousePosition.y)
+        return self.mousePosition
 
     def Update(self) -> None:
         for key in list(self.keyState.keys()):

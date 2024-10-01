@@ -6,20 +6,19 @@ from Utilities.InputManagement import *
 class TestLevel_1(Level):
     def __init__(self, _levelName: str = "Test Level 1") -> None:
         super().__init__(_levelName)
+        self.background: Object = Object();
+        self.background.sprite = Sprite(self.background, "Resources\\Sprites\\Backgrounds\\Stages\\Stage 1")
+        self.background.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.background.scale = Vector2(1.0, 1.0)
+        self.background.collider = None
+
+        self.testPlayer: Object = TestPlayer()
+        self.testPlayer.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.testPlayer.scale = Vector2(100, 100)
 
     def OnEnter(self) -> None:
-        background: Object = Object();
-        background.sprite = Sprite(background, "Resources\\Sprites\\Backgrounds\\Stages\\Stage 1")
-        background.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        background.scale = Vector2(1.0, 1.0)
-        background.collider = None
-
-        testPlayer: Object = TestPlayer()
-        testPlayer.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        testPlayer.scale = Vector2(100, 100)
-
-        self.objectManager.AddObject(background)
-        self.objectManager.AddObject(testPlayer)
+        self.objectManager.AddObject(self.background)
+        self.objectManager.AddObject(self.testPlayer)
 
         print(f"Hello, This is {self.levelName}!")
 

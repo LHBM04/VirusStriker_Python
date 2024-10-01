@@ -79,13 +79,14 @@ class Sprite:
         rotate: float           = self.owner.rotate
         isFilp: str             = f"{None if not self.info.isFlip[0] else 'w'}{None if not self.info.isFlip[1] else 'h'}"
         
-        if (self.info.color.r < 255 or self.info.color.g < 255 or
-            self.info.color.b < 255 or self.info.color.a < 255):
+        if (self.info.color.r > 255 or self.info.color.g > 255 or
+            self.info.color.b > 255 or self.info.color.a > 255):
             assert("[Oops!] 컬러값이 이상해요")
             return
 
         currentTexture.composite_draw(rotate, isFilp, x, y, scaleX, scaleY)
-        SDL_SetTextureColorMod(currentTexture.texture, self.info.color.r, self.info.color.g, self.info.color.b)
+        SDL_SetTextureColorMod(currentTexture.texture, int(self.info.color.r), int(self.info.color.g), int(self.info.color.b))
+        SDL_SetTextureBlendMode(currentTexture.texture, SDL_BLENDMODE_BLEND)
         SDL_SetTextureAlphaMod(currentTexture.texture, int(self.info.color.a))
         
 from Core.Actors.Object import *

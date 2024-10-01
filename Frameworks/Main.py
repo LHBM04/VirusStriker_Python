@@ -55,7 +55,8 @@ if __name__ == "__main__":
     fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
 
     SystemManager().Inintialize()
-    while SystemManager().isRunning:
+    while SystemManager().isRunning: 
+        clear_canvas()
         SendEvent(ReceiveEvent())
 
         if LevelManager().isResetDeltaTime:

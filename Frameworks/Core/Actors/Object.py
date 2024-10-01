@@ -23,6 +23,7 @@ class Object(ABC):
         self.colisionTag: Collider2D.ETag       = Collider2D.ETag.NONE      # 오브젝트의 충돌 태그.
         self.collider: Collider2D               = None                     # 오브젝트의 콜라이더.
         
+        self.isActive: bool = False
         self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
     # -----------[추상 메서드]-------------- #
@@ -102,12 +103,14 @@ class ObjectManager:
         if len(self.m_objects) > 0:
             for layerLevel in self.m_objects:
                 for object in self.m_objects[layerLevel]:
-                    object.Update(_deltaTime)
-                    object.sprite.Update(_deltaTime)
+                    if object.isActive:
+                        object.Update(_deltaTime)
+                        object.sprite.Update(_deltaTime)
                         
             for layerLevel in self.m_objects:
                 for object in self.m_objects[layerLevel]:
-                    object.LateUpdate(_deltaTime)
+                    if object.isActive:
+                        object.LateUpdate(_deltaTime)
         
     # 관리하는 오브젝트들의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
@@ -116,7 +119,7 @@ class ObjectManager:
             for layerLevel in self.m_objects:
                 for object in self.m_objects[layerLevel]:
                     object.FixedUpdate(_fixedDeltaTime) 
-                    if object.isDestroy: 
+                    if object.isActive and object.isDestroy: 
                         toRemove.append(object) 
 
             if len(toRemove) > 0:
@@ -150,5 +153,6 @@ class ObjectManager:
         if len(self.m_objects) > 0:
             for layerLevel in sorted(self.m_objects.keys(), key=lambda x: x.value):
                 for object in self.m_objects[layerLevel]:
-                    object.Render()  # 각 오브젝트의 Render 호출
-                    object.RenderDebug()  # 각 오브젝트의 RenderDebug 호출
+                    if object.isActive:
+                        object.Render()  # 각 오브젝트의 Render 호출
+                        object.RenderDebug()  # 각 오브젝트의 RenderDebug 호출
