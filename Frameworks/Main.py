@@ -1,12 +1,11 @@
 import time as Time
-from msvcrt import *
+
 from pico2d import *
 
-from Core.System import *
-from Level.LevelManagement import *
-from Utilities.AudioManagement import *
-from Utilities.ResourceManagement import *
-from Utilities.InputManagement import *
+from Frameworks.Core.System import SystemManager
+from Frameworks.Core.Utilities.InputManagement.InputManager import *
+from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
+from Frameworks.Level.SceneManager import SceneManager
 
 def ReceiveEvent() -> list[Event]:
     gotEvent: SDL_Event = SDL_Event()
@@ -34,16 +33,17 @@ def SendEvent(_events: list[Event]) -> None:
         elif event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:
             if event.type == SDL_KEYDOWN:
                 InputManager().isPressKey = True
-                InputManager().SetKeyState(event.key, InputManager.EInputState.DOWN)
+                InputManager().SetKeyState(event.key, EInputState.DOWN)
             elif event.type == SDL_KEYUP:
                 InputManager().isPressKey = False
-                InputManager().SetKeyState(event.key, InputManager.EInputState.UP)
+                InputManager().SetKeyState(event.key, EInputState.UP)
         elif event.type == SDL_MOUSEMOTION:
                 InputManager().mousePosition = Vector2(event.x, event.y)
         elif event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:      
                 InputManager().isPressKey = True
-                InputManager().SetMouseState(event.key, InputManager.EInputState.DOWN)
+                InputManager().SetMouseState(event.key, EInputState.DOWN)
                 InputManager().mousePosition = Vector2(event.x, event.y)
+                print(event.x, event.y)
 
 if __name__ == "__main__":
     previousTime: float = Time.time()   # 이전 시간
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         clear_canvas()
         SendEvent(ReceiveEvent())
 
-        if LevelManager().isResetDeltaTime:
+        if SceneManager().isResetDeltaTime:
             previousTime = Time.time()
 
         # Delta Time 계산

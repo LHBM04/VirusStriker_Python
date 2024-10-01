@@ -2,14 +2,12 @@ from typing import final
 
 from pico2d import *
 
-from Level.LevelManagement import *
-from Level.TestLevel import *
-from Level.TestLevel import *
+from Frameworks.Core.Utilities.Singleton import Singleton
+from Frameworks.Core.Utilities.InputManagement.InputManager import InputManager
+from Frameworks.Level.SceneManager import SceneManager
+from Frameworks.Level.Stages.OpeningScene import OpeningScene
+from Frameworks.Level.Stages.TitleScene import TitleScene
 
-import Utilities.Singleton as Singleton
-from Utilities.InputManagement import *
-from Utilities.AudioManagement import *
-from Utilities.ResourceManagement import *
 
 @final
 class SystemManager(metaclass = Singleton):
@@ -32,17 +30,16 @@ class SystemManager(metaclass = Singleton):
         displayMode.refresh_rate   = self.fpsRate  # 리프레시 레이트
 
         SDL_SetWindowDisplayMode(pico2d.window, displayMode)
-        
-        LevelManager().AddLevel("Test 1", TestLevel_1())
-        LevelManager().AddLevel("Test 2", TestLevel_2())
-    
-        LevelManager().LoadLevel("Test 1")
+
+        SceneManager().AddLevel("Opening Scene", OpeningScene())
+        SceneManager().AddLevel("Title Scene", TitleScene())
+        SceneManager().LoadLevel("Opening Scene")
 
     def Update(self, _deltaTime: float) -> None:
-        LevelManager().Update(_deltaTime);
+        SceneManager().Update(_deltaTime);
         InputManager().Update()
         #AudioManager().Update()
-        
+
         if InputManager().GetKeyDown(SDLK_SPACE):
             SDL_SetWindowFullscreen(pico2d.window, SDL_WINDOW_FULLSCREEN_DESKTOP)
 
@@ -50,11 +47,11 @@ class SystemManager(metaclass = Singleton):
             self.isRunning = False
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        LevelManager().FixedUpdate(_fixedDeltaTime);
+        SceneManager().FixedUpdate(_fixedDeltaTime)
 
     def Render(self) -> None:
-        LevelManager().RenderObject();
-        LevelManager().RenderUI();
+        SceneManager().RenderObject()
+        SceneManager().RenderUI()
         update_canvas()  # 캔버스 업데이트
     
     # 프로그램 종료 시 캔버스를 정리합니다.
