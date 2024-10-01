@@ -46,17 +46,18 @@ def SendEvent(_events: list[Event]) -> None:
                 InputManager().mousePosition = Vector2(event.x, event.y)
 
 if __name__ == "__main__":
-    previousTime: float = Time.time()   # 이전 시간
-    currentTime: float  = 0.0           # 현재 시간
+    previousTime: float = Time.time()
+    currentTime: float  = 0.0
 
     fixedDeltaTime: float = 0.0
-    fixedUpdateTime: float = 1.0 / 5.0
+    fixedUpdateTime: float = 1.0 / 5.0  
 
-    fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
+    fpsDeltaTime: float = 0.0
 
-    SystemManager().Inintialize()
+    # 게임 시스템 초기화
+    SystemManager().Inintialize() 
+
     while SystemManager().isRunning: 
-        clear_canvas()
         SendEvent(ReceiveEvent())
 
         if LevelManager().isResetDeltaTime:
@@ -75,6 +76,8 @@ if __name__ == "__main__":
 
         while fixedDeltaTime > fixedUpdateTime:
             fixedDeltaTime -= fixedUpdateTime
+            
+            # Fixed Update
             SystemManager().FixedUpdate(fixedUpdateTime)
 
         # 초당 프레임 계산
@@ -85,12 +88,11 @@ if __name__ == "__main__":
             SystemManager().gameFPS = 0
             fpsDeltaTime = 0.0
 
+        # Update & Render
         SystemManager().Update(deltaTime)
         SystemManager().Render()
 
-        # [디버그 코드]
-        #print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().gameFPS}")
-        
-        previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
+        # 현재 시간으로 prevTime 업데이트
+        previousTime = currentTime  
         
     SystemManager().CleanUp()

@@ -19,15 +19,14 @@ class Object(ABC):
         
         self.sprite: Sprite     = None                              # 오브젝트 스프라이트.
         
-        self.collisionLayer: Collider2D.ELayer  = Collider2D.ETag.NONE      # 오브젝트의 충돌 레이어.
-        self.colisionTag: Collider2D.ETag       = Collider2D.ETag.NONE      # 오브젝트의 충돌 태그.
-        self.collider: Collider2D               = None                     # 오브젝트의 콜라이더.
-        
         self.isActive: bool = True
         self.isDestroy: bool = False                                        # 오브젝트 파괴 여부.
 
     # -----------[추상 메서드]-------------- #
 
+    def Start(self):
+        pass
+    
     def Update(self, _deltaTime: float) -> None:
         pass
     
@@ -36,37 +35,13 @@ class Object(ABC):
     
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
-    
-    def OnCollisionEnter(self, _collider: Collider2D) -> None:
-        pass
-    
-    def OnCollisionExit(self, _collider: Collider2D) -> None:
-        pass
 
-    def OnTriggerEnter(self, _collider: Collider2D) -> None:
-        pass
-
-    def OnTriggerStay(self, _collider: Collider2D) -> None:
-        pass
-
-    def OnTriggerExit(self, _collider: Collider2D) -> None:
+    def Destroy(self) -> None:
         pass
 
     @final
     def Render(self) -> None:
         self.sprite.Render()
-
-    @final
-    def RenderDebug(self) -> None:
-        if self.collider == None:
-            return
-        
-        if self.collider.min != Vector2.Zero() and self.collider.max != Vector2.Zero():
-                # 바디의 위치 계산
-                minp: Vector2 = self.collider.min + self.collider.owner.position
-                maxp: Vector2 = self.collider.max + self.collider.owner.position
-        
-                draw_rectangle(minp.x, minp.y, maxp.x, maxp.y)
 
 # 오브젝트의 상태를 감시하고, 관리하는 매니저.
 @ final
@@ -91,24 +66,25 @@ class ObjectManager:
     def Update(self, _deltaTime: float) -> None:
         # 추가할 오브젝트가 있을 경우 추가합니다.
         if len(self.m_addObjects) > 0:
-            for layerLevel in self.m_addObjects:
-                if layerLevel.sprite.info.layerLevel not in self.m_objects.keys():
-                    self.m_objects[layerLevel.sprite.info.layerLevel] = []
-
-                self.m_objects[layerLevel.sprite.info.layerLevel].append(layerLevel)
+            for object in self.m_addObjects:
+                if object.sprite.info.layerLevel not in self.m_objects.keys():
+                    self.m_objects[object.sprite.info.layerLevel] = []
+                
+                self.m_objects[object.sprite.info.layerLevel].append(object)
+                object.Start()
 
             self.m_addObjects.clear()
 
         # 관리 중인 오브젝트가 있을 경우 업데이트 실행
         if len(self.m_objects) > 0:
-            for layerLevel in self.m_objects:
-                for object in self.m_objects[layerLevel]:
+            for object in self.m_objects:
+                for object in self.m_objects[object]:
                     if object.isActive:
                         object.Update(_deltaTime)
                         object.sprite.Update(_deltaTime)
                         
-            for layerLevel in self.m_objects:
-                for object in self.m_objects[layerLevel]:
+            for object in self.m_objects:
+                for object in self.m_objects[object]:
                     if object.isActive:
                         object.LateUpdate(_deltaTime)
         
@@ -123,8 +99,9 @@ class ObjectManager:
                         toRemove.append(object) 
 
             if len(toRemove) > 0:
-                for obj in toRemove:
-                    self.m_objects.remove(obj)
+                for object in toRemove:
+                    object.Destroy()
+                    self.m_objects.remove(object)
 
         if len(self.m_objects) > 0:
             for objects in self.m_objects.values():
@@ -155,4 +132,3 @@ class ObjectManager:
                 for object in self.m_objects[layerLevel]:
                     if object.isActive:
                         object.Render()  # 각 오브젝트의 Render 호출
-                        object.RenderDebug()  # 각 오브젝트의 RenderDebug 호출

@@ -89,4 +89,4 @@ class Sprite:
         SDL_SetTextureBlendMode(currentTexture.texture, SDL_BLENDMODE_BLEND)
         SDL_SetTextureAlphaMod(currentTexture.texture, int(self.info.color.a))
         
-from Core.Actors.Object import *
+from Core.Object import *

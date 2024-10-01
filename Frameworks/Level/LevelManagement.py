@@ -3,7 +3,7 @@ from typing import final
 from collections import deque
 
 from Core.System import *
-from Core.Actors.Object import *
+from Core.Object import *
 from Utilities.Singleton import *
 from Utilities.Vector2 import *
 
