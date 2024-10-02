@@ -1,11 +1,11 @@
 import numpy as np
 from pico2d import *
 
-from Frameworks.Core.Utilities.Mathematics import Vector2
+from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
 
 class Camera:
     def __init__(self):
-        self.position: Vector2  = Vector2()
+        self.position: Vector2  = Vector2(0.0, 0.0)
         self.rotation: float    = 0.0
         self.scale: float       = 5.0
 
@@ -36,3 +36,7 @@ class Camera:
     def RescaleScreen(self, _worldSize: Vector2):
         hh = get_canvas_height() / 2
         return _worldSize * (hh / self.scale)
+
+class CameraController:
+    def __init__(self):
+        pass

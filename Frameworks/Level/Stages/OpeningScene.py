@@ -10,7 +10,7 @@ from Frameworks.Core.Utilities.Mathematics.Color import Color
 from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
 from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
 from Frameworks.Level.Scene import Scene
-from Frameworks.Level.SceneManager import SceneManager
+from Frameworks.Level.Scene import SceneManager
 
 
 @final
@@ -19,7 +19,7 @@ class OpeningScene(Scene):
         super().__init__()
 
     def OnEnter(self) -> None:
-        pass
+        print("Hello!")
 
     def OnUpdate(self, _deltaTime: float) -> None:
         pass

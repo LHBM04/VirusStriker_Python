@@ -1,3 +1,4 @@
+from importlib.resources import Resource
 from typing import final
 
 from pico2d import *
@@ -5,7 +6,7 @@ from pico2d import *
 from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
 from Frameworks.Core.Utilities.Singleton import Singleton
 from Frameworks.Core.Utilities.InputManagement.InputManager import InputManager
-from Frameworks.Level.SceneManager import SceneManager
+from Frameworks.Level.Scene import SceneManager
 from Frameworks.Level.Stages.OpeningScene import OpeningScene
 from Frameworks.Level.Stages.TitleScene import TitleScene
 
@@ -18,27 +19,21 @@ class SystemManager(metaclass = Singleton):
         self.windowHeight: int  = 800               # 세로 해상도 (테스트).
         self.isRunning: bool    = True              # 프로그램 구동 여부.
         self.gameFPS: float     = 0.0               # 게임 초당 프레임.
+        self.m_fpsDeltaTime: float = 0.0
         self.fpsRate            = 60
 
     def Inintialize(self) -> None:
         open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
         SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))      # 윈도우 이름 변경
 
-        displayMode                = SDL_DisplayMode()
-        displayMode.format         = SDL_PIXELFORMAT_RGBA8888  # 픽셀 포맷
-        displayMode.w              = self.windowWidth  # 너비
-        displayMode.h              = self.windowHeight  # 높이
-        displayMode.refresh_rate   = self.fpsRate  # 리프레시 레이트
+        for path, file in ResourceManager().LoadImage():
+            print('Load: image - ' + path)
 
-        initBackground: Image = load_image("Resources\\Sprites\\Backgrounds\\Sprite_Background_Initialize.png")
-        initBackground.draw(get_canvas_width() / 2,
-                            get_canvas_height() / 2,
-                            get_canvas_width(),
-                            get_canvas_height())
+        for path, file in ResourceManager().LoadBGM():
+            print('Load: BGM - ' + path)
 
-        update_canvas()
-
-        yield ResourceManager().InitializeResource()
+        for path, file in ResourceManager().LoadSFX():
+            print('Load: SFX - ' + path)
 
         SceneManager().AddLevel("Opening Scene", OpeningScene())
         SceneManager().AddLevel("Title Scene", TitleScene())

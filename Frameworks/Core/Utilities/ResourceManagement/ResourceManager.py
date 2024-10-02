@@ -1,73 +1,49 @@
 import os.path
-from argparse import ArgumentError
 from typing import final
-from pathlib import Path
 
 from pico2d import *
 
 from Frameworks.Core.Utilities.Singleton import Singleton
 
+def LoadAll(_directoryPath: str, _suffix: str, _callback: callable) -> (str, str):
+    for root, _, files in os.walk(_directoryPath):
+        for file in files:
+            if not file.endswith(_suffix):
+                continue
+            filePath = os.path.join(root, file)
+            _callback(filePath)
+            yield filePath, file
+
 @final
 class ResourceManager(metaclass = Singleton):
     def __init__(self):
-        self.imageBank: dict[str : list[Image]]   = {}
+        self.imageBank: dict[str : Image]   = {}
         self.bgmBank: dict[str : Wav]       = {}
         self.sfxBank: dict[str: Wav]        = {}
 
-    def InitializeResource(self) -> None:
-        yield self.LoadAllImage("Resources\\Sprites")
-        yield self.LoadAllAudio("Resources\\Audio\\BGM")
-        yield self.LoadAllAudio("Resources\\Audio\\BGM")
-        yield None
+    def AddImage(self, _filePath) -> None:
+        self.imageBank[_filePath] = load_image(_filePath)
 
-    def LoadImage(self, _filePath: str) -> (str, Image):
-        filePath: Path = Path(_filePath)
-        if not filePath.exists() or not filePath.is_file():
-            raise ArgumentError(f"[Oops!] 파일 경로가 잘못 되었습니다. 경로는 \"{str(filePath)}\"였습니다.")
+    def AddBGM(self, _filePath) -> None:
+        self.bgmBank[_filePath] = load_music(_filePath)
 
-        yield load_image(filePath)
+    def AddSFX(self, _filePath) -> None:
+        self.sfxBank[_filePath] = load_wav(_filePath)
 
-    def LoadAllImage(self, _directoryPath: str) -> list[Image]:
-        directoryPath: Path = Path(_directoryPath)
-        if not directoryPath.exists() or not directoryPath.is_dir():
-            raise ArgumentError(f"[Oops!] 폴더 경로가 잘못 되었습니다. \"{str(directoryPath)}\"였습니다.")
+    def LoadImage(self) -> (str, str):
+        return LoadAll("Resources\\Sprites", '.png', self.AddImage)
 
-        self.imageBank[str(directoryPath)] = []
-        for filePath in directoryPath.iterdir():
-            self.imageBank[str(filePath)].append(self.LoadImage(filePath))
+    def LoadBGM(self) -> (str, str):
+        return LoadAll("Resources\\Audio\\BGM", '.wav', self.AddBGM)
 
-    def GetImage(self, _key: str) -> Image:
-        if _key not in self.imageBank:
-            raise KeyError(f"[Oops!] 키값이 잘못 되었습니다. 키는 \"{str(_key)}\"였습니다.")
+    def LoadSFX(self) -> (str, str):
+        return LoadAll("Resources\\Audio\\SFX", '.wav', self.AddSFX)
 
-        return self.imageBank[_key]
+    def GetImage(self, _filePath) -> Image:
+        return self.imageBank[_filePath]
 
-    def LoadAudio(self, _filePath: str) -> Wav:
-        filePath: Path = Path(_filePath)
-        if not filePath.exists() or not filePath.is_file():
-            raise ArgumentError(f"[Oops!] 파일 경로가 잘못 되었습니다. 경로는 \"{str(filePath)}\"였습니다.")
+    def GetBGM(self, _filePath) -> Music:
+        return self.bgmBank[_filePath]
 
-        yield load_wav(filePath)
-
-    def LoadAllAudio(self, _directoryPath: str) -> list[Wav]:
-        directoryPath: Path = Path(_directoryPath)
-        if not directoryPath.exists() or not directoryPath.is_dir():
-            raise ArgumentError(f"[Oops!] 폴더 경로가 잘못 되었습니다. \"{str(directoryPath)}\"였습니다.")
-
-        audioBank: list[Wav] = []
-        for filePath in directoryPath.iterdir():
-            audioBank[str(filePath)] = self.LoadAudio(filePath)
-
-        yield audioBank
-
-    def GetBGM(self, _key) -> Wav:
-        if _key not in self.bgmBank:
-            raise KeyError(f"[Oops!] 키값이 잘못 되었습니다. 키는 \"{_key}\"였습니다.")
-
-        return self.bgmBank[_key]
-
-    def GetSFX(self, _key: str) -> Wav:
-        if _key not in self.sfxBank:
-            raise KeyError(f"[Oops!] 키값이 잘못 되었습니다. 키는 \"{_key}\"였습니다.")
-
-        return self.sfxBank[_key]
+    def GetSFX(self, _filePath: str) -> Wav:
+        return self.sfxBank[_filePath]

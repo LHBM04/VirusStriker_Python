@@ -3,9 +3,10 @@ import time as Time
 from pico2d import *
 
 from Frameworks.Core.System import SystemManager
-from Frameworks.Core.Utilities.InputManagement.InputManager import *
+from Frameworks.Core.Utilities.InputManagement.InputManager import EInputState, InputManager
+from Frameworks.Core.Utilities.ResourceManagement import ResourceManager
 from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
-from Frameworks.Level.SceneManager import SceneManager
+from Frameworks.Level.Scene import Scene, SceneManager
 
 def ReceiveEvent() -> list[Event]:
     gotEvent: SDL_Event = SDL_Event()
@@ -54,6 +55,7 @@ if __name__ == "__main__":
     fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
 
     SystemManager().Inintialize()
+
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
 
@@ -67,7 +69,7 @@ if __name__ == "__main__":
         # Fixed Delta Time 계산
         fixedUpdateTime = 1.0 / 50.0
         fixedDeltaTime = 0.0
-        fixedDeltaTime += deltaTime;
+        fixedDeltaTime += deltaTime
         if fixedDeltaTime >= 2.0:
             fixedDeltaTime = 2.0
 
