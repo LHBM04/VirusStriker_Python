@@ -1,7 +1,5 @@
 from argparse import ArgumentError
 from enum import Enum
-from multipledispatch import dispatch
-from typing import List
 
 from pico2d import *
 
@@ -41,7 +39,7 @@ class Sprite:
 
         self.m_textures: list[Image]    = []                    # 해당 스프라이트의 텍스쳐들
         self.m_currentTextureIndex: int = 0                     # 해당 스프라이트의 현재 텍스쳐 인덱스.
-        self.renderInfo = SpriteRI()                            # 스프라이트 정보
+        self.renderInfo                 = SpriteRI()            # 스프라이트 정보
 
         self.isLoop: bool                   = _isLoop           # 해당 스프라이트의 루프 여부.
         self.isEnd: bool                    = False             # 해당 스프라이트의 루프 종료 여부.

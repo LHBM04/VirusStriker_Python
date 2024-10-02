@@ -18,14 +18,14 @@ class TitleScene(Scene):
         self.m_titleBackground.renderInfo.layerLevel    = ELayerLevel.BACKGROUND
         self.m_titleBackground.renderInfo.renderLayer   = 0
 
-        self.m_titleLogo: Sprite                = Sprite(ResourceManager().LoadSprite("Resources\\Sprites\\GUI\\Logo"))
+        self.m_titleLogo: Sprite                = Sprite(ResourceManager().LoadSprites("Resources\\Sprites\\GUI\\Logo"))
         self.m_titleLogo.renderInfo.position    = Vector2(390.0, 525.0)
         self.m_titleLogo.renderInfo.scale       = Vector2(578 / 1.25, 504 / 1.25)
         self.m_titleLogo.renderInfo.color       = Color(255, 255, 255, 255)
         self.m_titleLogo.renderInfo.layerLevel  = ELayerLevel.UI
         self.m_titleLogo.renderInfo.renderLayer = 0
 
-        self.m_actionCue: Sprite                = Sprite(ResourceManager().LoadSprite("Resources\\Sprites\\GUI\\Press Any Key"))
+        self.m_actionCue: Sprite                = Sprite(ResourceManager().LoadSprites("Resources\\Sprites\\GUI\\Press Any Key"))
         self.m_actionCue.renderInfo.position    = Vector2(375.0, 180.0)
         self.m_actionCue.renderInfo.scale       = Vector2(600 / 1.5, 90 / 1.5)
         self.m_actionCue.renderInfo.color       = Color(255, 255, 255, 255)
