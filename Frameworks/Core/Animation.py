@@ -1,7 +1,4 @@
 from argparse import ArgumentError
-from socket import send_fds
-from tkinter import Image
-
 from multipledispatch import dispatch
 
 from Frameworks.Core.Sprite import Sprite
