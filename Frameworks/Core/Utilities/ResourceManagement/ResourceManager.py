@@ -27,16 +27,17 @@ class ResourceManager(metaclass = Singleton):
         filePath: Path = Path(_path)
         if filePath.is_file():
             print(filePath.name)
-            return load_image(filePath)
-        return None
+            return load_image(filePath)  # 파일을 불러오는 함수
+        return None  # 파일이 없으면 None 반환
 
     def LoadSprites(self, _path: str) -> list[Image]:
         dirPath: Path = Path(_path)
         if dirPath.exists() and dirPath.is_dir():
             sprites: list[Image] = []
             for filePath in dirPath.iterdir():
-                if (filePath.is_file() and
-                    filePath.suffix == ".png"):
-                    sprites.append(self.LoadSprite(filePath))
+                if (filePath.is_file() and filePath.suffix == ".png"):
+                    sprite = self.LoadSprite(filePath)
+                    if sprite is not None:
+                        sprites.append(sprite)
             return sprites
-        return None
+        return []

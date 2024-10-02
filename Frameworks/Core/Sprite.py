@@ -1,3 +1,4 @@
+from argparse import ArgumentError
 from enum import Enum
 from multipledispatch import dispatch
 from typing import List
@@ -35,6 +36,9 @@ class SpriteRI:
 class Sprite:
     @dispatch(Image, _isLoop = bool)
     def __init__(self, _texture: Image, _isLoop: bool = True) -> None:
+        if _texture is None:
+            raise ArgumentError
+
         self.m_textures: list[Image]    = []                    # 해당 스프라이트의 텍스쳐들
         self.m_currentTextureIndex: int = 0                     # 해당 스프라이트의 현재 텍스쳐 인덱스.
         self.renderInfo = SpriteRI()                            # 스프라이트 정보
@@ -47,10 +51,13 @@ class Sprite:
         self.m_textures.append(_texture)
         self.m_textureSize: int         = len(self.m_textures)  # 해당 스프라이트의 텍스쳐 개수.
 
-    @dispatch(object, _isLoop = bool)
+    @dispatch(list, _isLoop = bool)
     def __init__(self, _textures: list[Image], _isLoop: bool = True) -> None:
+        if _textures is None or len(_textures) <= 0:
+            raise ArgumentError
+
         self.m_textures: list[Image]        = _textures             # 해당 스프라이트의 텍스쳐들
-        self.m_textureSize: int             = len(_textures)  # 해당 스프라이트의 텍스쳐 개수.
+        self.m_textureSize: int             = len(_textures)        # 해당 스프라이트의 텍스쳐 개수.
         self.m_currentTextureIndex: int     = 0                     # 해당 스프라이트의 현재 텍스쳐 인덱스.
         self.renderInfo                     = SpriteRI()            # 스프라이트 정보
 

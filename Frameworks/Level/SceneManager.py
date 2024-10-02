@@ -20,10 +20,10 @@ class SceneManager(metaclass = Singleton):
         self.m_nextLevel: Scene             = None  # 이동 중인 Level
         self.m_previousLevels: stack[Scene] = stack()  # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
 
-        self.m_loadingBackground: Sprite        = Sprite(ResourceManager().LoadSprites("Resources\\Sprites\\Backgrounds\\Loading\\Logo"))
-        self.m_loadingBackground.renderInfo.position  = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        self.m_loadingBackground.renderInfo.scale     = Vector2(get_canvas_width(), get_canvas_height())
-        self.m_loadingBackground.renderInfo.color     = Color(255, 255, 255, 0)
+        self.m_loadingBackground: Sprite                = Sprite(ResourceManager().LoadSprites("Resources\\Sprites\\Backgrounds\\Loading\\Logo"))
+        self.m_loadingBackground.renderInfo.position    = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
+        self.m_loadingBackground.renderInfo.scale       = Vector2(get_canvas_width(), get_canvas_height())
+        self.m_loadingBackground.renderInfo.color       = Color(255, 255, 255, 0)
 
         self.isResetDeltaTime: bool = False  # 델타 타임 리셋 여부.
     # -------------------[Level Attributes]------------------- #
