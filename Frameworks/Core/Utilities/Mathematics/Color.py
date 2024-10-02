@@ -3,22 +3,22 @@ from typing import final
 @final
 class Color:
     @staticmethod
-    def minValue() -> int:
+    def MinValue() -> int:
         return 0
     
     @staticmethod
-    def maxValue() -> int:
+    def MaxValue() -> int:
         return 255
     
-    def __init__(self, 
-                 _r: int = maxValue(), 
-                 _g: int = maxValue(), 
-                 _b: int = maxValue(), 
-                 _a: int = maxValue()) -> None:
-        self.r: int = max(self.minValue(), min(_r, self.maxValue()))
-        self.g: int = max(self.minValue(), min(_g, self.maxValue()))
-        self.b: int = max(self.minValue(), min(_b, self.maxValue()))
-        self.a: int = max(self.minValue(), min(_a, self.maxValue()))
+    def __init__(self,
+                 _r: int = MaxValue(),
+                 _g: int = MaxValue(),
+                 _b: int = MaxValue(),
+                 _a: int = MaxValue()) -> None:
+        self.r: int = max(self.MinValue(), min(_r, self.MaxValue()))
+        self.g: int = max(self.MinValue(), min(_g, self.MaxValue()))
+        self.b: int = max(self.MinValue(), min(_b, self.MaxValue()))
+        self.a: int = max(self.MinValue(), min(_a, self.MaxValue()))
 
     def __eq__(self, _other: 'Color') -> bool:
         return self.r == _other.r and self.g == _other.g and self.b == _other.b and self.a == _other.a

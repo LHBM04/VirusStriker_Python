@@ -18,23 +18,11 @@ class OpeningScene(Scene):
     def __init__(self):
         super().__init__()
 
-        self.m_openingBackground: Sprite = Sprite(ResourceManager().GetSprites("Resources\\Sprites\\Background\\Loading\\Logo"))
-        self.m_openingBackground.renderInfo.position = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
-        self.m_openingBackground.renderInfo.scale = Vector2(get_canvas_width(), get_canvas_height())
-        self.m_openingBackground.renderInfo.color = Color(255, 255, 255, 255)
-        self.m_openingBackground.renderInfo.layerLevel = ELayerLevel.BACKGROUND
-        self.m_openingBackground.renderInfo.renderLayer = 0
-        self.m_openingBackground.isLoop = False
-
     def OnEnter(self) -> None:
         pass
 
     def OnUpdate(self, _deltaTime: float) -> None:
-        self.m_openingBackground.Update(_deltaTime)
-        if self.m_openingBackground.m_currentTextureIndex >= self.m_openingBackground.m_textureSize - 8:
-            SceneManager().LoadLevel("Title Scene")
-        if InputManager().GetKeyDown(SDLK_RETURN):
-            SceneManager().LoadLevel("Title Scene")
+        pass
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
@@ -44,7 +32,6 @@ class OpeningScene(Scene):
 
     def OnRender(self) -> None:
         super().OnRender()
-        self.m_openingBackground.Render()
 
     def OnUIRender(self) -> None:
         super().OnUIRender()

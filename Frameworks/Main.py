@@ -43,7 +43,6 @@ def SendEvent(_events: list[Event]) -> None:
                 InputManager().isPressKey = True
                 InputManager().SetMouseState(event.key, EInputState.DOWN)
                 InputManager().mousePosition = Vector2(event.x, event.y)
-                print(event.x, event.y)
 
 if __name__ == "__main__":
     previousTime: float = Time.time()   # 이전 시간
@@ -55,8 +54,7 @@ if __name__ == "__main__":
     fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
 
     SystemManager().Inintialize()
-    while SystemManager().isRunning: 
-        clear_canvas()
+    while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
 
         if SceneManager().isResetDeltaTime:

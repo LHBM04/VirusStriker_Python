@@ -2,6 +2,7 @@ from typing import final
 
 from pico2d import *
 
+from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
 from Frameworks.Core.Utilities.Singleton import Singleton
 from Frameworks.Core.Utilities.InputManagement.InputManager import InputManager
 from Frameworks.Level.SceneManager import SceneManager
@@ -21,7 +22,7 @@ class SystemManager(metaclass = Singleton):
 
     def Inintialize(self) -> None:
         open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
-        SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))
+        SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))      # 윈도우 이름 변경
 
         displayMode                = SDL_DisplayMode()
         displayMode.format         = SDL_PIXELFORMAT_RGBA8888  # 픽셀 포맷
@@ -29,11 +30,21 @@ class SystemManager(metaclass = Singleton):
         displayMode.h              = self.windowHeight  # 높이
         displayMode.refresh_rate   = self.fpsRate  # 리프레시 레이트
 
-        SDL_SetWindowDisplayMode(pico2d.window, displayMode)
+        initBackground: Image = load_image("Resources\\Sprites\\Backgrounds\\Sprite_Background_Initialize.png")
+        initBackground.draw(get_canvas_width() / 2,
+                            get_canvas_height() / 2,
+                            get_canvas_width(),
+                            get_canvas_height())
+
+        update_canvas()
+
+        yield ResourceManager().InitializeResource()
 
         SceneManager().AddLevel("Opening Scene", OpeningScene())
         SceneManager().AddLevel("Title Scene", TitleScene())
         SceneManager().LoadLevel("Opening Scene")
+
+        self.Render()
 
     def Update(self, _deltaTime: float) -> None:
         SceneManager().Update(_deltaTime);
@@ -50,10 +61,11 @@ class SystemManager(metaclass = Singleton):
         SceneManager().FixedUpdate(_fixedDeltaTime)
 
     def Render(self) -> None:
+        update_canvas()  # 캔버스 업데이트
         SceneManager().RenderObject()
         SceneManager().RenderUI()
-        update_canvas()  # 캔버스 업데이트
-    
+        clear_canvas()
+
     # 프로그램 종료 시 캔버스를 정리합니다.
     def CleanUp(self) -> None:
         clear_canvas()

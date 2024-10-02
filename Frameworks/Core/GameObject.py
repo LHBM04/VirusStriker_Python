@@ -11,8 +11,6 @@ class GameObject(ABC):
         self.position: Vector2      = Vector2()     # 오브젝트 위치.
         self.scale: Vector2         = Vector2()     # 오브젝트 크기
         self.rotate: float          = 0             # 오브젝트 회전 각도.
-        
-        self.sprite: Sprite         = None          # 오브젝트 스프라이트.
 
         self.isActive: bool         = True          # 오브젝트 활성화 여부.
         self.isDestroy: bool        = False         # 오브젝트 파괴 여부.
@@ -33,10 +31,6 @@ class GameObject(ABC):
     @abstractmethod
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
-
-    @final
-    def Render(self) -> None:
-        self.sprite.Render()
 
 @final
 class ObjectManager:
