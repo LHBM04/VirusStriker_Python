@@ -1,6 +1,4 @@
 from argparse import ArgumentError
-from socket import send_fds
-from tkinter import Image
 
 from multipledispatch import dispatch
 
@@ -41,7 +39,6 @@ class Animation:
         self.sprites[self.currentSpriteIndex].Render()
 
 class Animator:
-    @dispatch(Animation)
     def __init__(self):
         self.animations: dict[str:Animation]    = {}    # 관리할 애니메이션들
         self.currentAnimation: Animation        = None  # 현재 재생 중인 애니메이션

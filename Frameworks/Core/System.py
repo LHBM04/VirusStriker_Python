@@ -25,7 +25,8 @@ class SystemManager(metaclass = Singleton):
     def Inintialize(self) -> None:
         open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
         SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))      # 윈도우 이름 변경
-
+        
+        # 사용하는 리소스 전부 로드
         for path, file in ResourceManager().LoadImage():
             print('Load: image - ' + path)
 

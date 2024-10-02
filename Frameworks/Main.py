@@ -58,7 +58,6 @@ if __name__ == "__main__":
 
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
-
         if SceneManager().isResetDeltaTime:
             previousTime = Time.time()
 
