@@ -41,5 +41,5 @@
 - Stage_2
 - CreditsScene
 #### GUI (이하 추후 작성 예정)
-
-- Main.py
+- HUD
+#### Main
