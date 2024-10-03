@@ -42,4 +42,4 @@
 - CreditsScene
 #### GUI (이하 추후 작성 예정)
 
-## Main.py
+- Main.py
