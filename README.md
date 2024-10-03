@@ -7,7 +7,7 @@
 ## Requirements
 ### Python Version
 `>= 3.12`
-### 사용한 외부 모듈 
+### Modules
 * multipledispatch
 * numpy
 * pathlib
