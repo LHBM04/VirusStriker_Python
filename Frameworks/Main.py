@@ -2,11 +2,11 @@ import time as Time
 
 from pico2d import *
 
-from Frameworks.Core.System import SystemManager
-from Frameworks.Core.Utilities.InputManagement.InputManager import EInputState, InputManager
-from Frameworks.Core.Utilities.ResourceManagement import ResourceManager
-from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
-from Frameworks.Level.Scene import Scene, SceneManager
+from Core.System import SystemManager
+from Core.Utilities.InputManagement.InputManager import EInputState, InputManager
+from Core.Utilities.ResourceManagement import ResourceManager
+from Core.Utilities.Mathematics.Vector2 import Vector2
+from Level.Scene import Scene, SceneManager
 
 def ReceiveEvent() -> list[Event]:
     gotEvent: SDL_Event = SDL_Event()
@@ -46,38 +46,39 @@ def SendEvent(_events: list[Event]) -> None:
                 InputManager().mousePosition = Vector2(event.x, event.y)
 
 if __name__ == "__main__":
-    previousTime: float = Time.time()   # 이전 시간
-    currentTime: float  = 0.0           # 현재 시간
+    previousTime: float = Time.time()   # 이전 프레임 시간
+    currentTime: float  = 0.0           # 현재 프레임 시간
 
-    fixedDeltaTime: float = 0.0
-    fixedUpdateTime: float = 1.0 / 5.0
+    fixedDeltaTime: float = 0.0         # 고정 시간 변화량
+    fixedUpdateTime: float = 1.0 / 5.0  # 고정된 시간 주기 (1/50.0 sec 고정)
 
     fpsDeltaTime: float = 0.0           # 프레임을 계산하기 위한 시간 변화량.
 
     SystemManager().Inintialize()
-
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
-
+        
+        # Scene이 전환된다면 이전 프레임을 다시 초기화
         if SceneManager().isResetDeltaTime:
             previousTime = Time.time()
-
-        # Delta Time 계산
+        
+        # Delta Time 계산 구문
         currentTime = Time.time()
         deltaTime = currentTime - previousTime
         
-        # Fixed Delta Time 계산
-        fixedUpdateTime = 1.0 / 50.0
-        fixedDeltaTime = 0.0
+        # Fixed Delta Time 계산 구문
+        fixedUpdateTime = 1.0 / 50.0    # 시간 주기를 고정
+        fixedDeltaTime = 0.0            # 0.0으로 초기화
         fixedDeltaTime += deltaTime
-        if fixedDeltaTime >= 2.0:
+
+        if fixedDeltaTime >= 2.0:       # 2.0초를 넘어가면 2.0초로 고정.
             fixedDeltaTime = 2.0
 
         while fixedDeltaTime > fixedUpdateTime:
             fixedDeltaTime -= fixedUpdateTime
             SystemManager().FixedUpdate(fixedUpdateTime)
 
-        # 초당 프레임 계산
+        # 초당 프레임 계산 구문
         SystemManager().gameFPS += 1
         fpsDeltaTime += deltaTime
         
@@ -88,9 +89,6 @@ if __name__ == "__main__":
         SystemManager().Update(deltaTime)
         SystemManager().Render()
 
-        # [디버그 코드]
-        #print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().gameFPS}")
-        
-        previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
+        previousTime = currentTime  # 이전 프레임 경과 시간을 현재 프레임 경과 시간으로 교체.
         
     SystemManager().CleanUp()
