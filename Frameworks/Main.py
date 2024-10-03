@@ -1,17 +1,16 @@
 from time import time
+from typing import List
 
 from pico2d import *
 
 from Core.System import SystemManager
 from Core.Utilities.InputManagement import EInputState, InputManager
 from Core.Utilities.Mathematics import Vector2
-from Level.SceneManagement import SceneManager
-from Level.Stages import OpeningScene, TitleScene
 
 # 이벤트를 받아, 이를 처리한 후 수신합니다.
-def ReceiveEvent() -> list[Event]:
-    gotEvent: SDL_Event = SDL_Event()
-    events: list[Event] = []
+def ReceiveEvent() -> list['Event']:
+    gotEvent: 'SDL_Event' = SDL_Event()
+    events: List['Event'] = []
 
     while SDL_PollEvent(ctypes.byref(gotEvent)):
         event = Event(gotEvent.type)
@@ -51,9 +50,10 @@ def Initialize():
     open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기
     SDL_SetWindowTitle(pico2d.window, SystemManager().windowName.encode('utf-8'))  # 윈도우 이름 변
 
-    SceneManager().AddLevel("Opening Scene", OpeningScene())
-    SceneManager().AddLevel("Title Scene", TitleScene())
-    SceneManager().LoadLevel("Opening Scene")
+    from Level.SceneManagement import SceneManager
+    from Level.Stages.TestScene import TestScene
+    SceneManager().AddLevel("Test Scene", TestScene())
+    SceneManager().LoadLevel("Test Scene")
 
 def Main():
     previousTime: float = time()  # 이전 프레임 시간
@@ -67,6 +67,7 @@ def Main():
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
 
+        from Level.SceneManagement import SceneManager
         if SceneManager().isResetDeltaTime:  # Scene이 전환된다면 이전 프레임을 다시 초기화
             previousTime = time()
 

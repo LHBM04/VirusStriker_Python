@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import final
+from typing import Dict
 
 from pico2d import *
 
@@ -16,21 +17,21 @@ class EInputState(Enum):
 @final
 class InputManager(metaclass = Singleton):
     def __init__(self) -> None:
-        self.keyState: dict[int : EInputState]      = {}
-        self.buttonState: dict[int : EInputState]   = {}
-        self.isPressKey: bool                       = False
-        self.mousePosition: Vector2                 = Vector2()
+        self.keyState: Dict[int : 'EInputState']        = {}
+        self.buttonState: Dict[int : 'EInputState']     = {}
+        self.isPressKey: bool                           = False
+        self.mousePosition: 'Vector2'                   = Vector2()
 
     def IsKeyPressed(self) -> None:
         self.isPressKey = True
 
-    def GetKeyState(self, key: int) -> EInputState:
+    def GetKeyState(self, key: int) -> 'EInputState':
         if key not in self.keyState:
             return EInputState.NONE
 
         return self.keyState[key]
 
-    def SetKeyState(self, key: int, state: EInputState) -> None:
+    def SetKeyState(self, key: int, state: 'EInputState') -> None:
         self.keyState[key] = state
 
     def GetKey(self, _keyCode: int) -> bool:
@@ -69,17 +70,17 @@ class InputManager(metaclass = Singleton):
         
         return self.GetMouseState(_keyCode) == EInputState.UP
 
-    def GetMouseState(self, key: int) -> EInputState:
+    def GetMouseState(self, key: int) -> 'EInputState':
         if key not in self.buttonState:
             return EInputState.NONE
 
         return self.buttonState[key]
 
-    def GetMousePosition(self) -> Vector2:
+    def GetMousePosition(self) -> 'Vector2':
         SDL_GetMouseState(self.mousePosition.x, self.mousePosition.y)
         return self.mousePosition
 
-    def SetMouseState(self, button: int, state: EInputState) -> None:
+    def SetMouseState(self, button: int, state: 'EInputState') -> None:
         self.buttonState[button] = state
 
     def Update(self) -> None:

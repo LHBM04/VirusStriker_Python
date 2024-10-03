@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 from collections import deque as stack
-from typing import final
+from typing import final, Dict
 
-from Core.Objects.GameObject import ObjectManager
 from Core.Utilities.Singleton import Singleton
 
 class Scene(ABC):
     def __init__(self) -> None:
-        self.objectManager: ObjectManager   = ObjectManager()   # 해당 Level 내 오브젝트를 관리하는 매니저 인스턴스
-        self.uiManager: ObjectManager       = ObjectManager()   # 해당 Level 내 UI를 관리하는 매니저 인스턴스
+        from Core.Components.GameObject import GameObjectManager
+        self.objectManager: 'ObjectManager'   = GameObjectManager()   # 해당 Level 내 오브젝트를 관리하는 매니저 인스턴스
+        self.uiManager: 'ObjectManager'       = GameObjectManager()   # 해당 Level 내 UI를 관리하는 매니저 인스턴스
 
     # -------------------[virtual methods]------------------- #
 
@@ -62,10 +62,10 @@ class Scene(ABC):
 class SceneManager(metaclass = Singleton):
     def __init__(self) -> None:
         # -------------------[private field]------------------- #
-        self.m_levels: dict[str:Scene]      = {}  # 관리할 Scene들.
-        self.m_currentLevel: Scene          = None  # 현재 활성화된 Level.
-        self.m_nextLevel: Scene             = None  # 이동 중인 Level
-        self.m_previousLevels: stack[Scene] = stack()  # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
+        self.m_levels: Dict[str:'Scene']      = {}  # 관리할 Scene들.
+        self.m_currentLevel: 'Scene'          = None  # 현재 활성화된 Level.
+        self.m_nextLevel: 'Scene'             = None  # 이동 중인 Level
+        self.m_previousLevels: stack['Scene'] = stack()  # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
 
         #self.m_loadingBackground: Sprite     = Sprite(ResourceManager().GetImage("Resources\\Sprites\\Background\\Loading\\Logo"))
         #self.m_loadingBackground.position    = Vector2(get_canvas_width() / 2, get_canvas_height() / 2)
@@ -83,7 +83,7 @@ class SceneManager(metaclass = Singleton):
 
     def AddLevel(self, _levelName: str, _scene: Scene) -> None:
         if _levelName in self.m_levels.keys() and _scene in self.m_levels.values():
-            raise ArgumentError("[Oops!] 이미 존재하는 Scene입니다.")
+            raise ValueError("[Oops!] 이미 존재하는 Scene입니다.")
 
         self.m_levels[_levelName] = _scene
 
