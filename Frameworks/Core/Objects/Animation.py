@@ -1,7 +1,7 @@
 from argparse import ArgumentError
 from multipledispatch import dispatch
 
-from Frameworks.Core.Sprite import Sprite
+from Core.Objects.Sprite import Sprite
 
 class Animation:
     def __init__(self, _sprite: list[Sprite]) -> None:

@@ -1,7 +1,7 @@
 import numpy as np
 from pico2d import *
 
-from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
+from Core.Utilities.Mathematics.Vector2 import Vector2
 
 class Camera:
     def __init__(self):

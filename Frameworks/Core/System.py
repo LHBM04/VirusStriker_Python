@@ -1,14 +1,12 @@
-from importlib.resources import Resource
 from typing import final
 
 from pico2d import *
 
-from Frameworks.Core.Utilities.ResourceManagement.ResourceManager import ResourceManager
-from Frameworks.Core.Utilities.Singleton import Singleton
-from Frameworks.Core.Utilities.InputManagement.InputManager import InputManager
-from Frameworks.Level.Scene import SceneManager
-from Frameworks.Level.Stages.OpeningScene import OpeningScene
-from Frameworks.Level.Stages.TitleScene import TitleScene
+from Core.Utilities.Singleton import Singleton
+from Core.Utilities.InputManagement import InputManager
+from Level.SceneManagement import SceneManager
+from Level.Stages import OpeningScene
+from Level.Stages import TitleScene
 
 
 @final

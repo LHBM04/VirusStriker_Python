@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import final
 
-from Frameworks.Core.Sprite import Sprite
-from Frameworks.Core.Sprite import ELayerLevel
-from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
+from Core.Objects.Sprite import ELayerLevel
+from Core.Utilities.Mathematics import Vector2
 
 # 게임 내 사용되는 모든 오브젝트의 베이스 클래스.
 class GameObject(ABC):

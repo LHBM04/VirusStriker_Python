@@ -1,12 +1,8 @@
-from abc import ABC, abstractmethod
 from argparse import ArgumentError
 from collections import deque as stack
-from typing import final
 
-from pico2d import *
-
-from Frameworks.Core.GameObject import *
-from Frameworks.Core.Utilities.Singleton import *
+from Core.Objects.GameObject import *
+from Core.Utilities.Singleton import *
 
 class Scene(ABC):
     def __init__(self) -> None:

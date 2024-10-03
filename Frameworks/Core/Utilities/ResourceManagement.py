@@ -1,18 +1,24 @@
-import os.path
 from typing import final
 
+from pathlib import Path
 from pico2d import *
 
-from Frameworks.Core.Utilities.Singleton import Singleton
+from Core.Utilities.Singleton import Singleton
 
-def LoadAll(_directoryPath: str, _suffix: str, _callback: callable) -> (str, str):
-    for root, _, files in os.walk(_directoryPath):
-        for file in files:
-            if not file.endswith(_suffix):
-                continue
-            filePath = os.path.join(root, file)
-            _callback(filePath)
-            yield filePath, file
+
+def LoadAll(_directoryPath: str, _suffix: str, _callback: callable) -> str:
+    directory = Path(_directoryPath)
+    if not (directory.exists() and directory.is_dir()):
+        raise IOError
+
+    for filePath in directory.iterdir():
+        if not (filePath.exists() and filePath.is_file()):
+            raise IOError
+        elif filePath.suffix is not _suffix:
+            continue
+
+        callable(filePath)
+        yield str(filePath)
 
 @final
 class ResourceManager(metaclass = Singleton):

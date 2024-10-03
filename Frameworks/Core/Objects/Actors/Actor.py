@@ -2,15 +2,14 @@ from typing import final
 
 from pico2d import *
 
-from Frameworks.Core import GameObject
-from Frameworks.Core.Triggers import Collider2D
-from Frameworks.Core.Utilities.Mathematics import Vector2
+from Core.Objects import Collider2D, GameObject
+from Core.Utilities.Mathematics import Vector2
 
 class Actor(GameObject):
     def __init__(self):
         super.__init__()
 
-        self.collider: Collider2D               = None                  # 오브젝트 콜라이더
+        self.collider: Collider2D = None                  # 오브젝트 콜라이더
         self.collisionLayer: Collider2D.ELayer  = Collider2D.EColliderTag.NONE  # 오브젝트의 충돌 레이어.
         self.colisionTag: Collider2D.EColliderTag       = Collider2D.EColliderTag.NONE  # 오브젝트의 충돌 태그.
 

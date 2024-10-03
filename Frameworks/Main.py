@@ -3,11 +3,11 @@ import time as Time
 from pico2d import *
 
 from Core.System import SystemManager
-from Core.Utilities.InputManagement.InputManager import EInputState, InputManager
-from Core.Utilities.ResourceManagement import ResourceManager
-from Core.Utilities.Mathematics.Vector2 import Vector2
-from Level.Scene import Scene, SceneManager
+from Core.Utilities.InputManagement import EInputState, InputManager
+from Core.Utilities.Mathematics import Vector2
+from Level.SceneManagement import SceneManager
 
+# 이벤트를 받아, 이를 처리한 후 수신합니다.
 def ReceiveEvent() -> list[Event]:
     gotEvent: SDL_Event = SDL_Event()
     events: list[Event] = []
@@ -27,6 +27,7 @@ def ReceiveEvent() -> list[Event]:
 
     return events
 
+# 수신한 이벤트를 받아 처리합니다.
 def SendEvent(_events: list[Event]) -> None:
     for event in _events:
         if event.type == SDL_QUIT:
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     SystemManager().Inintialize()
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
-        
+
         if SceneManager().isResetDeltaTime: # Scene이 전환된다면 이전 프레임을 다시 초기화
             previousTime = Time.time()
         
