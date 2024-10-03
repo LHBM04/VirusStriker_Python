@@ -4,12 +4,41 @@
 ## Requirements
 ### Python Version
 `>= 3.12`
-### Modules 
+### 사용한 외부 모듈 
 * multipledispatch
 * numpy
 * pathlib
 * pico2d
 * sdl2
-## Execution
-From Root Directory:
-```python Frameworks/Main.py```
+## 프레임워크
+* Frameworks
+** Core
+*** Componets
+**** Animation
+**** Collider2D
+**** Component
+**** GameObject
+**** SpriteRenderer
+**** Transform
+*** Objects (이하 추후 작성 예정)
+**** Actors
+***** Player
+***** Enemy
+**** Items
+*** Utilities
+**** AudioManagement
+**** InputManagement
+**** Mathematics
+**** ResourceManagement
+**** Singleton
+*** System
+** Level
+*** SceneManagement
+*** Stages (이하 추후 작성 예정)
+**** TitleScene
+**** MainMenuScene
+**** Stage_1
+**** Stage_2
+**** CreditsScene
+*** GUI (이하 추후 작성 예정)
+** Main.py
