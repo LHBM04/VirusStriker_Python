@@ -3,6 +3,7 @@ from collections import deque as stack
 
 from Core.Objects.GameObject import *
 from Core.Utilities.Singleton import *
+from Level.Stages import *
 
 class Scene(ABC):
     def __init__(self) -> None:
@@ -73,6 +74,10 @@ class SceneManager(metaclass = Singleton):
 
         self.isResetDeltaTime: bool = False  # 델타 타임 리셋 여부.
     # -------------------[Level Attributes]------------------- #
+
+    def Initialize(self):
+        SceneManager().AddLevel("Opening Scene", OpeningScene())
+        SceneManager().AddLevel("Title Scene", TitleScene())
 
     def GetActiveLevel(self) -> Scene:
         if self.m_currentLevel is None:

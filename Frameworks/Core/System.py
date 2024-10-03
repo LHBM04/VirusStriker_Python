@@ -21,30 +21,6 @@ class SystemManager(metaclass = Singleton):
         self.m_fpsDeltaTime: float = 0.0
         self.fpsRate            = 60
 
-    def Inintialize(self) -> None:
-        open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
-        SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))      # 윈도우 이름 변경
-
-        loadingBackground = load_image("Resources/Sprites/Backgrounds/Sprite_Background_Initialize.png")
-        for _ in ResourceManager().LoadImage():
-            clear_canvas()
-            loadingBackground.draw(self.windowWidth / 2, self.windowHeight / 2)
-            update_canvas()
-        for _ in ResourceManager().LoadBGM():
-            clear_canvas()
-            loadingBackground.draw(self.windowWidth / 2, self.windowHeight / 2)
-            update_canvas()
-        for _ in ResourceManager().LoadSFX():
-            clear_canvas()
-            loadingBackground.draw(self.windowWidth / 2, self.windowHeight / 2)
-            update_canvas()
-
-        SceneManager().AddLevel("Opening Scene", OpeningScene())
-        SceneManager().AddLevel("Title Scene", TitleScene())
-        SceneManager().LoadLevel("Opening Scene")
-
-        self.Render()
-
     def Update(self, _deltaTime: float) -> None:
         SceneManager().Update(_deltaTime)
         InputManager().Update()

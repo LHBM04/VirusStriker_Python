@@ -1,51 +1,76 @@
-from typing import final
-
-import re
 from pathlib import Path
+from typing import Iterator, List, final
+
 from pico2d import *
 
 from Core.Utilities.Singleton import Singleton
 
-def LoadAll(_directoryPath: str, _suffix: str, _callback: callable) -> None:
-    directoryPath = Path(_directoryPath)
-    if not directoryPath.exists() or not directoryPath.is_dir():
-        raise IOError(f"'{_directoryPath}'는 유효한 디렉토리가 아닙니다.")
-
-    for filePath in sorted(directoryPath.rglob('*'),
-                           key = lambda p: [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', Path(p).name)]):
-        if filePath.is_file() and filePath.suffix == _suffix:
-            yield _callback(str(filePath))
+def MakePath(_path: str) -> Path:
+    return Path(_path)
 
 @final
-class ResourceManager(metaclass = Singleton):
+class ResourceManager(metaclass=Singleton):
     def __init__(self):
-        self.imageBank: dict[str : Image]   = {}
-        self.bgmBank: dict[str : Wav]       = {}
-        self.sfxBank: dict[str: Wav]        = {}
+        self.imageBank: dict[str, list[Image]] = {}
+        self.imageFileSuffix: str = ".str"
 
-    def AddImage(self, _filePath) -> None:
-        self.imageBank[_filePath] = load_image(_filePath)
+        self.bgmBank: dict[str, Music] = {}
+        self.sfxBank: dict[str, Wav] = {}
+        self.audioFileSuffix: str = '.wav'
 
-    def AddBGM(self, _filePath) -> None:
-        self.bgmBank[_filePath] = load_music(_filePath)
+    def LoadImage(self, _filePath: Path) -> Iterator[Image]:
+        if not _filePath.exists() or not _filePath.is_file():
+            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(_filePath)}\"였습니다.")
 
-    def AddSFX(self, _filePath) -> None:
-        self.sfxBank[_filePath] = load_wav(_filePath)
+        yield load_image(str(_filePath))
 
-    def LoadImage(self) -> str:
-        return LoadAll(r"Resources\Sprites", '.png', self.AddImage)
+    def LoadImages(self, _directoryPath: Path) -> Iterator[Image]:
+        if not _directoryPath.exists() or not _directoryPath.is_dir():
+            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(_directoryPath)}\"였습니다.")
 
-    def LoadBGM(self) -> str:
-        return LoadAll(r"Resources\Audio\BGM", '.wav', self.AddBGM)
+        for filePath in _directoryPath.iterdir():
+            if filePath.is_file():
+                yield load_image(str(filePath))
 
-    def LoadSFX(self) -> str:
-        return LoadAll(r"Resources\Audio\SFX", '.wav', self.AddSFX)
+    def LoadBGM(self, _filePath: Path) -> Iterator[Music]:
+        if not _filePath.exists() or not _filePath.is_file():
+            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(_filePath)}\"였습니다.")
 
-    def GetImage(self, _filePath) -> Image:
-        return self.imageBank[_filePath]
+        yield load_music(str(_filePath))
 
-    def GetBGM(self, _filePath) -> Music:
-        return self.bgmBank[_filePath]
+    def LoadSFX(self, _filePath: Path) -> Iterator[Music]:
+        if not _filePath.exists() or not _filePath.is_file():
+            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(_filePath)}\"였습니다.")
 
-    def GetSFX(self, _filePath: str) -> Wav:
-        return self.sfxBank[_filePath]
+        yield load_wav(str(_filePath))
+
+    # 이미지 인스턴스를 가져옵니다.
+    def GetImage(self, _key: str, _index: int = 0) -> Image:
+        if _key not in self.imageBank.keys():
+            self.imageBank[_key] = []
+            for image in self.LoadImage(MakePath(_key)):
+                self.imageBank[_key].append(image)
+
+        return self.imageBank[_key][_index]
+
+    def GetImages(self, _key: str) -> List[Image]:
+        if _key not in self.imageBank.keys():
+            self.imageBank[_key] = []
+            for image in self.LoadImages(MakePath(_key)):
+                self.imageBank[_key].append(image)
+
+        return self.imageBank[_key]
+
+    def GetBGM(self, _key: str) -> Music:
+        if _key not in self.bgmBank.keys():
+            for bgm in self.LoadBGM(MakePath(_key)):
+                self.bgmBank[_key] = bgm
+
+        return self.bgmBank[_key]
+
+    def GetSFX(self, _key: str) -> Wav:
+        if _key not in self.bgmBank.keys():
+            for sfx in self.LoadSFX(MakePath(_key)):
+                self.sfxBank[_key] = sfx
+
+        return self.sfxBank[_key]
