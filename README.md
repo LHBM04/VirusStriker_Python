@@ -6,7 +6,10 @@
 `>= 3.12`
 ### Modules 
 * multipledispatch
-
+* numpy
+* pathlib
+* pico2d
+* sdl2
 ## Execution
 From Root Directory:
 ```python Frameworks/Main.py```
