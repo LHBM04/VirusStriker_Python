@@ -25,7 +25,7 @@
 #### Objects (이하 추후 작성 예정)
 - **Actors**
   - Player
-  - Enemy
+  - Enemies
 - **Items**
 #### Utilities
 - **AudioManagement**
