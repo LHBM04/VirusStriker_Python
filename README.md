@@ -1,4 +1,5 @@
 # VirusStriker_Python
+![대체 텍스트](./Resources/Sprites/GUI/Logo/Sprite_Logo_Title_0.png)
 기존의 "Virus Striker"를 Python으로 포팅한 버전. (2D 게임 프로그래밍 텀 프로젝트)
 
 ## Requirements
