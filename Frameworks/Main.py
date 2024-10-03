@@ -6,7 +6,7 @@ from Core.System import SystemManager
 from Core.Utilities.InputManagement import EInputState, InputManager
 from Core.Utilities.Mathematics import Vector2
 from Level.SceneManagement import SceneManager
-from Level.Stages import *
+from Level.Stages import OpeningScene, TitleScene
 
 # 이벤트를 받아, 이를 처리한 후 수신합니다.
 def ReceiveEvent() -> list[Event]:
@@ -51,7 +51,9 @@ def Initialize():
     open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기
     SDL_SetWindowTitle(pico2d.window, SystemManager().windowName.encode('utf-8'))  # 윈도우 이름 변
 
-
+    SceneManager().AddLevel("Opening Scene", OpeningScene())
+    SceneManager().AddLevel("Title Scene", TitleScene())
+    SceneManager().LoadLevel("Opening Scene")
 
 def Main():
     previousTime: float = time()  # 이전 프레임 시간
@@ -66,10 +68,10 @@ def Main():
         SendEvent(ReceiveEvent())
 
         if SceneManager().isResetDeltaTime:  # Scene이 전환된다면 이전 프레임을 다시 초기화
-            previousTime = Time.time()
+            previousTime = time()
 
         # Delta Time 계산 구문
-        currentTime = Time.time()
+        currentTime = time()
         deltaTime = currentTime - previousTime
 
         # Fixed Delta Time 계산 구문

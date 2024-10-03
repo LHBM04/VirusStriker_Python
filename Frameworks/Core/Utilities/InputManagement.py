@@ -89,8 +89,8 @@ class InputManager(metaclass = Singleton):
             elif self.keyState[key] == EInputState.UP:
                 self.keyState[key] = EInputState.NONE
 
-        for key in list(self.buttonState.keys()):
-            if self.buttonState[key] == EInputState.DOWN:
-                self.buttonState[key] = EInputState.PRESS
-            elif self.buttonState[key] == EInputState.UP:
-                self.buttonState[key] = EInputState.NONE
+        for button in list(self.buttonState.keys()):
+            if self.buttonState[button] == EInputState.DOWN:
+                self.buttonState[button] = EInputState.PRESS
+            elif self.buttonState[button] == EInputState.UP:
+                self.buttonState[button] = EInputState.NONE

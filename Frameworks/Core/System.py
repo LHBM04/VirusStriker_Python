@@ -3,11 +3,9 @@ from typing import final
 from pico2d import *
 
 from Core.Utilities.Singleton import Singleton
-from Core.Utilities.ResourceManagement import ResourceManager
 from Core.Utilities.InputManagement import InputManager
 from Level.SceneManagement import SceneManager
-from Level.Stages import OpeningScene
-from Level.Stages import TitleScene
+from Level.Stages import OpeningScene, TitleScene
 
 
 @final
@@ -25,9 +23,6 @@ class SystemManager(metaclass = Singleton):
         SceneManager().Update(_deltaTime)
         InputManager().Update()
         #AudioManager().Update()
-
-        if InputManager().GetKeyDown(SDLK_SPACE):
-            SDL_SetWindowFullscreen(pico2d.window, SDL_WINDOW_FULLSCREEN_DESKTOP)
 
         if InputManager().GetKeyDown(SDLK_ESCAPE):
             self.isRunning = False

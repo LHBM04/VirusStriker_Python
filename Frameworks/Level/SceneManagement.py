@@ -1,9 +1,9 @@
-from argparse import ArgumentError
+from abc import ABC, abstractmethod
 from collections import deque as stack
+from typing import final
 
-from Core.Objects.GameObject import *
-from Core.Utilities.Singleton import *
-from Level.Stages import *
+from Core.Objects.GameObject import ObjectManager
+from Core.Utilities.Singleton import Singleton
 
 class Scene(ABC):
     def __init__(self) -> None:
@@ -74,10 +74,6 @@ class SceneManager(metaclass = Singleton):
 
         self.isResetDeltaTime: bool = False  # 델타 타임 리셋 여부.
     # -------------------[Level Attributes]------------------- #
-
-    def Initialize(self):
-        SceneManager().AddLevel("Opening Scene", OpeningScene())
-        SceneManager().AddLevel("Title Scene", TitleScene())
 
     def GetActiveLevel(self) -> Scene:
         if self.m_currentLevel is None:
