@@ -1,5 +1,5 @@
 # VirusStriker_Python
-![VirusStriker](./Resources/Sprites/GUI/Sprite_Logo_Title_0.png)
+![Virus Striker](./Resources/Sprites/GUI/Sprite_Logo.png)
 
 
 기존의 "Virus Striker"를 Python으로 포팅한 버전. (2D 게임 프로그래밍 텀 프로젝트)
