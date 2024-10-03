@@ -58,8 +58,7 @@ if __name__ == "__main__":
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
         
-        # Scene이 전환된다면 이전 프레임을 다시 초기화
-        if SceneManager().isResetDeltaTime:
+        if SceneManager().isResetDeltaTime: # Scene이 전환된다면 이전 프레임을 다시 초기화
             previousTime = Time.time()
         
         # Delta Time 계산 구문
