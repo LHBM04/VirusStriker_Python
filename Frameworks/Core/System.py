@@ -3,6 +3,7 @@ from typing import final
 from pico2d import *
 
 from Core.Utilities.Singleton import Singleton
+from Core.Utilities.ResourceManagement import ResourceManager
 from Core.Utilities.InputManagement import InputManager
 from Level.SceneManagement import SceneManager
 from Level.Stages import OpeningScene
@@ -14,7 +15,7 @@ class SystemManager(metaclass = Singleton):
     def __init__(self) -> None:
         self.windowName: str    = "Virus Striker"   # 프로그램(윈도우) 이름.
         self.windowWidth: int   = 1280              # 가로 해상도 (테스트).
-        self.windowHeight: int  = 800               # 세로 해상도 (테스트).
+        self.windowHeight: int  = 720               # 세로 해상도 (테스트).
         self.isRunning: bool    = True              # 프로그램 구동 여부.
         self.gameFPS: float     = 0.0               # 게임 초당 프레임.
         self.m_fpsDeltaTime: float = 0.0
@@ -24,6 +25,20 @@ class SystemManager(metaclass = Singleton):
         open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
         SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))      # 윈도우 이름 변경
 
+        loadingBackground = load_image("Resources/Sprites/Backgrounds/Sprite_Background_Initialize.png")
+        for _ in ResourceManager().LoadImage():
+            clear_canvas()
+            loadingBackground.draw(self.windowWidth / 2, self.windowHeight / 2)
+            update_canvas()
+        for _ in ResourceManager().LoadBGM():
+            clear_canvas()
+            loadingBackground.draw(self.windowWidth / 2, self.windowHeight / 2)
+            update_canvas()
+        for _ in ResourceManager().LoadSFX():
+            clear_canvas()
+            loadingBackground.draw(self.windowWidth / 2, self.windowHeight / 2)
+            update_canvas()
+
         SceneManager().AddLevel("Opening Scene", OpeningScene())
         SceneManager().AddLevel("Title Scene", TitleScene())
         SceneManager().LoadLevel("Opening Scene")
@@ -31,7 +46,7 @@ class SystemManager(metaclass = Singleton):
         self.Render()
 
     def Update(self, _deltaTime: float) -> None:
-        SceneManager().Update(_deltaTime);
+        SceneManager().Update(_deltaTime)
         InputManager().Update()
         #AudioManager().Update()
 

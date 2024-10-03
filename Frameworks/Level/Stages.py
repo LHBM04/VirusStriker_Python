@@ -1,5 +1,6 @@
 from typing import final
 
+from Core.Utilities.ResourceManagement import ResourceManager
 from Level.SceneManagement import Scene
 
 
@@ -9,6 +10,8 @@ class OpeningScene(Scene):
         super().__init__()
 
     def OnEnter(self) -> None:
+
+
         print("Hello!")
 
     def OnUpdate(self, _deltaTime: float) -> None:

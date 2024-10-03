@@ -1,24 +1,20 @@
 from typing import final
 
+import re
 from pathlib import Path
 from pico2d import *
 
 from Core.Utilities.Singleton import Singleton
 
+def LoadAll(_directoryPath: str, _suffix: str, _callback: callable) -> None:
+    directoryPath = Path(_directoryPath)
+    if not directoryPath.exists() or not directoryPath.is_dir():
+        raise IOError(f"'{_directoryPath}'는 유효한 디렉토리가 아닙니다.")
 
-def LoadAll(_directoryPath: str, _suffix: str, _callback: callable) -> str:
-    directory = Path(_directoryPath)
-    if not (directory.exists() and directory.is_dir()):
-        raise IOError
-
-    for filePath in directory.iterdir():
-        if not (filePath.exists() and filePath.is_file()):
-            raise IOError
-        elif filePath.suffix is not _suffix:
-            continue
-
-        callable(filePath)
-        yield str(filePath)
+    for filePath in sorted(directoryPath.rglob('*'),
+                           key = lambda p: [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', Path(p).name)]):
+        if filePath.is_file() and filePath.suffix == _suffix:
+            yield _callback(str(filePath))
 
 @final
 class ResourceManager(metaclass = Singleton):
@@ -36,13 +32,13 @@ class ResourceManager(metaclass = Singleton):
     def AddSFX(self, _filePath) -> None:
         self.sfxBank[_filePath] = load_wav(_filePath)
 
-    def LoadImage(self) -> (str, str):
+    def LoadImage(self) -> str:
         return LoadAll(r"Resources\Sprites", '.png', self.AddImage)
 
-    def LoadBGM(self) -> (str, str):
+    def LoadBGM(self) -> str:
         return LoadAll(r"Resources\Audio\BGM", '.wav', self.AddBGM)
 
-    def LoadSFX(self) -> (str, str):
+    def LoadSFX(self) -> str:
         return LoadAll(r"Resources\Audio\SFX", '.wav', self.AddSFX)
 
     def GetImage(self, _filePath) -> Image:
