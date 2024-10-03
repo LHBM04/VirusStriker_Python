@@ -21,6 +21,15 @@ class OpeningScene(Scene):
     def OnEnter(self) -> None:
         print("Hello!")
 
+        for path, file in ResourceManager().LoadImage():
+            print('Load: image - ' + path)
+
+        for path, file in ResourceManager().LoadBGM():
+            print('Load: BGM - ' + path)
+
+        for path, file in ResourceManager().LoadSFX():
+            print('Load: SFX - ' + path)
+
     def OnUpdate(self, _deltaTime: float) -> None:
         pass
 

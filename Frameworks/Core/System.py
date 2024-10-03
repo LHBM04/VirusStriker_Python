@@ -26,15 +26,6 @@ class SystemManager(metaclass = Singleton):
         open_canvas(self.windowWidth, self.windowHeight, False, False) # 캔버스 열기
         SDL_SetWindowTitle(pico2d.window, self.windowName.encode('utf-8'))      # 윈도우 이름 변경
 
-        for path, file in ResourceManager().LoadImage():
-            print('Load: image - ' + path)
-
-        for path, file in ResourceManager().LoadBGM():
-            print('Load: BGM - ' + path)
-
-        for path, file in ResourceManager().LoadSFX():
-            print('Load: SFX - ' + path)
-
         SceneManager().AddLevel("Opening Scene", OpeningScene())
         SceneManager().AddLevel("Title Scene", TitleScene())
         SceneManager().LoadLevel("Opening Scene")

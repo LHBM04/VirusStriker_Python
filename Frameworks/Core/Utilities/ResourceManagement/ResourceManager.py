@@ -31,13 +31,13 @@ class ResourceManager(metaclass = Singleton):
         self.sfxBank[_filePath] = load_wav(_filePath)
 
     def LoadImage(self) -> (str, str):
-        return LoadAll("Resources\\Sprites", '.png', self.AddImage)
+        return LoadAll(r"Resources\Sprites", '.png', self.AddImage)
 
     def LoadBGM(self) -> (str, str):
-        return LoadAll("Resources\\Audio\\BGM", '.wav', self.AddBGM)
+        return LoadAll(r"Resources\Audio\BGM", '.wav', self.AddBGM)
 
     def LoadSFX(self) -> (str, str):
-        return LoadAll("Resources\\Audio\\SFX", '.wav', self.AddSFX)
+        return LoadAll(r"Resources\Audio\SFX", '.wav', self.AddSFX)
 
     def GetImage(self, _filePath) -> Image:
         return self.imageBank[_filePath]
