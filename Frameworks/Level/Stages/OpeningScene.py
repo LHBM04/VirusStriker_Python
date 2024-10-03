@@ -19,8 +19,6 @@ class OpeningScene(Scene):
         super().__init__()
 
     def OnEnter(self) -> None:
-        print("Hello!")
-
         for path, file in ResourceManager().LoadImage():
             print('Load: image - ' + path)
 
@@ -30,6 +28,8 @@ class OpeningScene(Scene):
         for path, file in ResourceManager().LoadSFX():
             print('Load: SFX - ' + path)
 
+        print("Hello!")
+        
     def OnUpdate(self, _deltaTime: float) -> None:
         pass
 
