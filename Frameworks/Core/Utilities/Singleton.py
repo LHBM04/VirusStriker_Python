@@ -1,4 +1,6 @@
-class Singleton(type):
+from abc import ABCMeta
+
+class Singleton(metaclass = ABCMeta, type):
     g_instances = {}
     def __call__(cls, *args, **kwargs):
         if cls not in cls.g_instances:

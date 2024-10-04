@@ -1,24 +1,32 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 from typing import final, List, Dict
 
 from Frameworks.Core.Components.Component import ComponentManager
 from Frameworks.Core.Components.Transform import Transform
-from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer
+from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer, ESortingLayer
 
 # 게임 내 모든 오브젝트의 베이스 클래스.
-class GameObject(ABC):
+class GameObject(metaclass = ABCMeta):
     def __init__(self):
-        self._componetManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
-        self._componetManager.AddComponent(Transform(self))          # Transform Add
-        self._componetManager.AddComponent(SpriteRenderer(self))     # SpriteRenderer Add
+        self.m_componentManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
+        self.m_componentManager.AddComponent(Transform(self))          # Transform Add
+        self.m_componentManager.AddComponent(SpriteRenderer(self))     # SpriteRenderer Add
 
+    # 해당 플레이어의 Transform
     @property
     def transform(self) -> Transform:
-        return self._componetManager.GetComponent(type(Transform))
+        component = self.m_componentManager.GetComponent(Transform)
+        if isinstance(component, Transform):
+            return component
+        raise TypeError(f"Expected Transform, but got {type(component).__name__}")
 
+    # 해당 오브젝트의 Sprite Renderer
     @property
     def spriteRenderer(self) -> SpriteRenderer:
-        return self._componetManager.GetComponent(type(SpriteRenderer))
+        component = self.m_componentManager.GetComponent(SpriteRenderer)
+        if isinstance(component, SpriteRenderer):
+            return component
+        raise TypeError(f"Expected SpriteRenderer, but got {type(component).__name__}")
 
     # 해당 오브젝트가 'Game Object Manager'에 추가될 때 실행됩니다.
     @abstractmethod
@@ -44,8 +52,6 @@ class GameObject(ABC):
     @abstractmethod
     def Destroy(self):
         pass
-
-from Frameworks.Core.Components.SpriteRenderer import ESortingLayer
 
 # Scene 내에서 사용되는 모든 오브젝트를 관리합니다.
 @final

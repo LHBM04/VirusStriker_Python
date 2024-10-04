@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 from enum import Enum
 
 from Core.Components.Component import Component
@@ -13,7 +13,7 @@ class EColliderTag(Enum):
     LETHAL  = 2  # 플레이어에게 치명적인(즉사) 오브젝트의 태그
 
 # Collider2D 베이스
-class Collider2D(ABC, Component):
+class Collider2D(metaclass = ABCMeta, Component):
     def __init__(self, _owner: GameObject) -> None:
         super().__init__(_owner)
 

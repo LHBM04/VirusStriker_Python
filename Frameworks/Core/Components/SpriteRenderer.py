@@ -1,19 +1,19 @@
 from enum import Enum
 
-# 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
-class ESortingLayer(Enum):
-    NONE = 0
-    BACKGROUND = 1
-    FOREGROUND = 2
-    OBJECT = 3
-    UI = 4
-
 from pico2d import *
 
 from Frameworks.Core.Components.GameObject import GameObject
 from Frameworks.Core.Utilities.Color import Color
 from Frameworks.Core.Utilities.Mathematics import Vector2
 from Frameworks.Core.Components.Component import Component
+
+# 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
+class ESortingLayer(Enum):
+    NONE        = 0
+    BACKGROUND  = 1
+    FOREGROUND  = 2
+    OBJECT      = 3
+    UI          = 4
 
 # 스프라이트 이미지를 출력하는 컴포넌트.
 class SpriteRenderer(Component):

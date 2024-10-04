@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterator, List, final, Dict
+from typing import Dict, Iterator, List, final
 
 from pico2d import *
 

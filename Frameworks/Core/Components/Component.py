@@ -1,12 +1,12 @@
-from abc import ABC, abstractmethod
-from logging import fatal
+from abc import ABCMeta, abstractmethod
 from typing import final, Set, Dict
 from typing import Type, TypeVar
 
+from Frameworks.Core.Components.GameObject import GameObject
+
 # 모든 컴포넌트의 베이스 클래스
-class Component(ABC):
-    def __init__(self, _owner: 'GameObject'):
-        from Frameworks.Core.Components.GameObject import GameObject
+class Component(metaclass = ABCMeta):
+    def __init__(self, _owner: GameObject):
         self.owner: GameObject = _owner # 해당 컴포넌트를 소지하고 있는 게임 오브젝트.
 
     @abstractmethod
