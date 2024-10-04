@@ -26,8 +26,8 @@ def ReceiveEvent() -> list['Event']:
 # 수신한 이벤트를 받아 처리합니다.
 def SendEvent(_events: list[Event]) -> None:
     from Core.System import SystemManager
-    from Core.Utilities.InputManagement import EInputState, InputManager
     from Core.Utilities.Mathematics.Vector2 import Vector2
+    from Core.Utilities.InputManagement import  EInputState, InputManager
 
     for event in _events:
         if event.type == SDL_QUIT:
@@ -48,8 +48,8 @@ def SendEvent(_events: list[Event]) -> None:
 
 def Initialize():
     from Core.System import SystemManager
-    from Level.SceneManagement import SceneManager
-    from Level.Stages.TestScene import TestScene
+    from Level.SceneManagement.SceneManager import SceneManager
+    from Levels.TestScene import TestScene
 
     open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기
     SDL_SetWindowTitle(pico2d.window, SystemManager().windowName.encode('utf-8'))  # 윈도우 이름 변
@@ -71,7 +71,7 @@ def Main():
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
 
-        from Level.SceneManagement import SceneManager
+        from Level.SceneManagement.SceneManager import SceneManager
         if SceneManager().isResetDeltaTime:  # Scene이 전환된다면 이전 프레임을 다시 초기화
             previousTime = time()
 

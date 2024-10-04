@@ -1,4 +1,3 @@
-from logging import fatal
 from typing import final
 from typing import List
 from dataclasses import dataclass

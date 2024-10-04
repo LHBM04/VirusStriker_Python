@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import final, Set, Dict
 from typing import Type, TypeVar
 
-from Frameworks.Core.Components.GameObject import GameObject
+from Core.Components.GameObject import GameObject
 
 # 모든 컴포넌트의 베이스 클래스
 class Component(metaclass = ABCMeta):

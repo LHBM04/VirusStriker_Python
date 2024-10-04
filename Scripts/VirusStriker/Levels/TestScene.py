@@ -5,7 +5,7 @@ from pico2d import *
 from Core.System import SystemManager
 from Core.Utilities.InputManagement import InputManager
 from Core.Utilities.ResourceManagement import ResourceManager
-from Level.SceneManagement import Scene
+from Level.SceneManagement.SceneManager import Scene
 
 @final
 class TestScene(Scene):

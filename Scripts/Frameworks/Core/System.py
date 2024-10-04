@@ -17,7 +17,7 @@ class SystemManager(metaclass = Singleton):
         self.fpsRate            = 60
 
     def Update(self, _deltaTime: float) -> None:
-        from Level.SceneManagement import SceneManager
+        from Level.SceneManagement.SceneManager import SceneManager
         SceneManager().Update(_deltaTime)
         InputManager().Update()
         #AudioManager().Update()
@@ -26,11 +26,11 @@ class SystemManager(metaclass = Singleton):
             self.isRunning = False
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        from Level.SceneManagement import SceneManager
+        from Level.SceneManagement.SceneManager import SceneManager
         SceneManager().FixedUpdate(_fixedDeltaTime)
 
     def Render(self) -> None:
-        from Level.SceneManagement import SceneManager
+        from Level.SceneManagement.SceneManager import SceneManager
 
         update_canvas()  # 캔버스 업데이트
         SceneManager().RenderObject()

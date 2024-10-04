@@ -1,14 +1,12 @@
 from abc import ABCMeta, abstractmethod
 from typing import final, List, Dict
 
-
-
 # 게임 내 모든 오브젝트의 베이스 클래스.
 class GameObject(metaclass = ABCMeta):
     def __init__(self):
-        from Frameworks.Core.Components.Component import ComponentManager
-        from Frameworks.Core.Components.Transform import Transform
-        from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer
+        from Core.Components.Component import ComponentManager
+        from Core.Components.Transform import Transform
+        from Core.Components.SpriteRenderer import SpriteRenderer
 
         self.name: str = "Game Object"
         self._componentManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
@@ -18,7 +16,7 @@ class GameObject(metaclass = ABCMeta):
     # 해당 플레이어의 Transform
     @property
     def transform(self) -> 'Transform':
-        from Frameworks.Core.Components.Transform import Transform
+        from Core.Components.Transform import Transform
 
         component = self._componentManager.GetComponent(Transform)
         if isinstance(component, Transform):
@@ -28,7 +26,7 @@ class GameObject(metaclass = ABCMeta):
     # 해당 오브젝트의 Sprite Renderer
     @property
     def spriteRenderer(self) -> 'SpriteRenderer':
-        from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer
+        from Core.Components.SpriteRenderer import SpriteRenderer
 
         component = self._componentManager.GetComponent(SpriteRenderer)
         if isinstance(component, SpriteRenderer):
@@ -64,7 +62,7 @@ class GameObject(metaclass = ABCMeta):
 @final
 class GameObjectManager:
     def __init__(self) -> None:
-        from Frameworks.Core.Components.SpriteRenderer import ESortingLayer
+        from Core.Components.SpriteRenderer import ESortingLayer
 
         self.m_objects: Dict[ESortingLayer : List[GameObject]]  = {}  # 관리 중인 오브젝트 리스트.
         self.m_addObjects: List[GameObject]                     = []  # 추가할 오브젝트 리스트.
@@ -94,7 +92,7 @@ class GameObjectManager:
             self.m_addObjects.clear()
 
         if len(self.m_objects) > 0:
-            from Frameworks.Core.Components.SpriteRenderer import ESortingLayer
+            from Core.Components.SpriteRenderer import ESortingLayer
 
             # Update() 실행
             for sortingLayer in ESortingLayer:
@@ -111,7 +109,7 @@ class GameObjectManager:
 
     # 관리하는 오브젝트들의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        from Frameworks.Core.Components.SpriteRenderer import ESortingLayer
+        from Core.Components.SpriteRenderer import ESortingLayer
 
         if len(self.m_objects) > 0:
             toRemove: List[GameObject] = []  # 제거할 오브젝트 리스트
@@ -129,26 +127,26 @@ class GameObjectManager:
         # 물리(충돌) 이벤트를 처리합니다.
         if len(self.m_objects) > 0:
             for objects in self.m_objects.values():
-                for object in objects:
-                    if object.collisionLayer == 0:
+                for currentObject in objects:
+                    if currentObject.collisionLayer == 0:
                         continue
 
-                for object2 in objects:
-                    if object == object2:
+                for currentObject2 in objects:
+                    if currentObject == currentObject2:
                         continue
 
-                    if (object == object2 and
-                        object.collisionLayer != object2.collisionLayer):
+                    if (currentObject == currentObject2 and
+                        currentObject.collisionLayer != currentObject2.collisionLayer):
                         continue
 
-                    if (object.collider != None and
-                        object2.collider != None):
-                        if (object.collider.IsCollision(object2.collider) and
-                            object2.IsCollision(object.collider)):
-                            if not object.collider.__useTrigger:
-                                object.OnCollision(object2.collider)
-                            if not object2.collider.__useTrigger:
-                                object2.OnCollision(object.collider)
+                    if (currentObject.collider != None and
+                        currentObject2.collider != None):
+                        if (currentObject.collider.IsCollision(currentObject2.collider) and
+                            currentObject2.IsCollision(currentObject.collider)):
+                            if not currentObject.collider.__useTrigger:
+                                currentObject.OnCollision(currentObject2.collider)
+                            if not currentObject2.collider.__useTrigger:
+                                currentObject2.OnCollision(currentObject.collider)
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.
     def Render(self) -> None:
