@@ -89,7 +89,7 @@ def Main():
 
         while fixedDeltaTime > fixedUpdateTime:
             fixedDeltaTime -= fixedUpdateTime
-            SystemManager().FixedUpdate(fixedUpdateTime)
+            SystemManager().FixedUpdate(fixedUpdateTime)    # 물리 처리를 위한 FixedUpdate() 실행.
 
         # 초당 프레임 계산 구문
         SystemManager().gameFPS += 1
