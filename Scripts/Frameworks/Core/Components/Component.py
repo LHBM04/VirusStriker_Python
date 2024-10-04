@@ -10,22 +10,18 @@ class Component(metaclass = ABCMeta):
         self.owner: GameObject = _owner # 해당 컴포넌트를 소지하고 있는 게임 오브젝트.
 
     # 해당 컴포넌트가 추가되었을 때 호출됩니다.
-    @abstractmethod
     def OnAdd(self):
         pass
 
     # 해당 컴포넌트를 소지한 오브젝트의 Update()에서 같이 실행됩니다.
-    @abstractmethod
     def OnUpdate(self, _deltaTime: float):
         pass
 
     # 해당 컴포넌트를 소지한 오브젝트의 FixedUpdate()에서 같이 실행됩니다.
-    @abstractmethod
     def OnFixedUpdate(self, _fixedDeltaTime: float):
         pass
 
     # 해당 컴포넌트가 삭제되었을 떄 호출됩니다.
-    @abstractmethod
     def OnDelete(self):
         pass
 
@@ -82,4 +78,4 @@ class ComponentManager:
     # 소지하고 잇는 컴포넌트의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         for currentComponent in self.__components.values():
-            currentComponent.OnUpdate(_fixedDeltaTime)
+            currentComponent.OnFixedUpdate(_fixedDeltaTime)

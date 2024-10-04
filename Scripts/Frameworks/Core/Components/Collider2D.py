@@ -59,10 +59,10 @@ class BoxCollider2D(Collider2D):
             return False
 
         # AABB 검사
-        min1: Vector2 = self.owner.transform.position + self.min
-        min2: Vector2 = _other.owner.transform.position + _other.min
-        max1: Vector2 = self.owner.transform.position + self.max
-        max2: Vector2 = _other.owner.transform.position + _other.max
+        min1: Vector2 = self.owner.transform.__position + self.min
+        min2: Vector2 = _other.owner.transform.__position + _other.min
+        max1: Vector2 = self.owner.transform.__position + self.max
+        max2: Vector2 = _other.owner.transform.__position + _other.max
 
         if (min1.x < max2.x and max1.x > min2.x and
             min1.y < max2.y and max1.y > min2.y):

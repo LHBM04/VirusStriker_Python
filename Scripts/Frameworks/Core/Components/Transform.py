@@ -1,41 +1,11 @@
 from typing import final
 from typing import List
-from dataclasses import dataclass
+
 
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
+from Core.Utilities.Mathematics.Rotation import Rotation
 from Core.Utilities.Mathematics.Vector2 import Vector2
-
-# 로테이션 정보
-@dataclass
-class Rotation:
-    __x: bool     # x축 뒤집기 여부
-    __y: bool     # y축 뒤집기 여부
-    __z: float    # z축 회전값 
-
-    @property
-    def x(self) -> bool:
-        return self.__x
-
-    @x.setter
-    def x(self, _isFlip: bool) -> None:
-        self.__x = _isFlip
-
-    @property
-    def y(self) -> bool:
-        return self.__y
-
-    @y.setter
-    def y(self, _isFlip: bool) -> None:
-        self.__y = _isFlip
-
-    @property
-    def z(self) -> float:
-        return self.__z
-
-    @z.setter
-    def z(self, _z: float) -> None:
-        self.__z = _z
 
 # 오브젝트의 위치, 크기, 회전값 등을 저장하는 컴포넌트
 @final
@@ -69,3 +39,6 @@ class Transform(Component):
     @property
     def rotation(self) -> Rotation:
         return self.__rotation
+
+    def OnUpdate(self, _deltaTime: float):
+        pass
