@@ -3,10 +3,6 @@ from typing import List
 
 from pico2d import *
 
-from Core.System import SystemManager
-from Core.Utilities.InputManagement import EInputState, InputManager
-from Core.Utilities.Mathematics import Vector2
-
 # 이벤트를 받아, 이를 처리한 후 수신합니다.
 def ReceiveEvent() -> list['Event']:
     gotEvent: 'SDL_Event' = SDL_Event()
@@ -29,6 +25,10 @@ def ReceiveEvent() -> list['Event']:
 
 # 수신한 이벤트를 받아 처리합니다.
 def SendEvent(_events: list[Event]) -> None:
+    from Core.System import SystemManager
+    from Core.Utilities.InputManagement import EInputState, InputManager
+    from Core.Utilities.Mathematics import Vector2
+
     for event in _events:
         if event.type == SDL_QUIT:
             SystemManager().isRunning = False
@@ -47,15 +47,19 @@ def SendEvent(_events: list[Event]) -> None:
                 InputManager().mousePosition = Vector2(event.x, event.y)
 
 def Initialize():
+    from Core.System import SystemManager
+    from Level.SceneManagement import SceneManager
+    from Level.Stages.TestScene import TestScene
+
     open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기
     SDL_SetWindowTitle(pico2d.window, SystemManager().windowName.encode('utf-8'))  # 윈도우 이름 변
 
-    from Level.SceneManagement import SceneManager
-    from Level.Stages.TestScene import TestScene
     SceneManager().AddLevel("Test Scene", TestScene())
     SceneManager().LoadLevel("Test Scene")
 
 def Main():
+    from Core.System import SystemManager
+
     previousTime: float = time()  # 이전 프레임 시간
     currentTime: float = 0.0  # 현재 프레임 시간
 

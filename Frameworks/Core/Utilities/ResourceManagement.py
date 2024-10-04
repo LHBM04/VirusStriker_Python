@@ -3,7 +3,7 @@ from typing import Iterator, List, final, Dict
 
 from pico2d import *
 
-from Core.Utilities.Singleton import Singleton
+from Frameworks.Core.Utilities.Singleton import Singleton
 
 def MakePath(_path: str) -> Path:
     return Path(_path)

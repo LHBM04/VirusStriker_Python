@@ -1,14 +1,24 @@
 from abc import ABC, abstractmethod
 from typing import final, List, Dict
 
+from Frameworks.Core.Components.Component import ComponentManager
+from Frameworks.Core.Components.Transform import Transform
+from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer
+
 # 게임 내 모든 오브젝트의 베이스 클래스.
 class GameObject(ABC):
     def __init__(self):
-        from Core.Components.Transform import Transform
-        from Core.Components.SpriteRenderer import SpriteRenderer
+        self._componetManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
+        self._componetManager.AddComponent(Transform(self))          # Transform Add
+        self._componetManager.AddComponent(SpriteRenderer(self))     # SpriteRenderer Add
 
-        self.transform: 'Transform' = Transform(self)
-        self.spriteRenderer: 'SpriteRenderer' = SpriteRenderer(self)
+    @property
+    def transform(self) -> Transform:
+        return self._componetManager.GetComponent(type(Transform))
+
+    @property
+    def spriteRenderer(self) -> SpriteRenderer:
+        return self._componetManager.GetComponent(type(SpriteRenderer))
 
     # 해당 오브젝트가 'Game Object Manager'에 추가될 때 실행됩니다.
     @abstractmethod
@@ -35,7 +45,7 @@ class GameObject(ABC):
     def Destroy(self):
         pass
 
-from Core.Components.SpriteRenderer import ESortingLayer
+from Frameworks.Core.Components.SpriteRenderer import ESortingLayer
 
 # Scene 내에서 사용되는 모든 오브젝트를 관리합니다.
 @final
