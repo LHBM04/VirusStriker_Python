@@ -3,7 +3,7 @@ from enum import Enum
 
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
-from Frameworks.Core.Utilities.Mathematics import Vector2
+from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
 
 # 충돌 검사를 위한 열거형.
 # 필요한 게 있을 때마다 추가하여 쓰도록 하자

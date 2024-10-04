@@ -27,7 +27,7 @@ def ReceiveEvent() -> list['Event']:
 def SendEvent(_events: list[Event]) -> None:
     from Core.System import SystemManager
     from Core.Utilities.InputManagement import EInputState, InputManager
-    from Core.Utilities.Mathematics import Vector2
+    from Core.Utilities.Mathematics.Vector2 import Vector2
 
     for event in _events:
         if event.type == SDL_QUIT:

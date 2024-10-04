@@ -52,7 +52,6 @@ class Color:
     def a(self, _a: int) -> None:
         self.a = max(self.MinValue(), min(_a, self.MaxValue()))
 
-
     def __eq__(self, _other: 'Color') -> bool:
         return self.__r == _other.__r and self.__g == _other.__g and self.__b == _other.__b and self.a == _other.a
 

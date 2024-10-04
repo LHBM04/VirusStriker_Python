@@ -5,7 +5,7 @@ from pico2d import *
 from Frameworks.Core.Components.Component import Component
 from Frameworks.Core.Components.GameObject import GameObject
 from Frameworks.Core.Utilities.Color import Color
-from Frameworks.Core.Utilities.Mathematics import Vector2
+from Frameworks.Core.Utilities.Mathematics.Vector2 import Vector2
 
 # 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
 class ESortingLayer(Enum):

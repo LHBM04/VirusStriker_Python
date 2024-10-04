@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
-from Core.Utilities.Mathematics import Vector2
+from Core.Utilities.Mathematics.Vector2 import Vector2
 
 # 로테이션 정보
 @dataclass
