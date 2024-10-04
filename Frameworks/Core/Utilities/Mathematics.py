@@ -111,8 +111,24 @@ class MathF:
 @final
 class Vector2:
     def __init__(self, _x: float = 0.0, _y: float = 0.0) -> None:
-        self.x: float = _x
-        self.y: float = _y
+        self.__x: float = _x
+        self.__y: float = _y
+
+    @property
+    def x(self) -> float:
+        return self.__x
+
+    @x.setter
+    def x(self, _x: float) -> None:
+        self.__x = _x
+
+    @property
+    def y(self) -> float:
+        return self.__y
+
+    @y.setter
+    def y(self, _y: float) -> None:
+        self.__y = _y
 
     # 방향 벡터 (클래스 메서드로 변경)
     @staticmethod
@@ -137,22 +153,22 @@ class Vector2:
 
     # 연산자 오버로딩
     def __neg__(self) -> 'Vector2':
-        return Vector2(-self.x, -self.y)
+        return Vector2(-self.__x, -self.__y)
 
     def __add__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.x + _other.x, self.y + _other.y)
+        return Vector2(self.__x + _other.__x, self.__y + _other.__y)
 
     def __sub__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.x - _other.x, self.y - _other.y)
+        return Vector2(self.__x - _other.__x, self.__y - _other.__y)
 
     def __mul__(self, _other: float) -> 'Vector2':
-        return Vector2(self.x * _other, self.y * _other)
+        return Vector2(self.__x * _other, self.__y * _other)
 
     def __truediv__(self, _other: float) -> 'Vector2':
-        return Vector2(self.x / _other, self.y / _other)
+        return Vector2(self.__x / _other, self.__y / _other)
 
     def __eq__(self, _other: 'Vector2') -> bool:
-        return MathF.Equalf(float(self.x), _other.x) and MathF.Equalf(float(self.y), _other.y)
+        return MathF.Equalf(float(self.__x), _other.__x) and MathF.Equalf(float(self.__y), _other.__y)
 
     def __ne__(self, _other: 'Vector2') -> bool:
         return not self.__eq__(_other)
@@ -163,9 +179,33 @@ class Vector3:
                  _x: float = 0.0,
                  _y: float = 0.0,
                  _z: float = 0.0):
-        self.x: float = _x
-        self.y: float = _y
-        self.z: float = _z
+        self.__x: float = _x
+        self.__y: float = _y
+        self.__z: float = _z
+
+    @property
+    def x(self) -> float:
+        return self.__x
+
+    @x.setter
+    def x(self, _x: float) -> None:
+        self.__x = _x
+
+    @property
+    def y(self) -> float:
+        return self.__y
+
+    @y.setter
+    def y(self, _y: float) -> None:
+        self.__y = _y
+
+    @property
+    def z(self) -> float:
+        return self.__z
+
+    @z.setter
+    def z(self, _z: float) -> None:
+        self.__z = _z
 
     # 방향 벡터 (클래스 메서드로 제공)
     @staticmethod
@@ -229,7 +269,7 @@ class MethVec:
         magnitude = self.Magnitude()
         if magnitude == 0:
             return Vector2.Zero()  # 크기가 0인 경우 Zero 벡터 반환
-        return Vector2(self.x / magnitude, self.y / magnitude)
+        return Vector2(self.__x / magnitude, self.__y / magnitude)
 
     @staticmethod
     def Floor(_value: float, _interval: float = 1.0, _offset=0) -> float:
