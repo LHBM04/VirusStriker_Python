@@ -6,34 +6,29 @@ from numpy import abs, atan2, ceil, cos, deg2rad, dot, floor, rad2deg, sin, sqrt
 @final
 class MathF:
     @staticmethod
-    @property
     def epsilon(self) -> float:
         return 0.0001
 
     @staticmethod
-    @property
     def pi(self) -> float:
         return 3.141592
 
     @staticmethod
-    @property
     def halfPi(self) -> float:
         return 1.570796
 
     @staticmethod
-    @property
     def oneThreeFourthsPi(self) -> float:
         return 5.4977871
 
     @staticmethod
-    @property
     def doublePi(self) -> float:
         return 6.283185
 
     @dispatch(float, float)
     @staticmethod
     def Equalf(self, _lhs: float, _rhs: float) -> bool:
-        return abs(_lhs - _rhs) < MathF.epsilon
+        return abs(_lhs - _rhs) < self.epsilon()
 
     @dispatch(float, float, float)
     @staticmethod
@@ -43,7 +38,7 @@ class MathF:
     @dispatch(float)
     @staticmethod
     def Equalf(self, _value: float) -> bool:
-        return MathF.Equalf(_value, 0.0)
+        return self.Equalf(_value, 0.0)
 
     @staticmethod
     def Proportion(self, _a: float, _b: float, _d: float) -> float:
