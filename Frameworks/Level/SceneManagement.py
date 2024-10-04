@@ -4,10 +4,10 @@ from typing import final, Dict
 
 from Core.Utilities.Singleton import Singleton
 
-from Core.Components.GameObject import GameObjectManager
-
 class Scene(ABC):
     def __init__(self) -> None:
+        from Core.Components.GameObject import GameObjectManager
+
         self.objectManager: GameObjectManager   = GameObjectManager()   # 해당 Level 내 오브젝트를 관리하는 매니저 인스턴스
         self.uiManager: GameObjectManager       = GameObjectManager()   # 해당 Level 내 UI를 관리하는 매니저 인스턴스
 

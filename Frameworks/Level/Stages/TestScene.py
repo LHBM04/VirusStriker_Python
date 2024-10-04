@@ -11,9 +11,9 @@ from Level.SceneManagement import Scene
 class TestScene(Scene):
     def __init__(self):
         super().__init__()
-        self.testImage: 'Image' = ResourceManager().GetSprite(r"Resources\Sprites\Backgrounds\Sprite_Background_Initialize.png")
-        self.testBGM: 'Music'   = ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_Title.wav")
-        self.testSFX: 'Wav'     = ResourceManager().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav")
+        self.testImage: Image = ResourceManager().GetSprite(r"Resources\Sprites\Backgrounds\Sprite_Background_Initialize.png")
+        self.testBGM: Music   = ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_Title.wav")
+        self.testSFX: Wav     = ResourceManager().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav")
 
     def OnEnter(self) -> None:
         self.testBGM.set_volume(17)
