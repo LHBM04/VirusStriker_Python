@@ -40,11 +40,11 @@ class SpriteRenderer(Component):
         isFilp: str = (('w' if self.owner.transform.rotation[0] else '') +
                        ('h' if self.owner.transform.rotation[1] else ''))
 
-        if (self.color.r > Color.MaxValue() or self.color.g > Color.MaxValue() or
-            self.color.b > Color.MaxValue() or self.color.a > Color.MaxValue()):
+        if (self.color.__r > Color.MaxValue() or self.color.__g > Color.MaxValue() or
+            self.color.__b > Color.MaxValue() or self.color.a > Color.MaxValue()):
             raise ValueError("[Oops!] 해당 렌더러의 컬러값이 잘못되었습니다.")
 
         self.sprite.composite_draw(rotate, isFilp, x, y, scaleX, scaleY)
-        SDL_SetTextureColorMod(self.sprite.texture, int(self.color.r), int(self.color.g), int(self.color.b))
+        SDL_SetTextureColorMod(self.sprite.texture, int(self.color.__r), int(self.color.__g), int(self.color.__b))
         SDL_SetTextureAlphaMod(self.sprite.texture, int(self.color.a))
         SDL_SetTextureBlendMode(self.sprite.texture, SDL_BLENDMODE_BLEND)

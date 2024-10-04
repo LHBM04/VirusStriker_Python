@@ -11,12 +11,12 @@ def MakePath(_path: str) -> Path:
 @final
 class ResourceManager(metaclass=Singleton):
     def __init__(self):
-        self.spriteBank: Dict[str, list[Image]] = {}
-        self.spriteFileSuffix: str = ".str"
+        self._spriteBank: Dict[str, list[Image]] = {}
+        self.__spriteFileSuffix: str = ".str"
 
-        self.bgmBank: Dict[str, Music] = {}
-        self.sfxBank: Dict[str, Wav] = {}
-        self.audioFileSuffix: str = '.wav'
+        self._bgmBank: Dict[str, Music] = {}
+        self._sfxBank: Dict[str, Wav] = {}
+        self.__audioFileSuffix: str = '.wav'
 
     def LoadSprite(self, _filePath: Path) -> Iterator[Image]:
         if not _filePath.exists() or not _filePath.is_file():
@@ -45,31 +45,31 @@ class ResourceManager(metaclass=Singleton):
         yield load_wav(str(_filePath))
 
     def GetSprite(self, _key: str, _index: int = 0) -> Image:
-        if _key not in self.spriteBank.keys():
-            self.spriteBank[_key] = []
+        if _key not in self._spriteBank.keys():
+            self._spriteBank[_key] = []
             for image in self.LoadSprite(MakePath(_key)):
-                self.spriteBank[_key].append(image)
+                self._spriteBank[_key].append(image)
 
-        return self.spriteBank[_key][_index]
+        return self._spriteBank[_key][_index]
 
     def GetImages(self, _key: str) -> List[Image]:
-        if _key not in self.spriteBank.keys():
-            self.spriteBank[_key] = []
+        if _key not in self._spriteBank.keys():
+            self._spriteBank[_key] = []
             for image in self.LoadSprites(MakePath(_key)):
-                self.spriteBank[_key].append(image)
+                self._spriteBank[_key].append(image)
 
-        return self.spriteBank[_key]
+        return self._spriteBank[_key]
 
     def GetBGM(self, _key: str) -> Music:
-        if _key not in self.bgmBank.keys():
+        if _key not in self._bgmBank.keys():
             for bgm in self.LoadBGM(MakePath(_key)):
-                self.bgmBank[_key] = bgm
+                self._bgmBank[_key] = bgm
 
-        return self.bgmBank[_key]
+        return self._bgmBank[_key]
 
     def GetSFX(self, _key: str) -> Wav:
-        if _key not in self.sfxBank.keys():
+        if _key not in self._sfxBank.keys():
             for sfx in self.LoadSFX(MakePath(_key)):
-                self.sfxBank[_key] = sfx
+                self._sfxBank[_key] = sfx
 
-        return self.sfxBank[_key]
+        return self._sfxBank[_key]
