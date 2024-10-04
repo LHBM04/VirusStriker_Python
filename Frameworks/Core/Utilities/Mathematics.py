@@ -1,34 +1,39 @@
 from typing import final
 
 from multipledispatch import dispatch
-from numpy import *
+from numpy import abs, atan2, ceil, cos, deg2rad, dot, floor, rad2deg, sin, sqrt, tan
 
 @final
 class MathF:
     @staticmethod
+    @property
     def epsilon(self) -> float:
         return 0.0001
 
     @staticmethod
+    @property
     def pi(self) -> float:
         return 3.141592
 
     @staticmethod
+    @property
     def halfPi(self) -> float:
         return 1.570796
 
     @staticmethod
+    @property
     def oneThreeFourthsPi(self) -> float:
         return 5.4977871
 
     @staticmethod
+    @property
     def doublePi(self) -> float:
         return 6.283185
 
     @dispatch(float, float)
     @staticmethod
     def Equalf(self, _lhs: float, _rhs: float) -> bool:
-        return abs(_lhs - _rhs) < MathF.epsilon()
+        return abs(_lhs - _rhs) < MathF.epsilon
 
     @dispatch(float, float, float)
     @staticmethod
@@ -213,7 +218,7 @@ class Vector3:
         return Vector3(self.x / _other, self.y / _other, self.z / _other)
 
     def __eq__(self, _other: 'Vector3') -> bool:
-        return (self.x is _other.x and self.y is _other.y and self.z is _other.z)
+        return self.x is _other.x and self.y is _other.y and self.z is _other.z
 
     def __ne__(self, _other: 'Vector3') -> bool:
         return not self.__eq__(_other)
@@ -222,7 +227,7 @@ class Vector3:
 class MethVec:
     @staticmethod
     def Magnitude(_vec: Vector2) -> float:
-        return np.sqrt(_vec.m_x ** 2 + _vec.m_y ** 2)
+        return sqrt(_vec.m_x ** 2 + _vec.m_y ** 2)
 
     @staticmethod
     def Normalized(self) -> Vector2:
@@ -233,7 +238,7 @@ class MethVec:
 
     @staticmethod
     def Floor(_value: float, _interval: float = 1.0, _offset=0) -> float:
-        return np.floor((_value - _offset) / _interval) * _interval + _offset
+        return floor((_value - _offset) / _interval) * _interval + _offset
 
     @staticmethod
     def Flip(_value: Vector2, _over: Vector2 = None) -> Vector2:
@@ -244,7 +249,7 @@ class MethVec:
 
     @staticmethod
     def Angle(_vec: Vector2) -> float:
-        return np.atan2(_vec.m_y, _vec.m_x)
+        return atan2(_vec.m_y, _vec.m_x)
 
     @staticmethod
     def Lerp(_lhs: Vector2, _rhs: Vector2, amount: float) -> Vector2:
@@ -252,7 +257,7 @@ class MethVec:
 
     @staticmethod
     def Dot(_lhs: Vector2, _rhs: Vector2) -> float:
-        return np.dot([_lhs.m_x, _lhs.m_y], [_rhs.m_x, _rhs.m_y])
+        return dot([_lhs.m_x, _lhs.m_y], [_rhs.m_x, _rhs.m_y])
 
     @staticmethod
     def MidPoint(_lhs: Vector2, _rhs: Vector2) -> Vector2:
@@ -260,7 +265,7 @@ class MethVec:
 
     @staticmethod
     def AngleToVector2(_angle: float) -> 'Vector2':
-        return Vector2(np.cos(_angle), np.sin(_angle))
+        return Vector2(cos(_angle), sin(_angle))
 
     @staticmethod
     def Highest(self, _lhs: 'Vector2', _rhs: 'Vector2', direction: float) -> float:
@@ -284,7 +289,7 @@ class MethVec:
     @dispatch(Vector2, Vector2, float)
     @staticmethod
     def Project(self, _lhs, _rhs, _angle) -> Vector2:
-        return self.Proportion(_lhs, _rhs, _rhs + (Vector2(np.cos(_angle), np.sin(_angle))))
+        return self.Proportion(_lhs, _rhs, _rhs + (Vector2(cos(_angle), sin(_angle))))
 
     @staticmethod
     def IsPerp(_lhs: Vector2, _rhs: Vector2) -> bool:
@@ -298,7 +303,7 @@ class MethVec:
     @dispatch(Vector2, Vector2, float)
     @staticmethod
     def Project(_lhs: 'Vector2', _rhs: Vector2, _angle: float) -> 'Vector2':
-        return MathF.Project(_lhs, _rhs, _rhs + Vector2(np.cos(_angle), np.sin(_angle)))
+        return MathF.Project(_lhs, _rhs, _rhs + Vector2(cos(_angle), sin(_angle)))
 
     @dispatch(Vector2, Vector2, Vector2)
     @staticmethod
@@ -314,11 +319,11 @@ class MethVec:
     @dispatch(Vector2, float)
     @staticmethod
     def ScalarProjection(self, _vec: Vector2, _theta: float) -> float:
-        return self.megitude * np.cos(_theta)
+        return self.megitude * cos(_theta)
 
     @staticmethod
     def ScalarProjectionAbs(_vec: Vector2, _theta: float) -> float:
-        return MathF.Magnitude(_vec) * np.cos(MathF.Angle(_vec) - _theta)
+        return MathF.Magnitude(_vec) * cos(MathF.Angle(_vec) - _theta)
 
     @dispatch(Vector2, float)
     @staticmethod
@@ -328,8 +333,8 @@ class MethVec:
     @dispatch(Vector2, float, Vector2)
     @staticmethod
     def RotateBy(_point: Vector2, _angle: float, _origin: Vector2) -> Vector2:
-        s: float = np.sin(_angle)
-        c: float = np.cos(_angle)
+        s: float = sin(_angle)
+        c: float = cos(_angle)
 
         nPoint: Vector2 = _point - _origin
 
@@ -343,7 +348,7 @@ class MethVec:
     @dispatch(Vector2, float, Vector2)
     @staticmethod
     def RotateTo(_point: Vector2, _angle: float, _origin: Vector2) -> Vector2:
-        return MathF.RotateBy(_point, _angle - np.atan2(_point.m_y - _origin.m_y, _point.m_x - _origin.m_x), _origin)
+        return MathF.RotateBy(_point, _angle - atan2(_point.m_y - _origin.m_y, _point.m_x - _origin.m_x), _origin)
 
     @staticmethod
     def ShortesArc(_lhs: Vector2, _rhs: Vector2) -> float:
@@ -351,4 +356,4 @@ class MethVec:
 
     @staticmethod
     def ShortesArcToDegree(_lhs: Vector2, _rhs: Vector2) -> float:
-        return MathF.ShortesArc_ByFloat(MathF.Angle(_lhs) * np.rad2deg(1), MathF.Angle(_rhs) * np.rad2deg(1))
+        return MathF.ShortesArc_ByFloat(MathF.Angle(_lhs) * rad2deg(1), MathF.Angle(_rhs) * rad2deg(1))
