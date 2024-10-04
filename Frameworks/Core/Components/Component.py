@@ -14,7 +14,11 @@ class Component(metaclass = ABCMeta):
         pass
 
     @abstractmethod
-    def OnUpdate(self):
+    def OnUpdate(self, _deltaTime: float):
+        pass
+
+    @abstractmethod
+    def OnFixedUpdate(self, _fixedDeltaTime: float):
         pass
 
     @abstractmethod
@@ -36,6 +40,7 @@ class ComponentManager:
             return False
 
         self.__components[type(component)] = component
+        component.OnAdd()
         return True
 
     # 컴포넌트들을 추가합니다.
@@ -43,9 +48,9 @@ class ComponentManager:
         for currentComponent in self.__components:
             if type(currentComponent) in self.__components.keys():
                 return False
-
-        for currentComponent in self.__components:
-            self.__components[type(currentComponent)] = currentComponent
+            else:
+                self.__components[type(currentComponent)] = currentComponent
+                currentComponent.OnAdd()
 
         return True
 
@@ -56,9 +61,20 @@ class ComponentManager:
 
         return self.__components[_componentType]
 
+    # 소지하고 있는 컴포넌트를 삭제합니다.
     def RemoveComponent(self, _componentType: Type[TComponent]) -> bool:
         if _componentType not in self.__components.keys():
             raise ValueError(f"[Oops!] 포함되지 않은 컴포넌트입니다. 검색하려던 컴포넌트는 \"{str(_componentType)}\"였습니다.")
 
-        self.__components.pop(_componentType)
+        delObject: Component = self.__components.pop(_componentType)
+        delObject.OnDelete()
         return True
+
+    # 소지하고 있는 컴포넌트를 업데이트합니다.
+    def Update(self, _deltaTime: float) -> None:
+        for currentComponent in self.__components.values():
+            currentComponent.OnUpdate(_deltaTime)
+
+    def FixedUpdate(self, _fixedDeltaTime: float) -> None:
+        for currentComponent in self.__components.values():
+            currentComponent.OnUpdate(_fixedDeltaTime)
