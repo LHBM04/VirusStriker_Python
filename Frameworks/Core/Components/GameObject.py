@@ -8,6 +8,7 @@ from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer, ESortingLa
 # 게임 내 모든 오브젝트의 베이스 클래스.
 class GameObject(metaclass = ABCMeta):
     def __init__(self):
+        self.name: str = "Game Object"
         self._componentManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
         self._componentManager.AddComponent(Transform(self))          # Transform Add
         self._componentManager.AddComponent(SpriteRenderer(self))     # SpriteRenderer Add
@@ -36,7 +37,7 @@ class GameObject(metaclass = ABCMeta):
     # 매 프레임마다 실행됩니다.
     @abstractmethod
     def Update(self, _deltaTime: float) -> None:
-        pass
+        self._componentManager.Update(_deltaTime)
 
     # 매 고정 프레임마다 실행됩니다.
     @abstractmethod
