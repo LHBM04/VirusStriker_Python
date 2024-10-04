@@ -12,9 +12,9 @@ class Transform(Component):
     def __init__(self, _owner: GameObject):
         super().__init__(_owner)
 
-        self.position: Vector2            = Vector2(0.0, 0.0) # 현재 포지션
-        self.scale: Vector2               = Vector2(0.0, 0.0) # 현재 크기
-        self.rotation: (bool, bool, float)  = (False, False, 0.0)     # 현재 회전값. (X, Y축은 Boolean.)
+        self.position: Vector2              = Vector2(0.0, 0.0)  # 현재 포지션
+        self.scale: Vector2                 = Vector2(0.0, 0.0)  # 현재 크기
+        self.rotation: (bool, bool, float)  = (False, False, 0.0)       # 현재 회전값. (X, Y축은 Boolean.)
 
-        self.parent: 'Transform'            = None                    # 부모 트랜스폼
-        self.children: List['Transform']    = []                      # 자식 트랜스폼
+        self.parent: 'Transform'            = None                      # 부모 트랜스폼
+        self.children: List['Transform']    = []                        # 자식 트랜스폼
