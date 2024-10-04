@@ -8,14 +8,14 @@ from Frameworks.Core.Components.SpriteRenderer import SpriteRenderer, ESortingLa
 # 게임 내 모든 오브젝트의 베이스 클래스.
 class GameObject(metaclass = ABCMeta):
     def __init__(self):
-        self.m_componentManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
-        self.m_componentManager.AddComponent(Transform(self))          # Transform Add
-        self.m_componentManager.AddComponent(SpriteRenderer(self))     # SpriteRenderer Add
+        self._componentManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
+        self._componentManager.AddComponent(Transform(self))          # Transform Add
+        self._componentManager.AddComponent(SpriteRenderer(self))     # SpriteRenderer Add
 
     # 해당 플레이어의 Transform
     @property
     def transform(self) -> Transform:
-        component = self.m_componentManager.GetComponent(Transform)
+        component = self._componentManager.GetComponent(Transform)
         if isinstance(component, Transform):
             return component
         raise TypeError(f"Expected Transform, but got {type(component).__name__}")
@@ -23,7 +23,7 @@ class GameObject(metaclass = ABCMeta):
     # 해당 오브젝트의 Sprite Renderer
     @property
     def spriteRenderer(self) -> SpriteRenderer:
-        component = self.m_componentManager.GetComponent(SpriteRenderer)
+        component = self._componentManager.GetComponent(SpriteRenderer)
         if isinstance(component, SpriteRenderer):
             return component
         raise TypeError(f"Expected SpriteRenderer, but got {type(component).__name__}")
@@ -132,9 +132,9 @@ class GameObjectManager:
                         object2.collider != None):
                         if (object.collider.IsCollision(object2.collider) and
                             object2.IsCollision(object.collider)):
-                            if not object.collider.useTrigger:
+                            if not object.collider.__useTrigger:
                                 object.OnCollision(object2.collider)
-                            if not object2.collider.useTrigger:
+                            if not object2.collider.__useTrigger:
                                 object2.OnCollision(object.collider)
 
     # 관리하는 오브젝트들의 Render()를 실행합니다.

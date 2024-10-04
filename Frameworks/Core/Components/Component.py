@@ -28,37 +28,37 @@ TComponent: TypeVar = TypeVar('TComponent', bound = Component)
 @final
 class ComponentManager:
     def __init__(self):
-        self.components: Dict[Type[TComponent] : Component] = { }
+        self.__components: Dict[Type[TComponent]: Component] = { }
 
     # 컴포넌트를 추가합니다.
     def AddComponent(self, component: Component) -> bool:
-        if type(component) in self.components.keys():
+        if type(component) in self.__components.keys():
             return False
 
-        self.components[type(component)] = component
+        self.__components[type(component)] = component
         return True
 
     # 컴포넌트들을 추가합니다.
     def AddComponents(self, _components: Set[Component]) -> bool:
-        for currentComponent in self.components:
-            if type(currentComponent) in self.components.keys():
+        for currentComponent in self.__components:
+            if type(currentComponent) in self.__components.keys():
                 return False
 
-        for currentComponent in self.components:
-            self.components[type(currentComponent)] = currentComponent
+        for currentComponent in self.__components:
+            self.__components[type(currentComponent)] = currentComponent
 
         return True
 
     # 소지하고 있는 컴포넌트를 가져옵니다.
     def GetComponent(self, _componentType: Type[TComponent]) -> Component:
-        if _componentType not in self.components.keys():
+        if _componentType not in self.__components.keys():
             raise ValueError(f"[Oops!] 포함되지 않은 컴포넌트입니다. 검색하려던 컴포넌트는 \"{str(_componentType)}\"였습니다.")
 
-        return self.components[_componentType]
+        return self.__components[_componentType]
 
     def RemoveComponent(self, _componentType: Type[TComponent]) -> bool:
-        if _componentType not in self.components.keys():
+        if _componentType not in self.__components.keys():
             raise ValueError(f"[Oops!] 포함되지 않은 컴포넌트입니다. 검색하려던 컴포넌트는 \"{str(_componentType)}\"였습니다.")
 
-        self.components.pop(_componentType)
+        self.__components.pop(_componentType)
         return True

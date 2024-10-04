@@ -17,8 +17,24 @@ class Collider2D(metaclass = ABCMeta, Component):
     def __init__(self, _owner: GameObject) -> None:
         super().__init__(_owner)
 
-        self.tag: EColliderTag = EColliderTag.NONE
-        self.useTrigger = False
+        self.__tag: EColliderTag    = EColliderTag.NONE
+        self.__useTrigger           = False
+
+    @property
+    def tag(self) -> EColliderTag:
+        return self.__tag
+
+    @tag.setter
+    def tag(self, _newTag: EColliderTag) -> None:
+        self.__tag = _newTag
+
+    @property
+    def useTrigger(self) -> bool:
+        return self.__useTrigger
+
+    @useTrigger.setter
+    def useTrigger(self, _useTrigger: bool):
+        self.__useTrigger = _useTrigger
 
     @abstractmethod
     def IsCollision(self, _other: 'Collider2D') -> bool:
@@ -43,10 +59,10 @@ class BoxCollider2D(Collider2D):
             return False
 
         # AABB 검사
-        min1: Vector2 = self.owner.position + self.min
-        min2: Vector2 = _other.owner.position + _other.min
-        max1: Vector2 = self.owner.position + self.max
-        max2: Vector2 = _other.owner.position + _other.max
+        min1: Vector2 = self.owner.transform.position + self.min
+        min2: Vector2 = _other.owner.transform.position + _other.min
+        max1: Vector2 = self.owner.transform.position + self.max
+        max2: Vector2 = _other.owner.transform.position + _other.max
 
         if (min1.x < max2.x and max1.x > min2.x and
             min1.y < max2.y and max1.y > min2.y):
@@ -57,7 +73,7 @@ class BoxCollider2D(Collider2D):
     def IsTrigger(self, _other: 'Collider2D') -> bool:
         # 트리거 상태 검사 (충돌 검사와 비슷하지만 트리거 이벤트 처리 추가)
         if self.IsCollision(_other):
-            if not self.useTrigger:
+            if not self.__useTrigger:
                 return False
 
         return True
