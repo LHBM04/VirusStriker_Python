@@ -19,7 +19,7 @@ class GameObject(metaclass = ABCMeta):
         component = self._componentManager.GetComponent(Transform)
         if isinstance(component, Transform):
             return component
-        raise TypeError(f"Expected Transform, but got {type(component).__name__}")
+        raise TypeError(f"[Oops!] 캐스팅을 시도했으나, 이루어지지 않았습니다. 캐스팅 대상은 {str(component)}였습니다.")
 
     # 해당 오브젝트의 Sprite Renderer
     @property
@@ -27,7 +27,7 @@ class GameObject(metaclass = ABCMeta):
         component = self._componentManager.GetComponent(SpriteRenderer)
         if isinstance(component, SpriteRenderer):
             return component
-        raise TypeError(f"Expected SpriteRenderer, but got {type(component).__name__}")
+        raise TypeError(f"[Oops!] 캐스팅을 시도했으나, 이루어지지 않았습니다. 캐스팅 대상은 {str(component)}였습니다.")
 
     # 해당 오브젝트가 'Game Object Manager'에 추가될 때 실행됩니다.
     @abstractmethod
@@ -42,7 +42,7 @@ class GameObject(metaclass = ABCMeta):
     # 매 고정 프레임마다 실행됩니다.
     @abstractmethod
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        pass
+        self._componentManager.FixedUpdate(_fixedDeltaTime)
 
     # Update() 이후 실행됩니다.
     @abstractmethod
