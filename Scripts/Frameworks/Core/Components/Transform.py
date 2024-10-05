@@ -1,4 +1,6 @@
+from typing import final
 from typing import List
+
 
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
@@ -6,6 +8,7 @@ from Core.Utilities.Mathematics.Rotation import Rotation
 from Core.Utilities.Mathematics.Vector2 import Vector2
 
 # 오브젝트의 위치, 크기, 회전값 등을 저장하는 컴포넌트
+@final
 class Transform(Component):
     def __init__(self, _owner: GameObject):
         super().__init__(_owner)
