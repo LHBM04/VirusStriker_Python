@@ -1,10 +1,6 @@
 from collections import deque as stack
 from typing import final, Dict
 
-from pico2d import *
-
-from Core.Components.GameObject import GameObject
-from Core.Components.SpriteRenderer import Color
 from Core.Utilities.Singleton import Singleton
 from Level.SceneManagement.Scene import Scene
 from Level.SceneManagement.SceneTransition import SceneTransition

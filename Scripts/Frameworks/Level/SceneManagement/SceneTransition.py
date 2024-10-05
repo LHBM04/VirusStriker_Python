@@ -1,10 +1,10 @@
 from typing import Callable
 
 from Core.Components.GameObject import GameObject
-from Core.System import SystemManager
 from Core.Utilities.ResourceManagement import ResourceManager
 from Core.Utilities.Mathematics.Vector2 import Vector2
-from Core.Components.SpriteRenderer import Color
+from Core.Components.Renderer.SpriteRenderer import Color
+from Core.System import SystemManager
 
 # Scene 간의 전환 사이 로딩 애니메이션을 구현합니다.
 class SceneTransition(GameObject):

@@ -6,14 +6,13 @@ from pico2d import *
 from Level.SceneManagement.Scene import Scene
 from Level.SceneManagement.SceneManager import SceneManager
 
-
 # 이벤트를 받아, 이를 처리한 후 수신합니다.
-def ReceiveEvent() -> list['Event']:
+def ReceiveEvent() -> List[Event]:
     gotEvent: 'SDL_Event' = SDL_Event()
     events: List['Event'] = []
 
     while SDL_PollEvent(ctypes.byref(gotEvent)):
-        event = Event(gotEvent.type)
+        event: Event = Event(gotEvent.type)
         if event.type in (SDL_QUIT, SDL_KEYDOWN, SDL_KEYUP, SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP):
             if event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:                                            # 키보드 입력
                 if not gotEvent.key.repeat:
@@ -28,7 +27,7 @@ def ReceiveEvent() -> list['Event']:
     return events
 
 # 수신한 이벤트를 받아 처리합니다.
-def SendEvent(_events: list[Event]) -> None:
+def SendEvent(_events: List[Event]) -> None:
     from Core.System import SystemManager
     from Core.Utilities.Mathematics.Vector2 import Vector2
     from Core.Utilities.InputManagement import  EInputState, InputManager
@@ -50,7 +49,7 @@ def SendEvent(_events: list[Event]) -> None:
                 InputManager().SetMouseState(event.key, EInputState.DOWN)
                 InputManager().mousePosition = Vector2(event.x, event.y)
 
-def Initialize():
+def Initialize() -> None:
     from Core.System import SystemManager
     from Level.SceneManagement.SceneManager import SceneManager
     from Levels.TestScene import TestScene
@@ -61,7 +60,7 @@ def Initialize():
     SceneManager().AddLevel("Test Scene", TestScene())
     SceneManager().LoadLevel("Test Scene")
 
-def Main():
+def Main() -> None:
     from Core.System import SystemManager
 
     previousTime: float = Time.time()  # 이전 시간

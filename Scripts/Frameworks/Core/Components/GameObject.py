@@ -1,12 +1,11 @@
-from abc import ABCMeta, abstractmethod
 from typing import final, List, Dict
 
 # 게임 내 모든 오브젝트의 베이스 클래스.
 class GameObject:
     def __init__(self):
         from Core.Components.Component import ComponentManager
-        from Core.Components.Transform import Transform
-        from Core.Components.SpriteRenderer import SpriteRenderer
+        from Core.Components.Transform.Transform import Transform
+        from Core.Components.Renderer.SpriteRenderer import SpriteRenderer
 
         self.name: str = "Game Object"
         self._componentManager: ComponentManager = ComponentManager() # Component Manager 선언 및 초기화
@@ -17,7 +16,7 @@ class GameObject:
     # 해당 플레이어의 Transform
     @property
     def transform(self) -> 'Transform':
-        from Core.Components.Transform import Transform
+        from Core.Components.Transform.Transform import Transform
 
         component = self._componentManager.GetComponent(Transform)
         if isinstance(component, Transform):
@@ -27,7 +26,7 @@ class GameObject:
     # 해당 오브젝트의 Sprite Renderer
     @property
     def spriteRenderer(self) -> 'SpriteRenderer':
-        from Core.Components.SpriteRenderer import SpriteRenderer
+        from Core.Components.Renderer.SpriteRenderer import SpriteRenderer
 
         component = self._componentManager.GetComponent(SpriteRenderer)
         if isinstance(component, SpriteRenderer):
@@ -63,7 +62,7 @@ class GameObject:
 @final
 class GameObjectManager:
     def __init__(self) -> None:
-        from Core.Components.SpriteRenderer import ESortingLayer
+        from Core.Components.Renderer.SpriteRenderer import ESortingLayer
 
         self.m_objects: Dict[ESortingLayer : List[GameObject]]  = {}  # 관리 중인 오브젝트 리스트.
         self.m_addObjects: List[GameObject]                     = []  # 추가할 오브젝트 리스트.
@@ -93,7 +92,7 @@ class GameObjectManager:
             self.m_addObjects.clear()
 
         if len(self.m_objects) > 0:
-            from Core.Components.SpriteRenderer import ESortingLayer
+            from Core.Components.Renderer.SpriteRenderer import ESortingLayer
 
             # Update() 실행
             for sortingLayer in ESortingLayer:
@@ -110,7 +109,7 @@ class GameObjectManager:
 
     # 관리하는 오브젝트들의 FixedUpdate()를 실행합니다.
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        from Core.Components.SpriteRenderer import ESortingLayer
+        from Core.Components.Renderer.SpriteRenderer import ESortingLayer
 
         if len(self.m_objects) > 0:
             toRemove: List[GameObject] = []  # 제거할 오브젝트 리스트
@@ -149,11 +148,11 @@ class GameObjectManager:
                             if not currentObject2.collider.__useTrigger:
                                 currentObject2.OnCollision(currentObject.collider)
 
-    # 관리하는 오브젝트들의 Render()를 실행합니다.
+    # 관리하는 오브젝트들의 Renderer()를 실행합니다.
     def Render(self) -> None:
         if len(self.m_objects) > 0:
             for layerLevel in sorted(self.m_objects.keys(), key=lambda x: x.value):
                 for object in self.m_objects[layerLevel]:
                     if object.isActive:
-                        object.Render()  # 각 오브젝트의 Render 호출
+                        object.Render()  # 각 오브젝트의 Renderer 호출
                         object.RenderDebug()  # 각 오브젝트의 RenderDebug 호출
