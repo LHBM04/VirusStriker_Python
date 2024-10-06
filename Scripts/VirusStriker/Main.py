@@ -101,7 +101,7 @@ def Main() -> None:
         SystemManager().Render()
 
         # [디버그 코드]
-        print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().fps}")
+        #print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().fps}")
 
         previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
 

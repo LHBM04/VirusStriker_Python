@@ -23,12 +23,11 @@ class TestScene(Scene):
         self.testObject.spriteRenderer.sprite = ResourceManager().GetSprite("Resources/Sprites/Backgrounds/Sprite_Background_Initialize.png")
         self.testObject.spriteRenderer.sortingLayer = ESortingLayer.BACKGROUND
         self.testObject.spriteRenderer.orderInLayer = 0
-        self.objectManager.AddObject(self.testObject)
 
     def OnEnter(self) -> None:
         super().OnEnter()
-        
-        print("Hello, World!")
+
+        self.objectManager.AddObject(self.testObject)
 
         self.testBGM.set_volume(17)
         self.testBGM.play(-1)

@@ -6,9 +6,9 @@ from logging import fatal
 @dataclass
 class Rotation:
     def __init__(self, _x: bool = False, _y: bool = False, _z: float = 0.0):
-        __x: bool = _x  # x축 뒤집기 여부
-        __y: bool = _y  # y축 뒤집기 여부
-        __z: float = _z # z축 회전값
+        self.__x: bool = _x  # x축 뒤집기 여부
+        self.__y: bool = _y  # y축 뒤집기 여부
+        self.__z: float = _z # z축 회전값
 
     @property
     def x(self) -> bool:
