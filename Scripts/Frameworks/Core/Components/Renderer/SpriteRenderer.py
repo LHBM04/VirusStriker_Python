@@ -85,7 +85,17 @@ class SpriteRenderer(Component):
                            ('h' if self.owner.transform.rotation.y else ''))
         rotate: float   = self.owner.transform.rotation.z
 
-        self.__sprite.composite_draw(rotate, isFilp, x, y, scaleX, scaleY)
-        SDL_SetTextureColorMod(self.__sprite.texture, int(self.color.r), int(self.color.g), int(self.color.b))
-        SDL_SetTextureAlphaMod(self.__sprite.texture, int(self.color.a))
-        SDL_SetTextureBlendMode(self.__sprite.texture, SDL_BLENDMODE_BLEND)
+        self.__sprite.composite_draw(rotate,
+                                     isFilp,
+                                     x,
+                                     y,
+                                     scaleX,
+                                     scaleY)
+        SDL_SetTextureColorMod(self.__sprite.texture,
+                               int(self.color.r),
+                               int(self.color.g),
+                               int(self.color.b))
+        SDL_SetTextureAlphaMod(self.__sprite.texture,
+                               int(self.color.a))
+        SDL_SetTextureBlendMode(self.__sprite.texture,
+                                SDL_BLENDMODE_BLEND)

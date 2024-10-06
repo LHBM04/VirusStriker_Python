@@ -62,10 +62,10 @@ class SystemManager(metaclass = Singleton):
     def Render(self) -> None:
         from Level.SceneManagement.SceneManager import SceneManager
 
-        update_canvas()  # 캔버스 업데이트
+        clear_canvas()
         SceneManager().RenderObject()
         SceneManager().RenderUI()
-        clear_canvas()
+        update_canvas()  # 캔버스 업데이트
 
     # 프로그램 종료 시 캔버스를 정리합니다.
     def CleanUp(self) -> None:

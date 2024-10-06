@@ -14,13 +14,18 @@ from Level.SceneManagement.SceneManager import Scene
 class TestScene(Scene):
     def __init__(self):
         super().__init__()
-        self.testBGM: Music   = ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_MainMenu3.wav")
-        self.testSFX: Wav     = ResourceManager().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav")
+        self.testBGM: Music   = (
+            ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_MainMenu3.wav"))
+        self.testSFX: Wav     = (
+            ResourceManager().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav"))
 
         self.testObject: GameObject = GameObject()
-        self.testObject.transform.position = Vector2(SystemManager().windowWidth / 2, SystemManager().windowHeight / 2)
-        self.testObject.transform.scale = Vector2(SystemManager().windowWidth, SystemManager().windowHeight)
-        self.testObject.spriteRenderer.sprite = ResourceManager().GetSprite("Resources/Sprites/Backgrounds/Sprite_Background_Initialize.png")
+        self.testObject.transform.position = (
+            Vector2(SystemManager().windowWidth / 2, SystemManager().windowHeight / 2))
+        self.testObject.transform.scale = (
+            Vector2(SystemManager().windowWidth, SystemManager().windowHeight))
+        self.testObject.spriteRenderer.sprite = (
+            ResourceManager().GetSprite("Resources/Sprites/Backgrounds/Sprite_Background_Initialize.png"))
         self.testObject.spriteRenderer.sortingLayer = ESortingLayer.BACKGROUND
         self.testObject.spriteRenderer.orderInLayer = 0
 
