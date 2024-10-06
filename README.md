@@ -13,36 +13,54 @@
 * pathlib
 * pico2d
 * sdl2
-## Frameworks
+## TODO: Frameworks(Hierarchy) ※ 추후 변경 가능
 ### Core
 #### Components
-- **Animation**
-- **Collider2D**
 - **Component**
-- **GameObject**
-- **SpriteRenderer**
-- **Transform**
-#### Objects (이하 추후 작성 예정)
-- **Actors**
-  - Player
-  - Enemies
-- **Items**
+  - **Animation**
+    - GameObject 
+  - **Animation**
+    - Animator
+    - Animation
+  - **Collider2D**
+    - BoxCollider2D
+    - CircleCollider2D
+  - **Renderer**
+     - SpriteRenderer
+     - CanvasRenderer 
+  - **Transform**
+    - Transform
+    - RectTransform
 #### Utilities
 - **AudioManagement**
+  - AudioManager
+  - AudioSource
+    - LoopAudioSource 
+  - SFX
+  - BGM
+  - BGMLoopData
 - **InputManagement**
+  - EInputState 
+  - InputManager
 - **Mathematics**
-- **ResourceManagement**
-- **Singleton**
+  - Vector2
+  - Vector3
+  - MathF
+  - MathV
+  - Rotation   
+- **FileManagement**
+  - FileManager
+  - JsonManager 
+- **Singleton** 
+  - Singleton
+  - LazySingleton
+#### GUI
+- **Canvas**
+- **CanvasGroup**
+- **UIObject**
+  - Text
+  - Image
+  - Button
+  - InputField
+  - ect...   
 #### System
-
-### Level
-#### SceneManagement
-#### Stages (이하 추후 작성 예정)
-- TitleScene
-- MainMenuScene
-- Stage_1
-- Stage_2
-- CreditsScene
-#### GUI (이하 추후 작성 예정)
-- HUD
-#### Main
