@@ -8,13 +8,38 @@ from Core.Utilities.InputManagement import InputManager
 @final
 class SystemManager(metaclass = Singleton):
     def __init__(self) -> None:
-        self.windowName: str    = "Virus Striker"   # 프로그램(윈도우) 이름.
-        self.windowWidth: int   = 1280              # 가로 해상도 (테스트).
-        self.windowHeight: int  = 720               # 세로 해상도 (테스트).
-        self.isRunning: bool    = True              # 프로그램 구동 여부.
-        self.gameFPS: float     = 0.0               # 게임 초당 프레임.
-        self.m_fpsDeltaTime: float = 0.0
-        self.fpsRate            = 60
+        self.__isRunning: bool      = True              # 프로그램 구동 여부.
+
+        self.__windowName: str      = "Virus Striker"   # 프로그램(윈도우) 이름.
+        self.__windowWidth: int     = 1280              # 가로 해상도 (테스트).
+        self.__windowHeight: int    = 720               # 세로 해상도 (테스트).
+
+        self.__gameFPS: float       = 0.0               # 게임 초당 프레임.
+        self.__fpsDeltaTime: float  = 0.0
+        self.__maxFpsRate: float    = 60
+
+    @property
+    def windowName(self) -> str:
+        return self.__windowName
+
+    @property
+    def windowWidth(self):
+        return self.__windowWidth
+
+    @property
+    def windowHeight(self):
+        return self.__windowHeight
+
+    @property
+    def isRunning(self) -> bool:
+        return self.__isRunning
+
+    @isRunning.setter
+    def isRunning(self, _running) -> None:
+        self.__isRunning = _running
+
+    def fps(self) -> float:
+        return self.__gameFPS
 
     def Update(self, _deltaTime: float) -> None:
         from Level.SceneManagement.SceneManager import SceneManager

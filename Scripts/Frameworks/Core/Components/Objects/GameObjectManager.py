@@ -39,6 +39,9 @@ class GameObjectManager:
 
             # Update() 실행
             for sortingLayer in ESortingLayer:
+                if sortingLayer not in self.m_objects.keys():
+                    continue
+
                 for currentObject in self.m_objects[sortingLayer]:
                     if currentObject.isActive:
                         currentObject.Update(_deltaTime)
@@ -46,6 +49,9 @@ class GameObjectManager:
 
             # LateUpdate() 실행
             for sortingLayer in ESortingLayer:
+                if sortingLayer not in self.m_objects.keys():
+                    continue
+
                 for currentObject in self.m_objects[sortingLayer]:
                     if currentObject.isActive:
                         currentObject.LateUpdate(_deltaTime)
@@ -57,39 +63,41 @@ class GameObjectManager:
         if len(self.m_objects) > 0:
             toRemove: List[GameObject] = []  # 제거할 오브젝트 리스트
             for sortingLayer in ESortingLayer:
+                if sortingLayer not in self.m_objects.keys():
+                    continue
+
                 for currentObject in self.m_objects[sortingLayer]:
                     currentObject.FixedUpdate(_fixedDeltaTime)
-                    if (currentObject.isActive and
-                            currentObject.isDestroy):
+                    if currentObject.isDestroy:
                         toRemove.append(currentObject)
 
             if len(toRemove) > 0:
                 for currentObject in toRemove:
                     self.m_objects[currentObject.spriteRenderer.sortingLayer](currentObject)
 
-        # 물리(충돌) 이벤트를 처리합니다.
-        if len(self.m_objects) > 0:
-            for objects in self.m_objects.values():
-                for currentObject in objects:
-                    if currentObject.collisionLayer == 0:
-                        continue
+        ## 물리(충돌) 이벤트를 처리합니다.
+        #if len(self.m_objects) > 0:
+        #    for objects in self.m_objects.values():
+        #        for currentObject in objects:
+        #            if currentObject.collisionLayer == 0:
+        #                continue
 
-                for currentObject2 in objects:
-                    if currentObject == currentObject2:
-                        continue
+        #            for currentObject2 in objects:
+        #                if currentObject == currentObject2:
+        #                    continue
 
-                    if (currentObject == currentObject2 and
-                            currentObject.collisionLayer != currentObject2.collisionLayer):
-                        continue
+        #                if (currentObject == currentObject2 and
+        #                    currentObject.collisionLayer != currentObject2.collisionLayer):
+        #                    continue
 
-                    if (currentObject.collider != None and
-                            currentObject2.collider != None):
-                        if (currentObject.collider.IsCollision(currentObject2.collider) and
-                                currentObject2.IsCollision(currentObject.collider)):
-                            if not currentObject.collider.__useTrigger:
-                                currentObject.OnCollision(currentObject2.collider)
-                            if not currentObject2.collider.__useTrigger:
-                                currentObject2.OnCollision(currentObject.collider)
+        #                if (currentObject.collider != None and
+        #                    currentObject2.collider != None):
+        #                    if (currentObject.collider.IsCollision(currentObject2.collider) and
+        #                        currentObject2.IsCollision(currentObject.collider)):
+        #                        if not currentObject.collider.__useTrigger:
+        #                            currentObject.OnCollision(currentObject2.collider)
+        #                        if not currentObject2.collider.__useTrigger:
+        #                            currentObject2.OnCollision(currentObject.collider)
 
     # 관리하는 오브젝트들의 Renderer()를 실행합니다.
     def Render(self) -> None:
@@ -98,4 +106,3 @@ class GameObjectManager:
                 for object in self.m_objects[layerLevel]:
                     if object.isActive:
                         object.Render()  # 각 오브젝트의 Renderer 호출
-                        object.RenderDebug()  # 각 오브젝트의 RenderDebug 호출

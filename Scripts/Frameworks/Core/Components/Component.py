@@ -3,6 +3,7 @@ from typing import final, Set, Dict
 from typing import Type, TypeVar
 
 from Core.Components.Objects.GameObject import GameObject
+from Core.Components.Objects.Object import Object
 
 # 모든 컴포넌트의 베이스 클래스
 class Component(metaclass = ABCMeta):

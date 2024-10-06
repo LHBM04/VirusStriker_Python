@@ -53,9 +53,17 @@ class SpriteRenderer(Component):
     def sortingLayer(self) -> ESortingLayer:
         return self.__sortingLayer
 
+    @sortingLayer.setter
+    def sortingLayer(self, _newSortingLayer: ESortingLayer) -> None:
+        self.__sortingLayer = _newSortingLayer
+
     @property
     def orderInLayer(self) -> int:
         return self.__orderInLayer
+
+    @orderInLayer.setter
+    def orderInLayer(self, _newOrderInLayer: int) -> None:
+        self.__orderInLayer = _newOrderInLayer
 
     def Render(self):
         x: float        = self.owner.transform.position.x

@@ -3,27 +3,34 @@ from typing import final, Dict
 
 from Core.Utilities.Singleton import Singleton
 from Level.SceneManagement.Scene import Scene
-from Level.SceneManagement.SceneTransition import SceneTransition
-
 
 @final
 class SceneManager(metaclass = Singleton):
     def __init__(self) -> None:
         # -------------------[private field]------------------- #
-        self.__scenes: Dict[str:Scene] = {}  # 관리할 Scene들.
+        self.__scenes: Dict[str : Scene] = {}  # 관리할 Scene들.
         self.__currentScene: Scene = None  # 현재 활성화된 Level.
         self.__nextScene: Scene = None  # 이동 중인 Level
         self.__previousScenes: stack[Scene] = stack()  # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
 
-        self.__sceneTransition: SceneTransition = SceneTransition()
         self.isResetDeltaTime: bool = False  # Scene 로드 중일 때 시간을 멈추기.
     # -------------------[Level Attributes]------------------- #
 
-    def GetActiveLevel(self) -> Scene:
-        if self.__currentScene is None:
-            assert (0)
+    @property
+    def scenes(self) -> Dict:
+        return self.__scenes
 
+    @property
+    def currentScene(self) -> Scene:
         return self.__currentScene
+
+    @property
+    def nextScene(self) -> Scene:
+        return self.__nextScene
+
+    @property
+    def priviouseScenes(self) -> stack[Scene]:
+        return self.__previousScenes
 
     def AddLevel(self, _levelName: str, _scene: Scene) -> None:
         if _levelName in self.__scenes.keys() and _scene in self.__scenes.values():
@@ -38,8 +45,6 @@ class SceneManager(metaclass = Singleton):
         self.__nextScene = self.__scenes[_sceneName]
         self.__previousScenes.append(self.__nextScene)
 
-        self.__sceneTransition.GoTo(self.__nextScene.name, self.ChangeScene)
-
     def ChangeScene(self):
         self.__currentScene, self.__nextScene = self.__nextScene, None
         self.__currentScene.OnEnter()
@@ -50,9 +55,6 @@ class SceneManager(metaclass = Singleton):
 
         self.__previousScenes.pop().OnExit()
         if len(self.__previousScenes) > 0:
-            self.__sceneTransition.isActive = True
-            self.__sceneTransition.Render()
-
             self.__nextScene = self.__previousScenes[0]
 
     # -------------------[Game Loop]------------------- #
@@ -61,7 +63,10 @@ class SceneManager(metaclass = Singleton):
         SceneManager().isResetDeltaTime = False
 
         if self.__nextScene is not None:
-            self.__sceneTransition.Update(_deltaTime)
+            self.ChangeScene()
+
+        else:
+            pass
 
         if self.__currentScene is not None:
             self.__currentScene.Update(_deltaTime)
@@ -77,5 +82,3 @@ class SceneManager(metaclass = Singleton):
     def RenderUI(self):
         if self.__currentScene is not None:
             self.__currentScene.RenderUI()
-
-        self.__sceneTransition.Render()

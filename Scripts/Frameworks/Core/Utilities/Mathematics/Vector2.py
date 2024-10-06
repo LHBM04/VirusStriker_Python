@@ -1,5 +1,7 @@
 from typing import final
 
+from .MathF import MathF
+
 @final
 class Vector2:
     def __init__(self, _x: float = 0.0, _y: float = 0.0) -> None:
