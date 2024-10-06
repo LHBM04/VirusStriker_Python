@@ -15,47 +15,47 @@
 * sdl2
 ## TODO: Frameworks(Hierarchy) ※ 추후 변경 가능
 ### Core
-#### Components
-- **Component**
-  - **Animation**
-    - GameObject 
-  - **Animation**
-    - Animator
-    - Animation
-  - **Collider2D**
-    - BoxCollider2D
-    - CircleCollider2D
-  - **Renderer**
-     - SpriteRenderer
-     - CanvasRenderer 
-  - **Transform**
-    - Transform
-    - RectTransform
-#### Utilities
-- **AudioManagement**
-  - AudioManager
-  - AudioSource
-    - LoopAudioSource 
-  - SFX
-  - BGM
-  - BGMLoopData
-- **InputManagement**
-  - EInputState 
-  - InputManager
-- **Mathematics**
-  - Vector2
-  - Vector3
-  - MathF
-  - MathV
-  - Rotation   
-- **FileManagement**
-  - FileManager
-  - JsonManager 
-- **Singleton** 
-  - Singleton
-  - LazySingleton
-#### System
-- **SystemManager**
+  - #### Components
+    - **Component**
+      - **Object**
+        - GameObject 
+      - **Animation**
+        - Animator
+        - Animation
+      - **Collider2D**
+        - BoxCollider2D
+        - CircleCollider2D
+      - **Renderer**
+        - SpriteRenderer
+        - CanvasRenderer 
+      - **Transform**
+        - Transform
+        - RectTransform
+  - #### Utilities
+    - **AudioManagement**
+      - AudioManager
+      - AudioSource
+      - LoopAudioSource 
+      - SFX
+      - BGM
+      - BGMLoopData
+  - **InputManagement**
+    - EInputState 
+    - InputManager
+  - **Mathematics**
+    - MathF
+    - Vector2
+    - Vector3
+    - MathV
+    - Rotation   
+  - **FileManagement**
+    - FileManager
+    - JsonManager 
+  - **Singleton** 
+    - Singleton
+    - LazySingleton
+  - #### System
+    - **SystemManager**
 ### GUI
 - **Canvas**
 - **CanvasGroup**
