@@ -14,7 +14,7 @@ from Level.SceneManagement.SceneManager import Scene
 class TestScene(Scene):
     def __init__(self):
         super().__init__()
-        self.testBGM: Music   = ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_Title.wav")
+        self.testBGM: Music   = ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_MainMenu3.wav")
         self.testSFX: Wav     = ResourceManager().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav")
 
         self.testObject: GameObject = GameObject()

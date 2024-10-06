@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-GLOBAL_INSTANCE_ID = 0   # 오브젝트에 붙여지는 고유 ID.
+GLOBAL_INSTANCE_ID = -1 # 오브젝트에 붙여지는 고유 ID.
 
 # 오브젝트에 번호를 부여합니다.
 def GetGlobalInstanceID() -> int:
