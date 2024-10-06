@@ -26,6 +26,8 @@
         - BoxCollider2D
         - CircleCollider2D
       - **Renderer**
+        - Color
+        - ESortingLayer
         - SpriteRenderer
         - CanvasRenderer 
       - **Transform**
@@ -39,6 +41,7 @@
       - SFX
       - BGM
       - BGMLoopData
+      - EBGMState
   - **InputManagement**
     - EInputState 
     - InputManager
