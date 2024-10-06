@@ -34,7 +34,7 @@ def SendEvent(_events: List[Event]) -> None:
 
     for event in _events:
         if event.type == SDL_QUIT:
-            SystemManager().isRunning = False
+            SystemManager().Quit()
         elif event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:
             if event.type == SDL_KEYDOWN:
                 InputManager().isPressKey = True

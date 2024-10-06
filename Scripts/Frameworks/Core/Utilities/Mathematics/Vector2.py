@@ -8,6 +8,28 @@ class Vector2:
         self.__x: float = _x
         self.__y: float = _y
 
+    # 연산자 오버로딩
+    def __neg__(self) -> 'Vector2':
+        return Vector2(-self.__x, -self.__y)
+
+    def __add__(self, _other: 'Vector2') -> 'Vector2':
+        return Vector2(self.__x + _other.__x, self.__y + _other.__y)
+
+    def __sub__(self, _other: 'Vector2') -> 'Vector2':
+        return Vector2(self.__x - _other.__x, self.__y - _other.__y)
+
+    def __mul__(self, _other: float) -> 'Vector2':
+        return Vector2(self.__x * _other, self.__y * _other)
+
+    def __truediv__(self, _other: float) -> 'Vector2':
+        return Vector2(self.__x / _other, self.__y / _other)
+
+    def __eq__(self, _other: 'Vector2') -> bool:
+        return MathF.Equalf(float(self.__x), _other.__x) and MathF.Equalf(float(self.__y), _other.__y)
+
+    def __ne__(self, _other: 'Vector2') -> bool:
+        return not self.__eq__(_other)
+
     @property
     def x(self) -> float:
         return self.__x
@@ -44,25 +66,3 @@ class Vector2:
     @staticmethod
     def Right() -> 'Vector2':
         return Vector2(1.0, 0.0)
-
-    # 연산자 오버로딩
-    def __neg__(self) -> 'Vector2':
-        return Vector2(-self.__x, -self.__y)
-
-    def __add__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.__x + _other.__x, self.__y + _other.__y)
-
-    def __sub__(self, _other: 'Vector2') -> 'Vector2':
-        return Vector2(self.__x - _other.__x, self.__y - _other.__y)
-
-    def __mul__(self, _other: float) -> 'Vector2':
-        return Vector2(self.__x * _other, self.__y * _other)
-
-    def __truediv__(self, _other: float) -> 'Vector2':
-        return Vector2(self.__x / _other, self.__y / _other)
-
-    def __eq__(self, _other: 'Vector2') -> bool:
-        return MathF.Equalf(float(self.__x), _other.__x) and MathF.Equalf(float(self.__y), _other.__y)
-
-    def __ne__(self, _other: 'Vector2') -> bool:
-        return not self.__eq__(_other)

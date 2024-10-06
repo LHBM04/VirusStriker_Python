@@ -34,10 +34,6 @@ class SystemManager(metaclass = Singleton):
     def isRunning(self) -> bool:
         return self.__isRunning
 
-    @isRunning.setter
-    def isRunning(self, _running) -> None:
-        self.__isRunning = _running
-
     @property
     def fps(self) -> float:
         return self.__gameFPS
@@ -51,9 +47,6 @@ class SystemManager(metaclass = Singleton):
         SceneManager().Update(_deltaTime)
         InputManager().Update()
         #AudioManager().Update()
-
-        if InputManager().GetKeyDown(SDLK_ESCAPE):
-            self.isRunning = False
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         from Level.SceneManagement.SceneManager import SceneManager
@@ -71,3 +64,6 @@ class SystemManager(metaclass = Singleton):
     def CleanUp(self) -> None:
         clear_canvas()
         close_canvas()
+
+    def Quit(self):
+        self.__isRunning = False
