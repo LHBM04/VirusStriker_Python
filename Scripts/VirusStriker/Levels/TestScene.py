@@ -29,14 +29,14 @@ class TestScene(Scene):
 
         self.objectManager.AddObject(self.testObject)
 
-        self.testBGM.set_volume(17)
+        self.testBGM.set_volume(50)
         self.testBGM.play(-1)
 
     def OnUpdate(self, _deltaTime: float) -> None:
         super().OnUpdate(_deltaTime)
 
         if InputManager().GetKeyDown(SDLK_SPACE):
-            self.testSFX.set_volume(15)
+            self.testSFX.set_volume(7)
             self.testSFX.play()
 
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
