@@ -3,15 +3,15 @@ from typing import final
 from pico2d import *
 
 from Core.Utilities.InputManagement import InputManager
-from Core.Utilities.FileManagement import ResourceManager
+from Core.Utilities.ResourceManagement.ResourceLoader import ResourceLoader
 from Level.SceneManagement.SceneManager import Scene
 
 @final
 class TestScene(Scene):
     def __init__(self):
         super().__init__()
-        self.testBGM: Music   = ResourceManager().GetBGM(r"Resources\Audio\BGM\BGM_Title.flac")
-        self.testSFX: Wav     = ResourceManager().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav")
+        self.testBGM: Music   = ResourceLoader().GetBGM(r"Resources\Audio\BGM\BGM_Title.flac")
+        self.testSFX: Wav     = ResourceLoader().GetSFX(r"Resources\Audio\SFX\SFX_CalculateScore.wav")
 
     def OnEnter(self) -> None:
         super().OnEnter()

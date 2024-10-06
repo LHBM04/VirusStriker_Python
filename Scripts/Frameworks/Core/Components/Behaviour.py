@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import final
+from typing import final, Iterator, List, TypeVar
 
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
@@ -14,35 +14,68 @@ class Behaviour(Component, metaclass = ABCMeta):
     def isEnabled(self) -> bool:
         return self.__isEnabled
 
-    @isEnabled.setter
-    def isEnabled(self, _enable) -> None:
-        self.__isEnabled = _enable
+    def FixedUpdate(self, _fixedDeltaTime: float):
+        if not self.isEnabled:
+            return
+
+        self.OnFixedUpdate(_fixedDeltaTime)
+
+    def Update(self, _deltaTime: float):
+        if not self.isEnabled:
+            return
+
+        self.OnUpdate(_deltaTime)
+
+    def LateUpdate(self, _deltaTime: float):
+        if not self.isEnabled:
+            return
+
+        self.OnLateUpdate(_deltaTime)
 
     # [Life-Cycle Methods]
-    @abstractmethod
     def OnEnabled(self) -> None:
         pass
 
-    @abstractmethod
-    def Start(self) -> None:
+    def OnStart(self) -> None:
         pass
 
-    @abstractmethod
-    def FixedUpdate(self, _fixedDeltaTime: float) -> None:
+    def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
         pass
 
-    @abstractmethod
-    def Update(self, _deltaTime: float) -> None:
+    def OnUpdate(self, _deltaTime: float) -> None:
         pass
 
-    @abstractmethod
-    def LateUpdate(self, _deltaTime: float) -> None:
+    def OnLateUpdate(self, _deltaTime: float) -> None:
         pass
 
-    @abstractmethod
     def OnDisable(self) -> None:
         pass
 
-    @abstractmethod
     def OnDestroy(self) -> None:
         pass
+
+# 타입 검색을 위한 제너릭 타입 선언.
+TBehaviour: TypeVar = TypeVar('TBehaviour', bound = Behaviour)
+
+@final
+class BehaviourManager:
+    def __init__(self, _actor: GameObject):
+        self.__behaviours: List[TBehaviour]      = []    # 관리 중인 Behaviour.
+        self.__addBehaviours: List[TBehaviour]   = []    # 추가할 Behaviour.
+
+    # [Operators Override] #
+    def __iter__(self) -> Iterator[TBehaviour]:
+        return iter(self.__behaviours)
+
+    def __getitem__(self, index: int) -> TBehaviour:
+        return self.__behaviours[index]
+
+    def __len__(self) -> int:
+        return len(self.__behaviours)
+
+    # [Methods] #
+    def AddBehaviour(self, _behaviour: TBehaviour) -> None:
+        self.__addBehaviours.append(_behaviour)
+
+    def AddBehaviours(self, *_behaviours: TBehaviour) -> None:
+        self.__addBehaviours.extend(_behaviours)

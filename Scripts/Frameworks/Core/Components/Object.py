@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from typing import final
 
 g_instanceID: int = 0
 
@@ -18,6 +19,7 @@ class Object(metaclass = ABCMeta):
 
     # [Properties] #
     # 해당 오브젝트의 ID를 가져옵니다. (Read-Only)
+    @final
     @property
     def instanceID(self) -> int:
         return self.__instanceID

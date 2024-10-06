@@ -8,7 +8,7 @@ class Vector2:
         self.__x: float = _x
         self.__y: float = _y
 
-    # 연산자 오버로딩
+    # [Operation Override] #
     def __neg__(self) -> 'Vector2':
         return Vector2(-self.__x, -self.__y)
 
@@ -30,6 +30,7 @@ class Vector2:
     def __ne__(self, _other: 'Vector2') -> bool:
         return not self.__eq__(_other)
 
+    # [Properties] #
     @property
     def x(self) -> float:
         return self.__x
@@ -46,7 +47,6 @@ class Vector2:
     def y(self, _y: float) -> None:
         self.__y = _y
 
-    # 방향 벡터 (클래스 메서드로 변경)
     @staticmethod
     def Zero() -> 'Vector2':
         return Vector2(0.0, 0.0)
