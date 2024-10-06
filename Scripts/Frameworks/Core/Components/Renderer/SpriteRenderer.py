@@ -66,13 +66,16 @@ class SpriteRenderer(Component):
         self.__orderInLayer = _newOrderInLayer
 
     def Render(self):
+        if self.sprite is None:
+            raise ValueError("[Oops!] 렌더링할 Sprite가 존재하지 않습니다.")
+
         x: float        = self.owner.transform.position.x
         y: float        = self.owner.transform.position.y
         scaleX: float   = self.owner.transform.scale.x
         scaleY: float   = self.owner.transform.scale.y
-        rotate: float   = self.owner.transform.rotation.z
         isFilp: str     = (('w' if self.owner.transform.rotation.x else '') +
                            ('h' if self.owner.transform.rotation.y else ''))
+        rotate: float   = self.owner.transform.rotation.z
 
         self.sprite.composite_draw(rotate, isFilp, x, y, scaleX, scaleY)
         SDL_SetTextureColorMod(self.sprite.texture, int(self.color.r), int(self.color.g), int(self.color.b))

@@ -90,7 +90,7 @@ def Main() -> None:
             SystemManager().FixedUpdate(fixedUpdateTime)
 
         # 초당 프레임 계산
-        SystemManager().gameFPS += 1
+        SystemManager().fps += 1
         fpsDeltaTime += deltaTime
 
         if fpsDeltaTime > 1.0:
@@ -101,7 +101,7 @@ def Main() -> None:
         SystemManager().Render()
 
         # [디버그 코드]
-        print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().gameFPS}")
+        print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().fps}")
 
         previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
 

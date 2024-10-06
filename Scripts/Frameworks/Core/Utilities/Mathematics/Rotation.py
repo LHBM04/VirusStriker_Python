@@ -1,11 +1,14 @@
 from dataclasses import dataclass
+from logging import fatal
+
 
 # 로테이션 정보
 @dataclass
 class Rotation:
-    __x: bool     # x축 뒤집기 여부
-    __y: bool     # y축 뒤집기 여부
-    __z: float    # z축 회전값
+    def __init__(self, _x: bool = False, _y: bool = False, _z: float = 0.0):
+        __x: bool = _x  # x축 뒤집기 여부
+        __y: bool = _y  # y축 뒤집기 여부
+        __z: float = _z # z축 회전값
 
     @property
     def x(self) -> bool:

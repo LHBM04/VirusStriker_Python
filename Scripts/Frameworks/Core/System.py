@@ -38,8 +38,13 @@ class SystemManager(metaclass = Singleton):
     def isRunning(self, _running) -> None:
         self.__isRunning = _running
 
+    @property
     def fps(self) -> float:
         return self.__gameFPS
+
+    @fps.setter
+    def fps(self, _rate) -> None:
+        self.__gameFPS = _rate
 
     def Update(self, _deltaTime: float) -> None:
         from Level.SceneManagement.SceneManager import SceneManager
