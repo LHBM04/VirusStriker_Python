@@ -1,7 +1,7 @@
 from typing import List
 
 from Core.Components.Component import Component
-from Core.Components.GameObject import GameObject
+from Core.Components.Objects.GameObject import GameObject
 from Core.Utilities.Mathematics.Rotation import Rotation
 from Core.Utilities.Mathematics.Vector2 import Vector2
 

@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from Core.Components.GameObject import GameObjectManager
+from Core.Components.Objects.GameObject import GameObjectManager
 
 class Scene(metaclass = ABCMeta):
     def __init__(self):

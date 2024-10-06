@@ -1,4 +1,4 @@
-from Core.Components.GameObject import GameObject
+from Core.Components.Objects.GameObject import GameObject
 from Core.Components.Collider2D.Collider2D import Collider2D
 
 # 원형 Collider2D (미구현)

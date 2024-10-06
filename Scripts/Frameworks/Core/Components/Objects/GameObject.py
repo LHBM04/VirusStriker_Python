@@ -1,8 +1,12 @@
 from typing import final, List, Dict
 
+from Core.Components.Objects.Object import Object
+
 # 게임 내 모든 오브젝트의 베이스 클래스.
-class GameObject:
+class GameObject(Object):
     def __init__(self):
+        super().__init__()
+
         from Core.Components.Component import ComponentManager
         from Core.Components.Transform.Transform import Transform
         from Core.Components.Renderer.SpriteRenderer import SpriteRenderer

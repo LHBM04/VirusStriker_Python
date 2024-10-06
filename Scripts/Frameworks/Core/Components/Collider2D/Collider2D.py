@@ -2,8 +2,8 @@ from abc import ABCMeta, abstractmethod
 from enum import Enum
 
 from Core.Components.Component import Component
-from Core.Components.GameObject import GameObject
-from Core.Utilities.Mathematics.Vector2 import Vector2
+from Core.Components.Objects.GameObject import GameObject
+
 
 # 충돌 검사를 위한 열거형.
 # 필요한 게 있을 때마다 추가하여 쓰도록 하자

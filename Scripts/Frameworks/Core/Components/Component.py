@@ -1,8 +1,8 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from typing import final, Set, Dict
 from typing import Type, TypeVar
 
-from Core.Components.GameObject import GameObject
+from Core.Components.Objects.GameObject import GameObject
 
 # 모든 컴포넌트의 베이스 클래스
 class Component(metaclass = ABCMeta):

@@ -66,8 +66,8 @@ def Main() -> None:
     previousTime: float = Time.time()  # 이전 시간
     currentTime: float = 0.0  # 현재 시간
 
+    fixedUpdateTime: float = 1.0 / 50.0
     fixedDeltaTime: float = 0.0
-    fixedUpdateTime: float = 1.0 / 5.0
 
     fpsDeltaTime: float = 0.0  # 프레임을 계산하기 위한 시간 변화량.
 
@@ -81,10 +81,7 @@ def Main() -> None:
         currentTime = Time.time()
         deltaTime = currentTime - previousTime
 
-        # Fixed Delta Time 계산
-        fixedUpdateTime = 1.0 / 50.0
-        fixedDeltaTime = 0.0
-        fixedDeltaTime += deltaTime;
+        fixedDeltaTime += deltaTime
         if fixedDeltaTime >= 2.0:
             fixedDeltaTime = 2.0
 

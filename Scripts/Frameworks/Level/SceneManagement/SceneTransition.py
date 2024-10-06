@@ -1,6 +1,6 @@
 from typing import Callable
 
-from Core.Components.GameObject import GameObject
+from Core.Components.Objects.GameObject import GameObject
 from Core.Utilities.ResourceManagement import ResourceManager
 from Core.Utilities.Mathematics.Vector2 import Vector2
 from Core.Components.Renderer.SpriteRenderer import Color

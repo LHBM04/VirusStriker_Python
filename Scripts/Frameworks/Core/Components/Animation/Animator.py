@@ -2,7 +2,7 @@ from typing import Dict
 
 from Core.Components.Component import Component
 from Core.Components.Animation.Animation import Animation
-from Core.Components.GameObject import GameObject
+from Core.Components.Objects.GameObject import GameObject
 
 # 스프라이트를 교체하는 등의 애니메이션을 구현합니다.
 class Animator(Component):
