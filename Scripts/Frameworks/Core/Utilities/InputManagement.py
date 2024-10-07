@@ -4,7 +4,7 @@ from typing import final, Dict
 from pico2d import *
 
 from Core.Utilities.Singleton import Singleton
-from Core.Utilities.Mathematics.Vector2 import Vector2
+from Core.Utilities.Mathematics import Vector2
 
 class EInputState(Enum):
     NONE    = 0

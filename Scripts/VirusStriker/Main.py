@@ -3,8 +3,7 @@ from typing import List
 
 from pico2d import *
 
-from Level.SceneManagement.Scene import Scene
-from Level.SceneManagement.SceneManager import SceneManager
+from Level.SceneManagement import SceneManager
 
 # 이벤트를 받아, 이를 처리한 후 수신합니다.
 def ReceiveEvent() -> List[Event]:
@@ -29,7 +28,7 @@ def ReceiveEvent() -> List[Event]:
 # 수신한 이벤트를 받아 처리합니다.
 def SendEvent(_events: List[Event]) -> None:
     from Core.System import SystemManager
-    from Core.Utilities.Mathematics.Vector2 import Vector2
+    from Core.Utilities.Mathematics import Vector2
     from Core.Utilities.InputManagement import  EInputState, InputManager
 
     for event in _events:
@@ -51,7 +50,7 @@ def SendEvent(_events: List[Event]) -> None:
 
 def Initialize() -> None:
     from Core.System import SystemManager
-    from Level.SceneManagement.SceneManager import SceneManager
+    from Level.SceneManagement import SceneManager
     from Levels.TestScene import TestScene
 
     open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기

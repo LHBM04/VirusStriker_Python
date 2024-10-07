@@ -43,17 +43,17 @@ class SystemManager(metaclass = Singleton):
         self.__gameFPS = _rate
 
     def Update(self, _deltaTime: float) -> None:
-        from Level.SceneManagement.SceneManager import SceneManager
+        from Level.SceneManagement import SceneManager
         SceneManager().Update(_deltaTime)
         InputManager().Update()
         #AudioManager().Update()
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        from Level.SceneManagement.SceneManager import SceneManager
+        from Level.SceneManagement import SceneManager
         SceneManager().FixedUpdate(_fixedDeltaTime)
 
     def Render(self) -> None:
-        from Level.SceneManagement.SceneManager import SceneManager
+        from Level.SceneManagement import SceneManager
 
         clear_canvas()
         SceneManager().RenderObject()
