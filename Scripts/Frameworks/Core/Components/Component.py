@@ -1,11 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from typing import final, Iterator, List, Dict
-from typing import Type, TypeVar
+from typing import final, Iterator, List, Dict, Type, TypeVar
 
 from Core.Components.Object import Object
 from Core.Components.GameObject import GameObject
-from Core.Components.SpriteRenderer import SpriteRenderer
-from Core.Components.Transform import Transform
 
 class Component(Object, metaclass = ABCMeta):
     def __init__(self, _owner: GameObject):
