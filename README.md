@@ -17,21 +17,9 @@
   - #### Components
     - **Component**
       - **Object**
-        - GameObject 
-      - **Animation**
-        - Animator
-        - Animation
-      - **Collider2D**
-        - BoxCollider2D
-        - CircleCollider2D
-      - **Renderer**
-        - Color
-        - ESortingLayer
-        - SpriteRenderer
-        - CanvasRenderer 
-      - **Transform**
-        - Transform
-        - RectTransform
+        - **GameObject**
+        - **Component**
+          - **Behaviour**        
   - #### Utilities
     - **AudioManagement**
       - AudioManager
@@ -44,18 +32,18 @@
     - **InputManagement**
       - EInputState 
       - InputManager
-   - **Mathematics**
+    - **Mathematics**
       - MathF
       - Vector2
       - Vector3
       - MathV
       - Rotation   
-   - **FileManagement**
+    - **FileManagement**
       - FileManager
       - JsonManager 
-   - **Singleton** 
-     - Singleton
-     - LazySingleton
+    - **Singleton** 
+      - Singleton
+      - LazySingleton
   - #### System
     - **SystemManager**
 ### GUI
