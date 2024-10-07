@@ -12,7 +12,7 @@
 * pathlib (I/O Utilities)
 * pico2d (Base Development Frameworks)
 * sdl2 (Other Windows Utilities)
-## TODO: Frameworks(Hierarchy) ※ 추후 변경 가능
+## Frameworks(Hierarchy) ※ 추후 변경 가능
 ### Core
   - #### Components
     - **Component**
