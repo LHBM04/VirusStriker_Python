@@ -10,6 +10,7 @@ from typing import final
 
 @final
 class Color:
+    # region [Static Methods]
     @staticmethod
     def MinValue() -> int:
         return 0
@@ -17,6 +18,8 @@ class Color:
     @staticmethod
     def MaxValue() -> int:
         return 255
+
+    # endregion
 
     def __init__(self,
                  _r: int = MaxValue(),
@@ -28,6 +31,17 @@ class Color:
         self.__b: int = max(self.MinValue(), min(_b, self.MaxValue()))
         self.__a: int = max(self.MinValue(), min(_a, self.MaxValue()))
 
+    #region [Operation Override]
+    def __eq__(self, _other: 'Color') -> bool:
+        return (self.r == _other.r and
+                self.g == _other.g and
+                self.b == _other.b and
+                self.a == _other.a)
+
+    def __ne__(self, _other: 'Color') -> bool:
+        return not self.__eq__(_other)
+    #endregion
+    #region [Properties]
     @property
     def r(self) -> int:
         return self.__r
@@ -59,16 +73,9 @@ class Color:
     @a.setter
     def a(self, _a: int) -> None:
         self.__a = max(self.MinValue(), min(_a, self.MaxValue()))
+    #endregion
 
-    def __eq__(self, _other: 'Color') -> bool:
-        return (self.r == _other.r and
-                self.g == _other.g and
-                self.b == _other.b and
-                self.a == _other.a)
-
-    def __ne__(self, _other: 'Color') -> bool:
-        return not self.__eq__(_other)
-
+#region [Initialized Colors]
 COLOR_RED: Color        = Color(255, 0, 0)
 COLOR_GREEN: Color      = Color(0, 255, 0)
 COLOR_BLUE: Color       = Color(0, 0, 255)
@@ -80,7 +87,7 @@ COLOR_BLACK: Color      = Color(0, 0, 0)
 COLOR_GRAY: Color       = Color(128, 128, 128)
 COLOR_ORANGE: Color     = Color(255, 165, 0)
 COLOR_CLEAR: Color     = Color(0, 0, 0, 0)
-
+#endregion
 
 # 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
 class ESortingLayer(Enum):
@@ -101,7 +108,7 @@ class SpriteRenderer(Component):
         self.__sortingLayer: ESortingLayer  = ESortingLayer.NONE                        # 해당 이미지가 렌더링 우선 순위
         self.__orderInLayer: int            = 0                                         # 해당 이미지가 렌더링 순서
 
-    # [Properties] #
+    #region [Properties]
     @property
     def sprite(self) -> Image:
         return self.__sprite
@@ -157,7 +164,8 @@ class SpriteRenderer(Component):
     @orderInLayer.setter
     def orderInLayer(self, _orderInLayer: int) -> None:
         self.__orderInLayer = _orderInLayer
-
+    #endregion
+    #region [Methods]
     def Render(self):
         if self.__sprite is None:
             raise ValueError("[Oops!] 렌더링할 Sprite가 존재하지 않습니다.")
@@ -176,3 +184,4 @@ class SpriteRenderer(Component):
                                int(self.color.a))
         SDL_SetTextureBlendMode(self.__sprite.texture,
                                 SDL_BLENDMODE_BLEND)
+    #endregion

@@ -17,14 +17,7 @@ class Transform(Component):
         self.__parent: 'Transform'          = None  # 부모 트랜스폼.
         self.__children: List['Transform']  = []    # 모든 자식 트랜스폼.
 
-    # [Properties] #
-    def gameObject(self) -> GameObject:
-        return None
-    
-    @property
-    def transform(self) -> 'Transform':
-        return self
-
+    #region [Properties]
     # 해당 Transform의 Position을 가져옵니다.
     @property
     def position(self) -> Vector3:
@@ -82,8 +75,8 @@ class Transform(Component):
     @property
     def children(self) -> List['Transform']:
         return self.__children
-
-    # [Methods]
+    #endregion
+    #region [Methods]
     # 해당 인덱스에 있는 자식 Transform을 가져옵니다.
     def GetChild(self, _index: Union[int, str]) -> 'Transform':
         if isinstance(_index, int):
@@ -105,3 +98,5 @@ class Transform(Component):
         else:
             raise ValueError(f"[Oops!] 인덱스가 틀렸거나, 해당 인덱스에 자식 Transform이 존재하지 않습니다. " +
                              f"검색한 인덱스는 {str(_index)}였습니다.")
+        #endregion
+        

@@ -3,7 +3,6 @@ from typing import final, Iterator, List, Dict, Type, TypeVar
 
 from Core.Components.Object import Object
 
-
 class Component(Object, metaclass = ABCMeta):
     def __init__(self, _owner: 'GameObject'):
         from Core.Components.GameObject import GameObject
@@ -20,13 +19,11 @@ class Component(Object, metaclass = ABCMeta):
     def name(self, _name: str) -> None:
         self.gameObject.name = _name
 
-    from Core.Components.GameObject import GameObject
     # 해당 컴포넌트가 붙어있는 오브젝트(오너)를 반환합니다. (Read-Only)
     @property
     def gameObject(self) -> 'GameObject':
         return self.__owner
 
-    from Core.Components.GameObject import Transform
     # 해당 컴포넌트가 붙어있는 오브젝트(오너)의 트랜스폼을 반환합니다. (Read-Only)
     @property
     def transform(self) -> 'Transform':
