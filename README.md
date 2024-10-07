@@ -41,21 +41,21 @@
       - BGM
       - BGMLoopData
       - EBGMState
-  - **InputManagement**
-    - EInputState 
-    - InputManager
-  - **Mathematics**
-    - MathF
-    - Vector2
-    - Vector3
-    - MathV
-    - Rotation   
-  - **FileManagement**
-    - FileManager
-    - JsonManager 
-  - **Singleton** 
-    - Singleton
-    - LazySingleton
+    - **InputManagement**
+      - EInputState 
+      - InputManager
+   - **Mathematics**
+      - MathF
+      - Vector2
+      - Vector3
+      - MathV
+      - Rotation   
+   - **FileManagement**
+      - FileManager
+      - JsonManager 
+   - **Singleton** 
+     - Singleton
+     - LazySingleton
   - #### System
     - **SystemManager**
 ### GUI
