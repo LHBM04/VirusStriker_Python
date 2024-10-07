@@ -19,6 +19,8 @@
       - **Object**
         - **GameObject**
         - **Component**
+          - Transform
+          - SpriteRenderer
           - **Behaviour**        
   - #### Utilities
     - **AudioManagement**
