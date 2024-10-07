@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from typing import final, Iterator, List, TypeVar
 
 from Core.Components.Component import Component
@@ -8,12 +8,12 @@ class Behaviour(Component, metaclass = ABCMeta):
     def __init__(self, _owner: GameObject):
         super().__init__(_owner)
         self.__isEnabled: bool = True
-
-    # [Properties]
+    #region [Properties]
     @property
     def isEnabled(self) -> bool:
         return self.__isEnabled
-
+    #endregion
+    #region [Methods]
     def FixedUpdate(self, _fixedDeltaTime: float):
         if not self.isEnabled:
             return
@@ -31,8 +31,8 @@ class Behaviour(Component, metaclass = ABCMeta):
             return
 
         self.OnLateUpdate(_deltaTime)
-
-    # [Life-Cycle Methods]
+    #endregion
+    #region [Life-Cycle Methods]
     def OnEnabled(self) -> None:
         pass
 
@@ -53,6 +53,7 @@ class Behaviour(Component, metaclass = ABCMeta):
 
     def OnDestroy(self) -> None:
         pass
+    #endregion
 
 # 타입 검색을 위한 제너릭 타입 선언.
 TBehaviour: TypeVar = TypeVar('TBehaviour', bound = Behaviour)
@@ -63,7 +64,7 @@ class BehaviourManager:
         self.__behaviours: List[TBehaviour]      = []    # 관리 중인 Behaviour.
         self.__addBehaviours: List[TBehaviour]   = []    # 추가할 Behaviour.
 
-    # [Operators Override] #
+    #region [Operators Override]
     def __iter__(self) -> Iterator[TBehaviour]:
         return iter(self.__behaviours)
 
@@ -72,10 +73,11 @@ class BehaviourManager:
 
     def __len__(self) -> int:
         return len(self.__behaviours)
-
-    # [Methods] #
+    #endregion
+    #region [Methods]
     def AddBehaviour(self, _behaviour: TBehaviour) -> None:
         self.__addBehaviours.append(_behaviour)
 
     def AddBehaviours(self, *_behaviours: TBehaviour) -> None:
         self.__addBehaviours.extend(_behaviours)
+    #endregion

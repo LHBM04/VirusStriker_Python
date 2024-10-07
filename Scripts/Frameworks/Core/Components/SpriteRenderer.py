@@ -4,7 +4,6 @@ from pico2d import *
 
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
-from Core.Utilities.Color import Color
 from Core.Utilities.Mathematics.Vector3 import Vector3
 
 from typing import final

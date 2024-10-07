@@ -2,14 +2,16 @@ from abc import ABCMeta, abstractmethod
 from typing import final, Iterator, List, Dict, Type, TypeVar
 
 from Core.Components.Object import Object
-from Core.Components.GameObject import GameObject
+
 
 class Component(Object, metaclass = ABCMeta):
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: 'GameObject'):
+        from Core.Components.GameObject import GameObject
+
         super().__init__()
         self.__owner: GameObject = _owner
 
-    # [Property Methods]
+    #region [Property Methods]
     @property
     def name(self) -> str:
         return self.gameObject.name
@@ -18,22 +20,27 @@ class Component(Object, metaclass = ABCMeta):
     def name(self, _name: str) -> None:
         self.gameObject.name = _name
 
+    from Core.Components.GameObject import GameObject
     # 해당 컴포넌트가 붙어있는 오브젝트(오너)를 반환합니다. (Read-Only)
     @property
-    def gameObject(self) -> GameObject:
+    def gameObject(self) -> 'GameObject':
         return self.__owner
 
+    from Core.Components.GameObject import Transform
     # 해당 컴포넌트가 붙어있는 오브젝트(오너)의 트랜스폼을 반환합니다. (Read-Only)
     @property
-    def transform(self) -> Transform:
+    def transform(self) -> 'Transform':
         return self.__owner.transform
+    #endregion
 
 # 타입 검색을 위한 제너릭 타입 선언.
 TComponent: TypeVar = TypeVar('TComponent', bound = Component)
 
 @final
 class ComponentManager:
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: 'GameObject'):
+        from Core.Components.GameObject import GameObject
+
         self.__owner: GameObject                                    = _owner  # 관리 중인 Component들의 주인.
         self.__components: Dict[Type[TComponent], TComponent]       = {}  # 관리 중인 Component.
         self.__addComponents: Dict[Type[TComponent], TComponent]    = {}  # 추가할 Component.

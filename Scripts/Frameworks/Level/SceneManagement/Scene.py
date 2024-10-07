@@ -6,10 +6,10 @@ class Scene(metaclass = ABCMeta):
 
     # [virtual methods] #
     def Update(self, _deltaTime: float) -> None:
-        self.Update(_deltaTime)
+        self.OnUpdate(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
-        self.FixedUpdate(_fixedDeltaTime)
+        self.OnFixedUpdate(_fixedDeltaTime)
 
     def RenderObject(self) -> None:
         self.OnRenderObject()
