@@ -2,10 +2,9 @@ from abc import ABCMeta
 from typing import final, Iterator, List, TypeVar
 
 from Core.Components.Component import Component
-from Core.Components.GameObject import GameObject
 
 class Behaviour(Component, metaclass = ABCMeta):
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: 'GameObject'):
         super().__init__(_owner)
         self.__isEnabled: bool = True
     #region [Properties]
@@ -60,7 +59,7 @@ TBehaviour: TypeVar = TypeVar('TBehaviour', bound = Behaviour)
 
 @final
 class BehaviourManager:
-    def __init__(self, _actor: GameObject):
+    def __init__(self, _actor: 'GameObject'):
         self.__behaviours: List[TBehaviour]      = []    # 관리 중인 Behaviour.
         self.__addBehaviours: List[TBehaviour]   = []    # 추가할 Behaviour.
 
