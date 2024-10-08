@@ -3,8 +3,8 @@ from enum import Enum
 
 from pico2d import *
 
-from Core.Component.Component import Component
-from Core.Component.GameObject import GameObject
+from Core.Components.Component import Component
+from Core.Components.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2
 
 class Renderer(Component, metaclass = ABCMeta):
@@ -93,10 +93,10 @@ class Renderer(Component, metaclass = ABCMeta):
     #endregion
 
 class SpriteRenderer(Renderer):
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: GameObject, _sprite: Image = None):
         super().__init__(_owner)
 
-        self.__sprite: Image                        = None
+        self.__sprite: Image                        = _sprite
         self.__isFlipX: bool                        = False
         self.__isFlipY: bool                        = False
         self.__color: Renderer.Color                = Renderer.Color()

@@ -27,7 +27,7 @@ def ReceiveEvent() -> List[Event]:
 
 # 수신한 이벤트를 받아 처리합니다.
 def SendEvent(_events: List[Event]) -> None:
-    from Core.System import SystemManager
+    from Core.SystemManagement import SystemManager
     from Core.Utilities.Mathematics import Vector2
     from Core.Utilities.InputManagement import  EInputState, InputManager
 
@@ -49,7 +49,7 @@ def SendEvent(_events: List[Event]) -> None:
                 InputManager().mousePosition = Vector2(event.x, event.y)
 
 def Initialize() -> None:
-    from Core.System import SystemManager
+    from Core.SystemManagement import SystemManager
     from Level.SceneManagement import SceneManager
     from Levels.TestScene import TestScene
 
@@ -60,7 +60,7 @@ def Initialize() -> None:
     SceneManager().LoadLevel("Test Scene")
 
 def Main() -> None:
-    from Core.System import SystemManager
+    from Core.SystemManagement import SystemManager
 
     previousTime: float = Time.time()  # 이전 시간
     currentTime: float = 0.0  # 현재 시간
