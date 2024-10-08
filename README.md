@@ -13,48 +13,50 @@
 * pico2d (Base Development Frameworks)
 * sdl2 (Other Windows Utilities)
 ## Frameworks(Hierarchy) ※ 추후 변경 가능
-### Core
-  - #### Components
-    - **Component**
-      - **Object**
-        - **GameObject**
-        - **Component**
-          - Transform
-          - SpriteRenderer
-          - **Behaviour**        
-  - #### Utilities
-    - **AudioManagement**
-      - AudioManager
-      - AudioSource
-      - LoopAudioSource 
-      - SFX
-      - BGM
-      - BGMLoopData
-      - EBGMState
-    - **InputManagement**
-      - EInputState 
-      - InputManager
-    - **Mathematics**
-      - MathF
-      - Vector2
-      - Vector3
-      - MathV
-      - Rotation   
-    - **FileManagement**
-      - FileManager
-      - JsonManager 
-    - **Singleton** 
-      - Singleton
-      - LazySingleton
-  - #### System
-    - **SystemManager**
-### GUI
-- **Canvas**
-- **CanvasGroup**
-- **UIObject**
-  - Text
-  - Image
-  - Button
-  - InputField
-  - ect...   
+```
+Core
+│
+├── Components
+│   └── Component
+│       └── Object
+│           ├── GameObject
+│           └── Component
+│               ├── Transform
+│               ├── SpriteRenderer
+│               └── Behaviour
+│
+├── Utilities
+│   ├── AudioManagement
+│   │   ├── AudioManager
+│   │   ├── AudioSource
+│   │   ├── LoopAudioSource
+│   │   ├── SFX
+│   │   ├── BGM
+│   │   ├── BGMLoopData
+│   │   └── EBGMState
+│   ├── InputManagement
+│   │   ├── EInputState
+│   │   └── InputManager
+│   ├── Mathematics
+│   │   ├── MathF
+│   │   ├── Vector2
+│   │   ├── Vector3
+│   │   ├── MathV
+│   │   └── Rotation
+│   ├── FileManagement
+│   │   ├── FileManager
+│   │   └── JsonManager
+│   └── Singleton
+│       ├── Singleton
+│       └── LazySingleton
+│
+└── System
+    └── SystemManager
+
+GUI
+│
+├── Canvas
+└── CanvasGroup
+
+```
 
