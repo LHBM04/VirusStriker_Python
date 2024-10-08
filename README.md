@@ -18,11 +18,11 @@ Core
 │
 ├── Components
 │   └── Object
-│      ├── GameObject
-│      └── Component
-│           ├── Transform
-│           ├── SpriteRenderer
-│           └── Behaviour
+│       ├── GameObject
+│       └── Component
+│            ├── Transform
+│            ├── SpriteRenderer
+│            └── Behaviour
 │
 ├── Utilities
 │   ├── AudioManagement
