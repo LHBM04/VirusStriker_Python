@@ -33,7 +33,6 @@ class TestScene(Scene):
     def OnUpdate(self, _deltaTime: float) -> None:
         super().OnUpdate(_deltaTime)
 
-        self.testText.Render()
         if InputManager().GetKeyDown(SDLK_SPACE):
             self.testSFX.set_volume(7)
             self.testSFX.play()
@@ -49,3 +48,4 @@ class TestScene(Scene):
 
     def OnRenderGUI(self) -> None:
         super().OnRenderGUI()
+        self.testText.Render()

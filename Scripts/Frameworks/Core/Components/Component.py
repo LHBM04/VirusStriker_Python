@@ -23,6 +23,12 @@ class Component(Object, metaclass = ABCMeta):
     @property
     def gameObject(self) -> 'GameObject':
         return self.__owner
+    
+    def OnAwake(self) -> None:
+        super().OnAwake()
+    
+    def OnDestroy(self) -> None:
+        super().OnDestroy()
     #endregion
 
 # 타입 검색을 위한 제너릭 타입 선언.

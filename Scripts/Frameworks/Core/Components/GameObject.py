@@ -1,5 +1,6 @@
 from typing import final, List, Type, TypeVar
 
+from Core.Components.Behaviour import BehaviorManager
 from Core.Components.Object import Object
 class GameObject(Object):
     def __init__(self):
@@ -8,7 +9,8 @@ class GameObject(Object):
         from Core.Components.Component import ComponentManager
         from Core.Components.Transform import Transform
 
-        self.__componentManager: ComponentManager = ComponentManager(self)
+        self.__componentManager: ComponentManager   = ComponentManager(self)
+        self.__behaviorManager: BehaviorManager     = BehaviorManager(self)
         self.__componentManager.AddComponent(Transform)
 
     #region [Properties]
@@ -30,24 +32,21 @@ class GameObject(Object):
     def GetComponent(self, _component: Type[TComponent]) -> TComponent:
         return self.__componentManager.GetComponent(_component)
 
-        # 관리 중인 Component들을 가져옵니다.
-
+    # 관리 중인 Component들을 가져옵니다.
     def GetComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
         return self.__componentManager.GetComponents(*_components)
 
-        # 관리 중인 Component들을 가져옵니다.
-
+    # 관리 중인 Component들을 가져옵니다.
     def AddComponent(self, _component: Type[TComponent]) -> TComponent:
         return self.__componentManager.AddComponent(_component)
 
-        # 관리 중인 Component들을 가져옵니다.
-
+    # 관리 중인 Component들을 가져옵니다.
     def AddComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
         return self.__componentManager.AddComponents(*_components)
 
     # 관리 중인 Component들을 가져옵니다.
     def AddBehaviour(self, _behaviour: 'Behaviour') -> None:
-        self.__behaviourManager.AddBehaviour(_behaviour)
+        self.__behaviorManager.AddBehaviour(_behaviour)
 
     # 관리 중인 Component들을 가져옵니다.
     def AddBehaviours(self, *_behaviours: 'Behaviour') -> None:

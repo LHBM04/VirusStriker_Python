@@ -3,7 +3,7 @@ from abc import ABCMeta
 class Object(metaclass = ABCMeta):
     def __init__(self):
         self.__name: str        = "New Object"  # 해당 오브젝트의 이름.
-        self.__isDestroy: bool  = True          # 해당 오브젝트의 파괴 여부.
+        self.__isDestroy: bool  = False         # 해당 오브젝트의 파괴 여부.
 
     #region [Properties]
     @property

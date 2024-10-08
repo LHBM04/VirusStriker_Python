@@ -53,12 +53,12 @@ class ResourceLoader(metaclass=Singleton):
 
         yield load_wav(str(_filePath))
 
-    def LoadFont(self, _filePath: str) ->  Sequence[Font]:
+    def LoadFont(self, _filePath: str, _size: int = 20) ->  Sequence[Font]:
         filePath: Path = Path(_filePath)
         if not filePath.exists() or not filePath.is_file():
             raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
 
-        yield load_font(str(_filePath))
+        yield load_font(str(_filePath), _size)
 
     # 로드된 스프라이트 리소스를 가져옵니다.
     def GetSprite(self, _key: str, _index: int = 0) -> Image:
@@ -71,7 +71,7 @@ class ResourceLoader(metaclass=Singleton):
 
     # 로드된 스프라이트 리소스를 통쨰로 가져옵니다.
     def GetSprites(self, _key: str) -> Sequence[Image]:
-        if _key not in self.__spriteBank.keys():
+        if _key not in self.__spriteBank:
             self.__spriteBank[_key] = []
             for image in self.LoadSprites(_key):
                 self.__spriteBank[_key].append(image)
@@ -80,7 +80,7 @@ class ResourceLoader(metaclass=Singleton):
 
     # 로드된 BGM 리소스를 가져옵니다.
     def GetBGM(self, _key: str) -> Music:
-        if _key not in self.__bgmBank.keys():
+        if _key not in self.__bgmBank:
             for bgm in self.LoadBGM(_key):
                 self.__bgmBank[_key] = bgm
 
@@ -88,15 +88,15 @@ class ResourceLoader(metaclass=Singleton):
 
     # 로드된 SFX 리소스를 가져옵니다.
     def GetSFX(self, _key: str) -> Wav:
-        if _key not in self.__sfxBank.keys():
+        if _key not in self.__sfxBank:
             for sfx in self.LoadSFX(_key):
                 self.__sfxBank[_key] = sfx
 
         return self.__sfxBank[_key]
 
-    def GetFont(self, _key: str) -> Font:
-        if _key not in self.__fontBank.keys():
-            for font in self.LoadFont(_key):
+    def GetFont(self, _key: str, _size: int = 20) -> Font:
+        if _key not in self.__fontBank:
+            for font in self.LoadFont(_key, _size):
                 self.__fontBank[_key] = font
 
         return self.__fontBank[_key]
