@@ -9,12 +9,15 @@ from Core.Utilities.Singleton import Singleton
 @final
 class ResourceLoader(metaclass=Singleton):
     def __init__(self):
-        self._spriteBank: Dict[str, List[Image]]    = {}        # 이미지 리소스가 담길 Dictionary.
+        self.__spriteBank: Dict[str, List[Image]]   = {}        # 이미지 리소스가 담길 Dictionary.
         self.__spriteResourceSuffix: str            = ".png"    # 이미지 리소스의 확장자.
 
-        self._bgmBank: Dict[str, Music] = {}                    # BGM 리소스가 담길 Dictionary.
-        self._sfxBank: Dict[str, Wav]   = {}                    # SFX 리소스가 담길 Dictionary.
-        self.__audioResourceSuffix: str = '.flac'               # 오디오 리소스의 확장자.
+        self.__bgmBank: Dict[str, Music]            = {}        # BGM 리소스가 담길 Dictionary.
+        self.__sfxBank: Dict[str, Wav]              = {}        # SFX 리소스가 담길 Dictionary.
+        self.__audioResourceSuffix: str             = '.flac'   # 오디오 리소스의 확장자.
+
+        self.__fontBank: Dict[str, Font]            = {}        # 폰트 리소스가 담길 Dictionary.
+        self.__fontResourceSuffix: str              = '.otf'    # 폰트 리소스의 확장자.
 
     # 이미지 리소스를 로드합니다.
     def LoadSprite(self, _filePath: str) -> Sequence[Image]:
@@ -31,7 +34,7 @@ class ResourceLoader(metaclass=Singleton):
             raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(directoryPath)}\"였습니다.")
 
         for filePath in directoryPath.iterdir():
-            if filePath.is_file():
+            if filePath.is_file() and filePath.suffix() == self.__spriteResourceSuffix:
                 yield load_image(str(filePath))
 
     # BGM 리소스를 로드합니다.
@@ -50,36 +53,50 @@ class ResourceLoader(metaclass=Singleton):
 
         yield load_wav(str(_filePath))
 
+    def LoadFont(self, _filePath: str) ->  Sequence[Font]:
+        filePath: Path = Path(_filePath)
+        if not filePath.exists() or not filePath.is_file():
+            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
+
+        yield load_font(str(_filePath))
+
     # 로드된 스프라이트 리소스를 가져옵니다.
     def GetSprite(self, _key: str, _index: int = 0) -> Image:
-        if _key not in self._spriteBank.keys():
-            self._spriteBank[_key] = []
+        if _key not in self.__spriteBank.keys():
+            self.__spriteBank[_key] = []
             for image in self.LoadSprite(_key):
-                self._spriteBank[_key].append(image)
+                self.__spriteBank[_key].append(image)
 
-        return self._spriteBank[_key][_index]
+        return self.__spriteBank[_key][_index]
 
     # 로드된 스프라이트 리소스를 통쨰로 가져옵니다.
     def GetSprites(self, _key: str) -> Sequence[Image]:
-        if _key not in self._spriteBank.keys():
-            self._spriteBank[_key] = []
+        if _key not in self.__spriteBank.keys():
+            self.__spriteBank[_key] = []
             for image in self.LoadSprites(_key):
-                self._spriteBank[_key].append(image)
+                self.__spriteBank[_key].append(image)
 
-        return self._spriteBank[_key]
+        return self.__spriteBank[_key]
 
     # 로드된 BGM 리소스를 가져옵니다.
     def GetBGM(self, _key: str) -> Music:
-        if _key not in self._bgmBank.keys():
+        if _key not in self.__bgmBank.keys():
             for bgm in self.LoadBGM(_key):
-                self._bgmBank[_key] = bgm
+                self.__bgmBank[_key] = bgm
 
-        return self._bgmBank[_key]
+        return self.__bgmBank[_key]
 
     # 로드된 SFX 리소스를 가져옵니다.
     def GetSFX(self, _key: str) -> Wav:
-        if _key not in self._sfxBank.keys():
+        if _key not in self.__sfxBank.keys():
             for sfx in self.LoadSFX(_key):
-                self._sfxBank[_key] = sfx
+                self.__sfxBank[_key] = sfx
 
-        return self._sfxBank[_key]
+        return self.__sfxBank[_key]
+
+    def GetFont(self, _key: str) -> Font:
+        if _key not in self.__fontBank.keys():
+            for font in self.LoadFont(_key):
+                self.__fontBank[_key] = font
+
+        return self.__fontBank[_key]

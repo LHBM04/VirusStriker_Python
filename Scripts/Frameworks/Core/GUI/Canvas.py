@@ -5,4 +5,3 @@ class Canvas(Behavior):
     def __init__(self, _uiInterface: GameObject):
         super().__init__(_uiInterface)
 
-        

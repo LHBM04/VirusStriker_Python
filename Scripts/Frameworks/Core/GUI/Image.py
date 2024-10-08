@@ -2,21 +2,21 @@ from pico2d import Image
 
 from Core.Components.GameObject import GameObject
 from Core.Components.Renderer import Renderer
-from Core.Utilities.Mathematics import Vector2, Vector3
+from Core.Utilities.Mathematics import Vector2
+from Core.Utilities.Color import Color
 
-class ImageRenderer(Renderer):
+class Image(Renderer):
     def __init__(self, _owner: GameObject, _image: Image = None):
         super().__init__(_owner)
 
         self.__image: Image                         = _image
-        self.__color: Renderer.Color                = Renderer.Color()
+        self.__color: Color                         = Color()
         self.__isFlipX: bool                        = False
         self.__isFlipY: bool                        = False
         self.__sortingLayer: Renderer.ESortingLayer = Renderer.ESortingLayer.NONE
-        self.__orderInLayer: int = 0
+        self.__orderInLayer: int                    = 0
 
-        # region [Properties]
-
+    #region [Properties]
     @property
     def image(self) -> Image:
         return self.__image

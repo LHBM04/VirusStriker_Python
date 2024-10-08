@@ -4,11 +4,11 @@ from typing import final, Iterator, List, Dict, Type, TypeVar
 from Core.Components.Object import Object
 
 class Component(Object, metaclass = ABCMeta):
-    from Core.Components.GameObject import GameObject
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: 'GameObject'):
         super().__init__()
 
-        self.__owner: 'GameObject' = _owner
+        from Core.Components.GameObject import GameObject
+        self.__owner: GameObject = _owner
         self.__isActive: bool = True
 
     #region [Properties]
@@ -21,7 +21,7 @@ class Component(Object, metaclass = ABCMeta):
         self.__owner.name = _name
 
     @property
-    def gameObject(self) -> GameObject:
+    def gameObject(self) -> 'GameObject':
         return self.__owner
     #endregion
 
@@ -30,19 +30,15 @@ TComponent: TypeVar = TypeVar('TComponent', bound = Component)
 
 @final
 class ComponentManager:
-    from Core.Components.GameObject import GameObject
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: 'GameObject'):
         self.__owner                                            = _owner
         self.__components: Dict[Type[TComponent], TComponent]   = {}
-        self.__addComponents: List[TComponent]                  = []
 
     #region [Properties]
-    from Core.Components.GameObject import GameObject
     @property
     def gameObject(self) -> 'GameObject':
         return self.__owner
 
-    from Core.Components.Transform import Transform
     @property
     def transform(self) -> 'Transform':
         return self.__owner.transform
@@ -66,19 +62,23 @@ class ComponentManager:
     def GetComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
         return [self.__components[component] for component in _components if component in self.__components]
 
-    def AddComponent(self, _component: Type[TComponent]) -> bool:
+    def AddComponent(self, _component: Type[TComponent]) -> Component:
         if _component in self.__components:
             raise ValueError(f"[Oops!] 중복된 Component는 허용하지 않습니다! {type(_component)}")
 
-        self.__addComponents[type(_component)] = _component(self.__owner)
-        return True
+        newComponent: TComponent = _component(self.__owner)
+        self.__components[_component] = newComponent
+        return newComponent
 
-    def AddComponents(self, *_components: Type[TComponent]) -> bool:
+    def AddComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
+        newComponents: List[TComponent] = []
         for currentComponent in _components:
             if currentComponent in self.__components:
                 raise ValueError(f"[Oops!] 중복된 Component는 허용하지 않습니다! {currentComponent}")
             else:
-                self.__addComponents[type(currentComponent)] = currentComponent(self.__owner)
+                newComponent: TComponent = currentComponent(self.__owner)
+                self.__components[currentComponent] = newComponent
+                newComponents.append(newComponent)
 
-        return True
+        return newComponents
     #endregion

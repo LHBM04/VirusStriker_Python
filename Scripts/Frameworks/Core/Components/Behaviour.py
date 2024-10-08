@@ -4,8 +4,7 @@ from typing import final
 from Core.Components.Component import Component
 
 class Behavior(Component, metaclass = ABCMeta):
-    from Core.Components.GameObject import GameObject
-    def __init__(self, _actor: GameObject):
+    def __init__(self, _actor: 'GameObject'):
         super().__init__(_actor)
 
         self.__isEnabled: bool = True
@@ -21,14 +20,14 @@ class Behavior(Component, metaclass = ABCMeta):
             if self.__isEnabled:
                 return
 
+            self.__isEnabled = True
             self.OnEnable()
         else:
             if not self.__isEnabled:
                 return
 
+            self.__isEnabled = False
             self.OnDisable()
-
-        self.__isEnabled = _enable
     # endregion
     def OnEnable(self) -> None:
         pass
@@ -65,6 +64,7 @@ class Behavior(Component, metaclass = ABCMeta):
 
     def OnDestroy(self) -> None:
         pass
+
 @final
 class BehaviorManager:
     def __init__(self):

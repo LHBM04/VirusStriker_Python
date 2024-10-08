@@ -6,7 +6,7 @@ class Scene(metaclass = ABCMeta):
     def __init__(self):
         self.name = "New Scene"
 
-    # [virtual methods] #
+    #region [virtual methods]
     def Update(self, _deltaTime: float) -> None:
         self.OnUpdate(_deltaTime)
 
@@ -18,8 +18,8 @@ class Scene(metaclass = ABCMeta):
 
     def RenderUI(self) -> None:
         self.OnRenderGUI()
-
-    # [abstract methods] #
+    #endregion
+    #region [abstract methods]
     @abstractmethod
     def OnEnter(self) -> None:
         pass
@@ -43,21 +43,20 @@ class Scene(metaclass = ABCMeta):
     @abstractmethod
     def OnRenderGUI(self) -> None:
         pass
+    #endregion
 
 from Core.Utilities.Singleton import Singleton
 
 @final
 class SceneManager(metaclass = Singleton):
     def __init__(self) -> None:
-        # -------------------[private field]------------------- #
-        self.__scenes: Dict[str : Scene] = {}  # 관리할 Scene들.
-        self.__currentScene: Scene = None  # 현재 활성화된 Level.
-        self.__nextScene: Scene = None  # 이동 중인 Level
+        self.__scenes: Dict[str : Scene]    = {}  # 관리할 Scene들.
+        self.__currentScene: Scene          = None  # 현재 활성화된 Level.
+        self.__nextScene: Scene             = None  # 이동 중인 Level
         self.__previousScenes: stack[Scene] = stack()  # 이전에 활성화되었던 Scene들. (돌아가기 위함.)
+        self.__isResetDeltaTime: bool       = False  # Scene 로드 중일 때 시간을 멈추기.
 
-        self.isResetDeltaTime: bool = False  # Scene 로드 중일 때 시간을 멈추기.
-    # -------------------[Level Attributes]------------------- #
-
+    #region [Properties]
     @property
     def scenes(self) -> Dict:
         return self.__scenes
@@ -74,6 +73,11 @@ class SceneManager(metaclass = Singleton):
     def priviouseScenes(self) -> stack[Scene]:
         return self.__previousScenes
 
+    @property
+    def isResetDeltaTime(self) -> bool:
+        return self.__isResetDeltaTime
+    #endregion
+    #region [Methods]
     def AddLevel(self, _levelName: str, _scene: Scene) -> None:
         if _levelName in self.__scenes.keys() and _scene in self.__scenes.values():
             raise ValueError("[Oops!] 이미 존재하는 Scene입니다.")
@@ -87,10 +91,6 @@ class SceneManager(metaclass = Singleton):
         self.__nextScene = self.__scenes[_sceneName]
         self.__previousScenes.append(self.__nextScene)
 
-    def ChangeScene(self):
-        self.__currentScene, self.__nextScene = self.__nextScene, None
-        self.__currentScene.OnEnter()
-
     def UnloadLevel(self) -> None:
         if len(self.__previousScenes) <= 0:
             return
@@ -98,15 +98,14 @@ class SceneManager(metaclass = Singleton):
         self.__previousScenes.pop().OnExit()
         if len(self.__previousScenes) > 0:
             self.__nextScene = self.__previousScenes[0]
-
-    # -------------------[Game Loop]------------------- #
-
+    #endregion
+    #region [Life-Cycle]
     def Update(self, _deltaTime: float):
-        SceneManager().isResetDeltaTime = False
+        SceneManager().__isResetDeltaTime = False
 
         if self.__nextScene is not None:
-            self.ChangeScene()
-
+            self.__currentScene, self.__nextScene = self.__nextScene, None
+            self.__currentScene.OnEnter()
         else:
             pass
 
@@ -124,3 +123,4 @@ class SceneManager(metaclass = Singleton):
     def RenderUI(self):
         if self.__currentScene is not None:
             self.__currentScene.RenderUI()
+    #endregion

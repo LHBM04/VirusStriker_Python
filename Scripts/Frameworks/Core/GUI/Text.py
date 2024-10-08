@@ -2,14 +2,15 @@ from pico2d import Font
 
 from Core.Components.GameObject import GameObject
 from Core.Components.Renderer import Renderer
+from Core.Utilities.Color import Color
 
-class TextRenderer(Renderer):
+class Text(Renderer):
     def __init__(self, _owner: GameObject, _font: Font = None):
         super().__init__(_owner)
 
         self.__font: Font               = _font
         self.__text: str                = ""
-        self.__color: Renderer.Color    = Renderer.Color(255, 255, 255, 255)
+        self.__color: Color             = Color(255, 255, 255, 255)
 
     #region [Properties]
     @property
@@ -29,22 +30,22 @@ class TextRenderer(Renderer):
         self.__text = _text
 
     @property
-    def color(self) -> Renderer.Color:
+    def color(self) -> Color:
         return self.__color
 
     @color.setter
-    def color(self, _color: Renderer.Color) -> None:
+    def color(self, _color: Color) -> None:
         self.__color = _color
     #endregion
     #region [Methods Override]
     def Render(self):
         if self.__font is None:
-            return
+            raise ValueError("[Oops!] 해당 인스턴스의 Font가 지정되지 않았습니다.")
 
-        self.__font.draw(self.gameObject.transform.x,
-                         self.gameObject.transform.y,
+        self.__font.draw(self.gameObject.transform.position.x,
+                         self.gameObject.transform.position.y,
                          self.__text,
-                         self.__color)
+                         (self.__color.r, self.__color.g, self.__color.b))
 
     def RenderDebug(self):
         pass
