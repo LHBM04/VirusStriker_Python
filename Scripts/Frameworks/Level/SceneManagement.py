@@ -35,14 +35,6 @@ class Scene(metaclass = ABCMeta):
     @abstractmethod
     def OnExit(self) -> None:
         pass
-
-    @abstractmethod
-    def OnRenderObject(self) -> None:
-        pass
-
-    @abstractmethod
-    def OnRenderGUI(self) -> None:
-        pass
     #endregion
 
 from Core.Utilities.Singleton import Singleton

@@ -26,13 +26,13 @@ class TestScene(Scene):
     def OnEnter(self) -> None:
         super().OnEnter()
 
-        self.testText.Render()
         self.testBGM.set_volume(50)
         self.testBGM.play(-1)
 
     def OnUpdate(self, _deltaTime: float) -> None:
         super().OnUpdate(_deltaTime)
 
+        self.testText.Update(_deltaTime)
         if InputManager().GetKeyDown(SDLK_SPACE):
             self.testSFX.set_volume(7)
             self.testSFX.play()
@@ -42,10 +42,3 @@ class TestScene(Scene):
 
     def OnExit(self) -> None:
         super().OnExit()
-
-    def OnRenderObject(self) -> None:
-        super().OnRenderObject()
-
-    def OnRenderGUI(self) -> None:
-        super().OnRenderGUI()
-        self.testText.Render()

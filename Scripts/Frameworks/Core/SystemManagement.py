@@ -52,14 +52,6 @@ class SystemManager(metaclass = Singleton):
         from Level.SceneManagement import SceneManager
         SceneManager().FixedUpdate(_fixedDeltaTime)
 
-    def Render(self) -> None:
-        from Level.SceneManagement import SceneManager
-
-        clear_canvas()
-        SceneManager().RenderObject()
-        SceneManager().RenderUI()
-        update_canvas()  # 캔버스 업데이트
-
     # 프로그램 종료 시 캔버스를 정리합니다.
     def CleanUp(self) -> None:
         clear_canvas()

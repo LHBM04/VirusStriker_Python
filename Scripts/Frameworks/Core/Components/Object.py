@@ -24,28 +24,9 @@ class Object(metaclass = ABCMeta):
             Object.Destroy(self)
 
     #endregion
-    #region [Life-Cycle Methods]
-    def Start(self):
-        pass
-
-    def Update(self, _deltaTime: float):
-        pass
-
-    def FixedUpdate(self, _fixedDeltaTime: float):
-        pass
-
-    def LateUpdate(self, _deltaTime: float):
-        pass
-
     def OnDestroy(self):
         pass
 
-    def Render(self):
-        pass
-
-    def RenderDebug(self):
-        pass
-    #endregion
     @staticmethod
     def Destroy(_object: 'Object') -> None:
         _object.__isDestroy = False

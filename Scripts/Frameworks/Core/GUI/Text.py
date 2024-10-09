@@ -1,10 +1,10 @@
 from pico2d import Font
 
 from Core.Components.GameObject import GameObject
-from Core.GUI.UIBehaivor import UIObject
+from Core.GUI.UIBehaivor import UIBehavior
 from Core.Utilities.Color import Color
 
-class Text(UIObject):
+class Text(UIBehavior):
     def __init__(self, _owner: GameObject, _font: Font = None):
         super().__init__(_owner)
 

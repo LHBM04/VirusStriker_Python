@@ -1,11 +1,12 @@
 from pico2d import Image
 
 from Core.Components.GameObject import GameObject
-from Core.GUI.UIBehaivor import UIObject
+from Core.Components.ESoringLayer import ESortingLayer
+from Core.GUI.UIBehaivor import UIBehavior
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
 
-class Image(UIObject):
+class Image(UIBehavior):
     def __init__(self, _owner: GameObject, _image: Image = None):
         super().__init__(_owner)
 
@@ -50,19 +51,19 @@ class Image(UIObject):
         self.gameObject.transform.rotation = _rotation
 
     @property
-    def color(self) -> Renderer.Color:
+    def color(self) -> Color:
         return self.__color
 
     @color.setter
-    def color(self, _color: Renderer.Color) -> None:
+    def color(self, _color: Color) -> None:
         self.__color = _color
 
     @property
-    def sortingLayer(self) -> Renderer.ESortingLayer:
+    def sortingLayer(self) -> ESortingLayer:
         return self.__sortingLayer
 
     @sortingLayer.setter
-    def sortingLayer(self, _sortingLayer: Renderer.ESortingLayer) -> None:
+    def sortingLayer(self, _sortingLayer: ESortingLayer) -> None:
         self.__sortingLayer = _sortingLayer
 
     @property

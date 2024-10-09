@@ -78,8 +78,6 @@ class SpriteRenderer(Component):
     #endregion
     #region [Methods Override]
     def Render(self):
-        super().Render()
-
         if self.__sprite is None:
             raise ValueError("[Oops!] 렌더링할 Sprite가 존재하지 않습니다.")
 
@@ -97,7 +95,4 @@ class SpriteRenderer(Component):
                                int(self.color.a))
         SDL_SetTextureBlendMode(self.__sprite.texture,
                                 SDL_BLENDMODE_BLEND)
-        
-    def RenderDebug(self):
-        super().RenderDebug()
     #endregion

@@ -9,7 +9,6 @@ class Component(Object, metaclass = ABCMeta):
 
         from Core.Components.GameObject import GameObject
         self.__owner: GameObject    = _owner
-        self.__isEnable: bool       = True
 
     #region [Properties]
     @property
@@ -28,23 +27,7 @@ class Component(Object, metaclass = ABCMeta):
     def transform(self) -> 'Transform':
         return self.__owner.transform
 
-    @property
-    def isEnable(self) -> bool:
-        return self.__isEnable
-
-    @isEnable.setter
-    def isEnable(self, _enable) -> None:
-        if _enable:
-            self.__isEnable = True
-            self.OnEnable()
-        else:
-            self.__isEnable = False
-            self.OnDisable()
-    #endregion
-    def OnEnable(self) -> None:
-        pass
-
-    def OnDisable(self) -> None:
+    def Start(self):
         pass
 
 # 타입 검색을 위한 제너릭 타입 선언.
@@ -106,44 +89,4 @@ class ComponentManager:
                 newComponents[-1].Start()
 
         return newComponents
-    # endregion
-    # region [Life-Cycle Methods]
-    def Update(self, _deltaTime: float):
-        # 새로운 컴포넌트 추가
-        if len(self.__addComponents) > 0:
-            self.__components.update(self.__addComponents)
-        
-        # 컴포넌트 Update.
-        if len(self.__components) > 0:
-            for currentComponent in self.__components:
-                if currentComponent.isEnable:
-                    currentComponent.Update(_deltaTime)
-
-        # 컴포넌트 LateUpdate.
-        if len(self.__components) > 0:
-            for currentComponent in self.__components:
-                if currentComponent.isEnable:
-                    currentComponent.LateUpdate(_deltaTime)
-
-    def FixedUpdate(self, _fixedDeltaTime: float):
-        # 컴포넌트 FixedUpdate.
-        for currentComponent in self.__components:
-            if currentComponent.isEnable:
-                currentComponent.FixedUpdate(_fixedDeltaTime)
-
-            # 컴포넌트 Destroy.
-            if currentComponent.isDestroy:
-                self.__components.pop(currentComponent).OnDestroy()
-
-    def Render(self):
-        if len(self.__components) > 0:
-            for currentComponent in self.__components:
-                if currentComponent.isEnable:
-                    currentComponent.Render()
-
-    def RenderDebug(self):
-        if len(self.__components) > 0:
-            for currentComponent in self.__components:
-                if currentComponent.isEnable:
-                    currentComponent.RenderDebug()
     # endregion

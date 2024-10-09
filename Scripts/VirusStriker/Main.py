@@ -72,7 +72,7 @@ def Main() -> None:
 
     while SystemManager().isRunning:
         SendEvent(ReceiveEvent())
-
+        clear_canvas()
         if SceneManager().isResetDeltaTime:
             previousTime = Time.time()
 
@@ -97,12 +97,9 @@ def Main() -> None:
             fpsDeltaTime = 0.0
 
         SystemManager().Update(deltaTime)
-        SystemManager().Render()
-
-        # [디버그 코드]
-        #print(f"Delta Time: {deltaTime}, Fixed Delta Time: {fixedUpdateTime}, FPS: {SystemManager().fps}")
 
         previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
+        update_canvas()
 
     SystemManager().CleanUp()
 
