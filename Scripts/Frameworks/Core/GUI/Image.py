@@ -1,7 +1,7 @@
 from pico2d import Image
 
 from Core.Components.GameObject import GameObject
-from Core.Components.Renderer import Renderer
+from Core.Components.SpriteRenderer import Renderer
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
 

@@ -8,38 +8,23 @@ from Core.Components.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
 
-class Renderer(Component, metaclass = ABCMeta):
-        #endregion
-    # 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
-    class ESortingLayer(Enum):
-        NONE        = 0
-        BACKGROUND  = 1
-        FOREGROUND  = 2
-        OBJECT      = 3
-        UI          = 4
+# 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
+class ESortingLayer(Enum):
+    NONE = 0
+    BACKGROUND = 1
+    FOREGROUND = 2
+    OBJECT = 3
+    UI = 4
 
-    def __init__(self, _owner: GameObject):
-        super().__init__(_owner)
-
-    #region [Abstract Methods]
-    @abstractmethod
-    def Render(self):
-        pass
-
-    @abstractmethod
-    def RenderDebug(self):
-        pass
-    #endregion
-
-class SpriteRenderer(Renderer):
+class SpriteRenderer(Component):
     def __init__(self, _owner: GameObject, _sprite: Image = None):
         super().__init__(_owner)
 
         self.__sprite: Image                        = _sprite
         self.__isFlipX: bool                        = False
         self.__isFlipY: bool                        = False
-        self.__color: Color                         = Color()
-        self.__sortingLayer: Renderer.ESortingLayer = Renderer.ESortingLayer.NONE
+        self.__color: Color                         = Color(255, 255, 255, 255)
+        self.__sortingLayer: ESortingLayer          = ESortingLayer.NONE
         self.__orderInLayer: int                    = 0
 
     #region [Properties]
@@ -84,11 +69,11 @@ class SpriteRenderer(Renderer):
         self.__color = _color
 
     @property
-    def sortingLayer(self) -> Renderer.ESortingLayer:
+    def sortingLayer(self) -> ESortingLayer:
         return self.__sortingLayer
 
     @sortingLayer.setter
-    def sortingLayer(self, _sortingLayer: Renderer.ESortingLayer) -> None:
+    def sortingLayer(self, _sortingLayer: ESortingLayer) -> None:
         self.__sortingLayer = _sortingLayer
 
     @property

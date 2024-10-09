@@ -1,7 +1,7 @@
-from typing import final, List, Type, TypeVar
+from typing import final, List, Iterator, Type, TypeVar
 
-from Core.Components.Behaviour import BehaviorManager
 from Core.Components.Object import Object
+
 class GameObject(Object):
     def __init__(self):
         super().__init__()
@@ -10,24 +10,34 @@ class GameObject(Object):
         from Core.Components.Transform import Transform
 
         self.__componentManager: ComponentManager   = ComponentManager(self)
-        self.__behaviorManager: BehaviorManager     = BehaviorManager(self)
-        self.__componentManager.AddComponent(Transform)
+        self.__transform: Transform                 = self.__componentManager.AddComponent(Transform)
 
     #region [Properties]
     @property
     def transform(self) -> 'Transform':
-        from Core.Components.Transform import Transform
-        return self.__componentManager.GetComponent(Transform)
+        return self.__transform
 
     @property
     def gameObject(self) -> 'GameObject':
         return self
     #endregion
+    # region [Life-Cycle Methods]
+    def Update(self, _deltaTime: float):
+        self.__componentManager.Update(_deltaTime)
 
-    from Core.Components.Component import Component
-    TComponent: TypeVar = TypeVar('TComponent', bound = Component)
+    def FixedUpdate(self, _fixedDeltaTime: float):
+        self.__componentManager.FixedUpdate(_fixedDeltaTime)
 
+    def Render(self):
+        self.__componentManager.Render()
+
+    def RenderDebug(self):
+        self.__componentManager.RenderDebug()
+    # endregion
     # region [Methods]
+    from Core.Components.Component import Component
+    TComponent: TypeVar = TypeVar('TComponent', bound=Component)
+
     # 관리 중인 Component를 가져옵니다
     def GetComponent(self, _component: Type[TComponent]) -> TComponent:
         return self.__componentManager.GetComponent(_component)
@@ -43,16 +53,55 @@ class GameObject(Object):
     # 관리 중인 Component들을 가져옵니다.
     def AddComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
         return self.__componentManager.AddComponents(*_components)
-
-    # 관리 중인 Component들을 가져옵니다.
-    def AddBehaviour(self, _behaviour: 'Behaviour') -> None:
-        self.__behaviorManager.AddBehaviour(_behaviour)
-
-    # 관리 중인 Component들을 가져옵니다.
-    def AddBehaviours(self, *_behaviours: 'Behaviour') -> None:
-        self.__behaviourManage
+    # endregion
 
 @final
 class GameObjectManager:
     def __init__(self):
-        pass
+        self.__gameObjects: List[GameObject]    = []
+        self.__addGameObjects: List[GameObject] = []
+
+    #region [Operators Override]
+    def __iter__(self) -> Iterator[GameObject]:
+        return iter(self.__gameObjects)
+
+    def __getitem__(self, _index: int) -> GameObject:
+        return self.__gameObjects[_index]
+
+    def __len__(self) -> int:
+        return len(self.__gameObjects)
+    #endregion
+    def Update(self, _deltaTime: float):
+        # 새로운 컴포넌트 추가
+        if len(self.__addGameObjects) > 0:
+            self.__gameObjects.extend(self.__addGameObjects)
+
+        # 컴포넌트 Update.
+        if len(self.__gameObjects) > 0:
+            for currentObject in self.__gameObjects:
+                    currentObject.Update(_deltaTime)
+
+        # 컴포넌트 LateUpdate.
+        if len(self.__gameObjects) > 0:
+            for currentObject in self.__gameObjects:
+                if currentObject.isActive:
+                    currentObject.LateUpdate(_deltaTime)
+
+    def FixedUpdate(self, _fixedDeltaTime: float):
+        # 컴포넌트 FixedUpdate.
+        for currentObject in self.__gameObjects:
+            currentObject.FixedUpdate(_fixedDeltaTime)
+
+            # 컴포넌트 Destroy.
+            if currentObject.isDestroy:
+                self.__gameObjects.remove(currentObject)[0].Destroy()
+
+    def Render(self):
+        if len(self.__gameObjects) > 0:
+            for currentObject in self.__gameObjects:
+                currentObject.Render()
+
+    def RenderDebug(self):
+        if len(self.__gameObjects) > 0:
+            for currentObject in self.__gameObjects:
+                currentObject.RenderDebug()

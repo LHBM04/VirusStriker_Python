@@ -1,7 +1,7 @@
 from pico2d import Font
 
 from Core.Components.GameObject import GameObject
-from Core.Components.Renderer import Renderer
+from Core.Components.SpriteRenderer import Renderer
 from Core.Utilities.Color import Color
 
 class Text(Renderer):

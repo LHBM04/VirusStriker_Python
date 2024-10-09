@@ -17,16 +17,35 @@ class Object(metaclass = ABCMeta):
     @property
     def isDestroy(self) -> bool:
         return self.__isDestroy
+
+    @isDestroy.setter
+    def isDestroy(self, _destroy) -> None:
+        if _destroy:
+            Object.Destroy(self)
+
     #endregion
-    #region [Abstract Method]
-    def OnAwake(self) -> None:
+    #region [Life-Cycle Methods]
+    def Start(self):
         pass
 
-    def OnDestroy(self) -> None:
+    def Update(self, _deltaTime: float):
         pass
 
+    def FixedUpdate(self, _fixedDeltaTime: float):
+        pass
+
+    def LateUpdate(self, _deltaTime: float):
+        pass
+
+    def OnDestroy(self):
+        pass
+
+    def Render(self):
+        pass
+
+    def RenderDebug(self):
+        pass
+    #endregion
     @staticmethod
-    def Destroy(self, _object: 'Object') -> None:
+    def Destroy(_object: 'Object') -> None:
         _object.__isDestroy = False
-        self.OnDestroy()
-    #endregion
