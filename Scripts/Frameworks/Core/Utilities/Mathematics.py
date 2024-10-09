@@ -1,7 +1,7 @@
 from typing import final
 
 from multipledispatch import dispatch
-from numpy import abs, atan2, ceil, cos, deg2rad, dot, floor, rad2deg, sin, sqrt, tan
+from numpy import abs, atan2, ceil, cos, dot, floor, rad2deg, sin, sqrt, tan
 
 @final
 class MathF:

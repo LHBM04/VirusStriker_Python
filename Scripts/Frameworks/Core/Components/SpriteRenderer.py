@@ -1,5 +1,3 @@
-from abc import ABCMeta, abstractmethod
-
 from pico2d import *
 
 from Core.Components.Component import Component
@@ -76,12 +74,11 @@ class SpriteRenderer(Component):
     def orderInLayer(self, _orderInLayer: int) -> None:
         self.__orderInLayer = _orderInLayer
     #endregion
-    #region [Methods Override]
-    def Render(self):
+    def Start(self):
         if self.__sprite is None:
             raise ValueError("[Oops!] 렌더링할 Sprite가 존재하지 않습니다.")
 
-        self.__sprite.composite_draw(self.gameObject.transform.rotation.z,
+        self.__sprite.composite_draw(self.gameObject.transform.rotation,
                                      ('w' if self.__isFlipX else '') + ('h' if self.__isFlipY else ''),
                                      self.gameObject.transform.position.x,
                                      self.gameObject.transform.position.y,
@@ -95,4 +92,3 @@ class SpriteRenderer(Component):
                                int(self.color.a))
         SDL_SetTextureBlendMode(self.__sprite.texture,
                                 SDL_BLENDMODE_BLEND)
-    #endregion

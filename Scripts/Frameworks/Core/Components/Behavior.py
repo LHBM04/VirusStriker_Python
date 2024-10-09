@@ -1,17 +1,17 @@
 from abc import ABCMeta
-from typing import final, List, Dict, Type, TypeVar, Sequence
+from typing import final, List, Dict, Iterator, Type, TypeVar, Sequence
 
 from Core.Components.Component import Component
-from Core.Components.GameObject import GameObject
 
 class Behavior(Component, metaclass = ABCMeta):
     def __init__(self, _actor: 'GameObject'):
         from Core.Components.GameObject import GameObject
 
-        super().__init__(_actor)
+        self.__actor: GameObject        = _actor
+        self.__isEnabled: bool          = False
+        self.__isActiveAndEnabled: bool = False
 
-        self.__actor: GameObject    = _actor
-        self.__isEnable: bool       = True
+        super().__init__(_actor)
 
     # region [Properties]
     @property
@@ -20,14 +20,24 @@ class Behavior(Component, metaclass = ABCMeta):
 
     @isEnable.setter
     def isEnable(self, _enable) -> None:
+        self.__isEnable = _enable
         if _enable:
-            self.__isEnable = True
             self.OnEnable()
-        else:
-            self.__isEnable = False
-            self.OnDisable()
+            return
+
+        self.OnDisable()
+
+    @property
+    def isActiveAndEnabled(self) -> bool:
+        return self.__isEnabled and self.gameObject.isActive
     # endregion
     # region [Life-Cycle Methods]
+    def Awake(self):
+        super().Awake()
+        
+    def Start(self):
+        super().Start()
+    
     def OnEnable(self) -> None:
         pass
 
@@ -42,6 +52,9 @@ class Behavior(Component, metaclass = ABCMeta):
 
     def OnDisable(self) -> None:
         pass
+
+    def OnDestroy(self):
+        super().OnDestroy()
     # endregion
 
 # 타입 검색을 위한 제너릭 타입 선언.
@@ -49,18 +62,31 @@ TBehavior: TypeVar = TypeVar('TBehavior', bound = Behavior)
 
 @final
 class BehaviorManager:
-    def __init__(self, _actor: GameObject):
+    def __init__(self, _actor: 'GameObject'):
+        from Core.Components.GameObject import GameObject
+
         self.__actor: GameObject                                = _actor    # 행동 수행자
         self.__behaviors: Dict[Type[TBehavior], Behavior]       = {}        # 행동
         self.__addBehaviors: Dict[Type[TBehavior], Behavior]    = {}        # 추가될 행동
+
+    # region [Operators Override]
+    def __iter__(self) -> Iterator[TBehavior]:
+        return iter(self.__behaviors.values())
+
+    def __getitem__(self, _index: Type[TBehavior]) -> TBehavior:
+        return self.GetBehavior(_index)
+
+    def __len__(self) -> int:
+        return len(self.__behaviors)
+    # endregion
 
     def AddBehavior(self, _behaviorType: Type[TBehavior]) -> TBehavior:
         if _behaviorType in self.__behaviors:
             raise ValueError(f"[Oops!] 중복된 Behavior는 허용하지 않습니다! {type(_behaviorType)}")
 
         newBehavior: TBehavior = _behaviorType(self.__actor)
-        newBehavior.Start()
         newBehavior.OnEnable()
+        newBehavior.Start()
         self.__addBehaviors[_behaviorType] = newBehavior
 
         return newBehavior
@@ -72,8 +98,8 @@ class BehaviorManager:
                 raise ValueError(f"[Oops!] 중복된 Behavior는 허용하지 않습니다! {type(currentBehavior)}")
 
             newBehavior: TBehavior = currentBehavior(self.__actor)
-            newBehavior.Start()
             newBehavior.OnEnable()
+            newBehavior.Start()
             self.__addBehaviors[currentBehavior] = newBehavior
             newBehaviors.append(currentBehavior(self.__actor))
 
@@ -101,23 +127,24 @@ class BehaviorManager:
     def GetBehaviors(self, *_behaviorTypes: Type[TBehavior]) -> Sequence[TBehavior]:
         return [self.__behaviors[behaviorType] for behaviorType in _behaviorTypes if behaviorType in self.__behaviors]
 
-    def Update(self, _deltaTime):
+    def Update(self, _deltaTime: float):
         if len(self.__addBehaviors) > 0:
             self.__behaviors.update(self.__addBehaviors)
+            self.__addBehaviors.clear()
 
         if len(self.__behaviors) > 0:
-            for behavior in self.__behaviors:
+            for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.Update(_deltaTime)
 
         if len(self.__behaviors) > 0:
-            for behavior in self.__behaviors:
+            for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.LateUpdate(_deltaTime)
 
-    def FixedUpdate(self, _fixedDeltaTime):
+    def FixedUpdate(self, _fixedDeltaTime: float):
         if len(self.__behaviors) > 0:
-            for behavior in self.__behaviors:
+            for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.FixedUpdate(_fixedDeltaTime)
 

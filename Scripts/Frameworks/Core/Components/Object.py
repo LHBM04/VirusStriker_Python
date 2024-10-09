@@ -24,9 +24,6 @@ class Object(metaclass = ABCMeta):
             Object.Destroy(self)
 
     #endregion
-    def OnDestroy(self):
-        pass
-
     @staticmethod
     def Destroy(_object: 'Object') -> None:
         _object.__isDestroy = False

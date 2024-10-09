@@ -38,9 +38,12 @@ class Text(UIBehavior):
         self.__color = _color
     #endregion
     #region [Methods Override]
+    def OnDisable(self) -> None:
+        print("Disable")
+
     def Render(self):
         super().Render()
-        
+
         if self.__font is None:
             raise ValueError("[Oops!] 해당 인스턴스의 Font가 지정되지 않았습니다.")
 

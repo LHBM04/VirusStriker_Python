@@ -5,10 +5,13 @@ from Core.Components.Object import Object
 
 class Component(Object, metaclass = ABCMeta):
     def __init__(self, _owner: 'GameObject'):
+        from Core.Components.GameObject import GameObject
+
         super().__init__()
 
-        from Core.Components.GameObject import GameObject
-        self.__owner: GameObject    = _owner
+        self.__owner: GameObject        = _owner
+
+        self.Awake()
 
     #region [Properties]
     @property
@@ -27,7 +30,13 @@ class Component(Object, metaclass = ABCMeta):
     def transform(self) -> 'Transform':
         return self.__owner.transform
 
+    def Awake(self):
+        pass
+
     def Start(self):
+        pass
+
+    def OnDestroy(self):
         pass
 
 # 타입 검색을 위한 제너릭 타입 선언.
@@ -73,7 +82,6 @@ class ComponentManager:
             raise ValueError(f"[Oops!] 중복된 Component는 허용하지 않습니다! {type(_component)}")
 
         newComponent: TComponent = _component(self.__owner)
-        newComponent.Start()
         self.__addComponents[_component] = newComponent
         return newComponent
 
@@ -86,7 +94,28 @@ class ComponentManager:
                 newComponent: TComponent = currentComponent(self.__owner)
                 self.__addComponents[currentComponent] = newComponent
                 newComponents.append(newComponent)
-                newComponents[-1].Start()
 
         return newComponents
+
+    def RemoveComponent(self, _component: Type[TComponent]) -> bool:
+        return True
+
+    def RemoveComponents(self, *_components: Type[TComponent]) -> bool:
+        return True
+
+    def RemoveAllComponents(self) -> bool:
+        return True
     # endregion
+    def Update(self, _deltaTime: float):
+        if self.__addComponents:
+            for newComponent in self.__addComponents.values():
+                self.__components[type(newComponent)] = newComponent  # __components에 추가
+                newComponent.Start()  # Start 메서드 호출
+            self.__addComponents.clear()
+
+    def FixedUpdate(self, _fixedDeltaTime: float):
+        if len(self.__components) > 0:
+            for component in self.__components.values():
+                if component.isDestroy:
+                    key: Type[TComponent] = next(key for key, value in self.__components.items() if value is component)
+                    self.__components.pop(key).OnDestroy()
