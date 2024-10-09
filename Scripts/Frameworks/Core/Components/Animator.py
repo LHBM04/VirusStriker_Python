@@ -28,7 +28,7 @@ class Animation:
         return self.__sprites
 
     @sprites.setter
-    def sprites(self, _sprites: Union[str, List]):
+    def sprites(self, _sprites: Union[str, List[Image]]):
         if isinstance(_sprites, str):
             self.__sprites = ResourceLoader().LoadSprites(_sprites)
         elif isinstance(_sprites, list):
@@ -62,22 +62,22 @@ class Animation:
     # endregion
     @abstractmethod
     def Animate(self, _deltaTime: float):
-        self.__animationDeltaTime +=  _deltaTime
+        self.__animationDeltaTime += _deltaTime
 
         if self.__animationDeltaTime > self.__currentAnimateTime:
             self.__animationDeltaTime -= self.__currentAnimateTime
             self.__currentSpriteIndex += 1
-            self.__animator.gameObject.GetComponent(SpriteRenderer).sprite = self.__sprites[self.__currentSpriteIndex]
 
-            if self.__currentSpriteIndex >= self.spritesLength - 1:
-                self.__isEnd = True
-
+            if self.__currentSpriteIndex >= self.spritesLength:
                 if self.isLoop:
                     self.__currentSpriteIndex = 0
                     self.__isEnd = False
                 else:
-                    self.__currentSpriteIndex = self.__currentSpriteIndex - 1
-                    return
+                    self.__currentSpriteIndex = self.spritesLength - 1
+                    self.__isEnd = True
+                    return  # 종료
+
+            self.__animator.gameObject.GetComponent(SpriteRenderer).sprite = self.__sprites[self.__currentSpriteIndex]
 
 @final
 class Animator(Behavior):
