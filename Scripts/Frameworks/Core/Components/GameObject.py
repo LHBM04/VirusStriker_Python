@@ -75,6 +75,11 @@ class GameObjectManager:
     def __len__(self) -> int:
         return len(self.__gameObjects)
     # endregion
+
+    def AddGameObject(self, _gameObject: GameObject) -> None:
+        self.__addGameObjects.append(_gameObject)
+        _gameObject.Start()
+
     # region [Life-Cycle Methods]
     def Update(self, _deltaTime: float):
         # 새로운 컴포넌트 추가
@@ -84,13 +89,12 @@ class GameObjectManager:
         # 컴포넌트 Update.
         if len(self.__gameObjects) > 0:
             for currentObject in self.__gameObjects:
-                    currentObject.Update(_deltaTime)
+                currentObject.Update(_deltaTime)
 
         # 컴포넌트 LateUpdate.
         if len(self.__gameObjects) > 0:
             for currentObject in self.__gameObjects:
-                if currentObject.isActive:
-                    currentObject.LateUpdate(_deltaTime)
+                currentObject.LateUpdate(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
         # 컴포넌트 FixedUpdate.
@@ -99,7 +103,8 @@ class GameObjectManager:
 
             # 컴포넌트 Destroy.
             if currentObject.isDestroy:
-                self.__gameObjects.remove(currentObject)[0].Destroy()
+                index = self.__gameObjects.index(currentObject)
+                self.__gameObjects.pop(index).OnDestroy()
 
     def Render(self):
         if len(self.__gameObjects) > 0:
