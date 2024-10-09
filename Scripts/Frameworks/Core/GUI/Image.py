@@ -1,11 +1,11 @@
 from pico2d import Image
 
 from Core.Components.GameObject import GameObject
-from Core.Components.SpriteRenderer import Renderer
+from Core.GUI.UIBehaivor import UIObject
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
 
-class Image(Renderer):
+class Image(UIObject):
     def __init__(self, _owner: GameObject, _image: Image = None):
         super().__init__(_owner)
 
@@ -13,7 +13,7 @@ class Image(Renderer):
         self.__color: Color                         = Color()
         self.__isFlipX: bool                        = False
         self.__isFlipY: bool                        = False
-        self.__sortingLayer: Renderer.ESortingLayer = Renderer.ESortingLayer.NONE
+        self.__sortingLayer: ESortingLayer = ESortingLayer.NONE
         self.__orderInLayer: int                    = 0
 
     #region [Properties]

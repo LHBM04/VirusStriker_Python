@@ -1,10 +1,10 @@
 from pico2d import Font
 
 from Core.Components.GameObject import GameObject
-from Core.Components.SpriteRenderer import Renderer
+from Core.GUI.UIBehaivor import UIObject
 from Core.Utilities.Color import Color
 
-class Text(Renderer):
+class Text(UIObject):
     def __init__(self, _owner: GameObject, _font: Font = None):
         super().__init__(_owner)
 
@@ -39,6 +39,8 @@ class Text(Renderer):
     #endregion
     #region [Methods Override]
     def Render(self):
+        super().Render()
+        
         if self.__font is None:
             raise ValueError("[Oops!] 해당 인스턴스의 Font가 지정되지 않았습니다.")
 
@@ -48,5 +50,5 @@ class Text(Renderer):
                          (self.__color.r, self.__color.g, self.__color.b))
 
     def RenderDebug(self):
-        pass
+        super().RenderDebug()
     #endregion

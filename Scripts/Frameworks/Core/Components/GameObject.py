@@ -11,6 +11,7 @@ class GameObject(Object):
 
         self.__componentManager: ComponentManager   = ComponentManager(self)
         self.__transform: Transform                 = self.__componentManager.AddComponent(Transform)
+        self.__isActive: bool                       = True
 
     #region [Properties]
     @property

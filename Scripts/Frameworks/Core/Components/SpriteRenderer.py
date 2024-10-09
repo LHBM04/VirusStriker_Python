@@ -1,20 +1,12 @@
 from abc import ABCMeta, abstractmethod
-from enum import Enum
 
 from pico2d import *
 
 from Core.Components.Component import Component
+from Core.Components.ESoringLayer import ESortingLayer
 from Core.Components.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
-
-# 그려야 할 그래픽들의 우선 순위를 나타내는 열거형. (가장 높은 것이 우선 순위)
-class ESortingLayer(Enum):
-    NONE = 0
-    BACKGROUND = 1
-    FOREGROUND = 2
-    OBJECT = 3
-    UI = 4
 
 class SpriteRenderer(Component):
     def __init__(self, _owner: GameObject, _sprite: Image = None):

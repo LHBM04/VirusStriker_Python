@@ -9,7 +9,7 @@ class Component(Object, metaclass = ABCMeta):
 
         from Core.Components.GameObject import GameObject
         self.__owner: GameObject    = _owner
-        self.__isActive: bool       = True
+        self.__isEnable: bool       = True
 
     #region [Properties]
     @property
@@ -29,26 +29,23 @@ class Component(Object, metaclass = ABCMeta):
         return self.__owner.transform
 
     @property
-    def isActive(self) -> bool:
-        return self.__isActive
+    def isEnable(self) -> bool:
+        return self.__isEnable
 
-    @isActive.setter
-    def isActive(self, _active) -> None:
-        self.SetActive(_active)
+    @isEnable.setter
+    def isEnable(self, _enable) -> None:
+        if _enable:
+            self.__isEnable = True
+            self.OnEnable()
+        else:
+            self.__isEnable = False
+            self.OnDisable()
     #endregion
     def OnEnable(self) -> None:
         pass
 
     def OnDisable(self) -> None:
         pass
-
-    def SetActive(self, _active) -> None:
-        if _active:
-            self.__isActive = True
-            self.OnEnable()
-        else:
-            self.__isActive = False
-            self.OnDisable()
 
 # 타입 검색을 위한 제너릭 타입 선언.
 TComponent: TypeVar = TypeVar('TComponent', bound = Component)
@@ -119,19 +116,19 @@ class ComponentManager:
         # 컴포넌트 Update.
         if len(self.__components) > 0:
             for currentComponent in self.__components:
-                if currentComponent.isActive:
+                if currentComponent.isEnable:
                     currentComponent.Update(_deltaTime)
 
         # 컴포넌트 LateUpdate.
         if len(self.__components) > 0:
             for currentComponent in self.__components:
-                if currentComponent.isActive:
+                if currentComponent.isEnable:
                     currentComponent.LateUpdate(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
         # 컴포넌트 FixedUpdate.
         for currentComponent in self.__components:
-            if currentComponent.isActive:
+            if currentComponent.isEnable:
                 currentComponent.FixedUpdate(_fixedDeltaTime)
 
             # 컴포넌트 Destroy.
@@ -141,12 +138,12 @@ class ComponentManager:
     def Render(self):
         if len(self.__components) > 0:
             for currentComponent in self.__components:
-                if currentComponent.isActive:
+                if currentComponent.isEnable:
                     currentComponent.Render()
 
     def RenderDebug(self):
         if len(self.__components) > 0:
             for currentComponent in self.__components:
-                if currentComponent.isActive:
+                if currentComponent.isEnable:
                     currentComponent.RenderDebug()
     # endregion
