@@ -1,5 +1,6 @@
 from typing import final, List, Iterator, Type, TypeVar
 
+from Core.Components.Behavior import BehaviorManager
 from Core.Components.Object import Object
 
 class GameObject(Object):
@@ -9,6 +10,7 @@ class GameObject(Object):
         from Core.Components.Component import ComponentManager
         from Core.Components.Transform import Transform
 
+        self.__behaviorManager: BehaviorManager     = BehaviorManager(self)
         self.__componentManager: ComponentManager   = ComponentManager(self)
         self.__transform: Transform                 = self.__componentManager.AddComponent(Transform)
         self.__isActive: bool                       = True
@@ -24,20 +26,10 @@ class GameObject(Object):
     #endregion
     # region [Life-Cycle Methods]
     def Update(self, _deltaTime: float):
-        super().Update(_deltaTime)
-        self.__componentManager.Update(_deltaTime)
+        self.__behaviorManager.Update(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
-        super().FixedUpdate(_fixedDeltaTime)
-        self.__componentManager.FixedUpdate(_fixedDeltaTime)
-
-    def Render(self):
-        super().Render()
-        self.__componentManager.Render()
-
-    def RenderDebug(self):
-        super().RenderDebug()
-        self.__componentManager.RenderDebug()
+        self.__behaviorManager.FixedUpdate(_fixedDeltaTime)
     # endregion
     # region [Component Methods]
     from Core.Components.Component import Component
