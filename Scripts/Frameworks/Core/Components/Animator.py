@@ -28,10 +28,10 @@ class Animation:
         return self.__sprites
 
     @sprites.setter
-    def sprites(self, _sprites: Union[str, List[Image]]):
+    def sprites(self, _sprites: Union[str, List]):
         if isinstance(_sprites, str):
             self.__sprites = ResourceLoader().LoadSprites(_sprites)
-        elif isinstance(_sprites, List):
+        elif isinstance(_sprites, list):
             self.__sprites = _sprites
         else:
             raise ValueError()
@@ -60,7 +60,6 @@ class Animation:
     def animationDeltaTime(self) -> float:
         return self.__animationDeltaTime
     # endregion
-
     @abstractmethod
     def Animate(self, _deltaTime: float):
         self.__animationDeltaTime +=  _deltaTime
@@ -68,9 +67,9 @@ class Animation:
         if self.__animationDeltaTime > self.__currentAnimateTime:
             self.__animationDeltaTime -= self.__currentAnimateTime
             self.__currentSpriteIndex += 1
-            self.__spriteRenderer.sprite = self.__sprites[self.__currentSpriteIndex]
+            self.__animator.gameObject.GetComponent(SpriteRenderer).sprite = self.__sprites[self.__currentSpriteIndex]
 
-            if self.__currentSpriteIndex >= self.spritesLength:
+            if self.__currentSpriteIndex >= self.spritesLength - 1:
                 self.__isEnd = True
 
                 if self.isLoop:
@@ -80,6 +79,7 @@ class Animation:
                     self.__currentSpriteIndex = self.__currentSpriteIndex - 1
                     return
 
+@final
 class Animator(Behavior):
     def __init__(self, _actor: GameObject):
         super().__init__(_actor)
@@ -88,11 +88,21 @@ class Animator(Behavior):
         self.__currentAnimation: Animation      = None
         self.__nextAnimation: str               = ""
 
+    def SetState(self, _stateName: str) -> None:
+        if _stateName not in self.__animations:
+            raise ValueError()
+
+        self.__nextAnimation = _stateName
+
+    def AddAnimation(self, _state: str, _animation: Animation) -> None:
+        self.__animations[_state] = _animation
+
     def Update(self, _deltaTime: float):
         if self.__nextAnimation == "":
             return
 
         self.__currentAnimation = self.__animations[self.__nextAnimation]
+        self.__nextAnimation    = ""
 
     def LateUpdate(self, _deltaTime: float):
         if self.__currentAnimation is None:

@@ -97,6 +97,7 @@ def Main() -> None:
             fpsDeltaTime = 0.0
 
         SystemManager().Update(deltaTime)
+        SystemManager().Render()
 
         previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
         update_canvas()

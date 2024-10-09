@@ -75,6 +75,9 @@ class SpriteRenderer(Component):
         self.__orderInLayer = _orderInLayer
     #endregion
     def Start(self):
+        self.Render()
+
+    def Render(self):
         if self.__sprite is None:
             raise ValueError("[Oops!] 렌더링할 Sprite가 존재하지 않습니다.")
 

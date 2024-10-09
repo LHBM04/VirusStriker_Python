@@ -34,7 +34,7 @@ class ResourceLoader(metaclass=Singleton):
             raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(directoryPath)}\"였습니다.")
 
         for filePath in directoryPath.iterdir():
-            if filePath.is_file() and filePath.suffix() == self.__spriteResourceSuffix:
+            if filePath.is_file() and filePath.suffix == self.__spriteResourceSuffix:
                 yield load_image(str(filePath))
 
     # BGM 리소스를 로드합니다.

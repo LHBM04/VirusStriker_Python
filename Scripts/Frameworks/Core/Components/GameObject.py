@@ -50,15 +50,15 @@ class GameObject(Object):
         if not self.__isActiveSelf:
             return
 
-        self.__behaviorManager.Update(_deltaTime)
         self.__componentManager.Update(_deltaTime)
+        self.__behaviorManager.Update(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
         if not self.__isActiveSelf:
             return
 
-        self.__behaviorManager.FixedUpdate(_fixedDeltaTime)
         self.__componentManager.FixedUpdate(_fixedDeltaTime)
+        self.__behaviorManager.FixedUpdate(_fixedDeltaTime)
     # endregion
     # region [Component Methods]
     from Core.Components.Component import Component
@@ -120,42 +120,23 @@ class GameObjectManager:
 
     def AddGameObject(self, _gameObject: GameObject) -> None:
         self.__addGameObjects.append(_gameObject)
-        _gameObject.Start()
 
     # region [Life-Cycle Methods]
     def Update(self, _deltaTime: float):
-        # 새로운 컴포넌트 추가
-        if len(self.__addGameObjects) > 0:
+        if self.__addGameObjects:
             self.__gameObjects.extend(self.__addGameObjects)
+            self.__addGameObjects.clear()
 
-        # 컴포넌트 Update.
-        if len(self.__gameObjects) > 0:
+        if self.__gameObjects:
             for currentObject in self.__gameObjects:
                 currentObject.Update(_deltaTime)
 
-        # 컴포넌트 LateUpdate.
-        if len(self.__gameObjects) > 0:
-            for currentObject in self.__gameObjects:
-                currentObject.LateUpdate(_deltaTime)
-
     def FixedUpdate(self, _fixedDeltaTime: float):
-        # 컴포넌트 FixedUpdate.
         for currentObject in self.__gameObjects:
             currentObject.FixedUpdate(_fixedDeltaTime)
 
-            # 컴포넌트 Destroy.
             if currentObject.isDestroy:
                 index: int = self.__gameObjects.index(currentObject)
-                self.__gameObjects.pop(index).OnDestroy()
-
-    def Render(self):
-        if len(self.__gameObjects) > 0:
-            for currentObject in self.__gameObjects:
-                currentObject.Render()
-
-    def RenderDebug(self):
-        if len(self.__gameObjects) > 0:
-            for currentObject in self.__gameObjects:
-                currentObject.RenderDebug()
+                self.__gameObjects.pop(index)
     # endregion
     

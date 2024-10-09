@@ -2,15 +2,24 @@ from abc import ABCMeta, abstractmethod
 from collections import deque as stack
 from typing import final, Dict
 
+from Core.Components.GameObject import GameObjectManager
+
+
 class Scene(metaclass = ABCMeta):
     def __init__(self):
         self.name = "New Scene"
 
+        self.objMng = GameObjectManager()
+
     #region [virtual methods]
     def Update(self, _deltaTime: float) -> None:
+        self.objMng.Update(_deltaTime)
+
         self.OnUpdate(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
+        self.objMng.FixedUpdate(_fixedDeltaTime)
+
         self.OnFixedUpdate(_fixedDeltaTime)
     #endregion
     #region [abstract methods]
@@ -24,6 +33,13 @@ class Scene(metaclass = ABCMeta):
 
     @abstractmethod
     def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
+        pass
+
+    @abstractmethod
+    def Render(self):
+        pass
+
+    def RenderDebug(self):
         pass
 
     @abstractmethod
@@ -101,4 +117,12 @@ class SceneManager(metaclass = Singleton):
     def FixedUpdate(self, _fixedDeltaTime: float):
         if self.__currentScene is not None:
             self.__currentScene.FixedUpdate(_fixedDeltaTime)
+
+    def Render(self):
+        if self.__currentScene is not None:
+            self.__currentScene.Render()
+
+    def RenderDebug(self):
+        if self.__currentScene is not None:
+            self.__currentScene.RenderDebug()
     #endregion

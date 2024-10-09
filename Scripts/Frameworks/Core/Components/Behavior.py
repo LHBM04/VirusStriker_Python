@@ -8,15 +8,15 @@ class Behavior(Component, metaclass = ABCMeta):
         from Core.Components.GameObject import GameObject
 
         self.__actor: GameObject        = _actor
-        self.__isEnabled: bool          = False
-        self.__isActiveAndEnabled: bool = False
+        self.__isEnabled: bool          = True
+        self.__isActiveAndEnabled: bool = True
 
         super().__init__(_actor)
 
     # region [Properties]
     @property
     def isEnable(self) -> bool:
-        return self.__isEnable
+        return self.__isEnabled
 
     @isEnable.setter
     def isEnable(self, _enable) -> None:
@@ -128,22 +128,22 @@ class BehaviorManager:
         return [self.__behaviors[behaviorType] for behaviorType in _behaviorTypes if behaviorType in self.__behaviors]
 
     def Update(self, _deltaTime: float):
-        if len(self.__addBehaviors) > 0:
+        if self.__addBehaviors:
             self.__behaviors.update(self.__addBehaviors)
             self.__addBehaviors.clear()
 
-        if len(self.__behaviors) > 0:
+        if self.__behaviors:
             for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.Update(_deltaTime)
 
-        if len(self.__behaviors) > 0:
+        if self.__behaviors:
             for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.LateUpdate(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
-        if len(self.__behaviors) > 0:
+        if self.__behaviors:
             for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.FixedUpdate(_fixedDeltaTime)

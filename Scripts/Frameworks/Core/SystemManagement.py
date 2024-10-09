@@ -4,6 +4,8 @@ from pico2d import *
 
 from Core.Utilities.Singleton import Singleton
 from Core.Utilities.InputManagement import InputManager
+from Level.SceneManagement import SceneManager
+
 
 @final
 class SystemManager(metaclass = Singleton):
@@ -51,6 +53,12 @@ class SystemManager(metaclass = Singleton):
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         from Level.SceneManagement import SceneManager
         SceneManager().FixedUpdate(_fixedDeltaTime)
+
+    def Render(self):
+        clear_canvas()
+        SceneManager().Render()
+        SceneManager().RenderDebug()
+        update_canvas()
 
     # 프로그램 종료 시 캔버스를 정리합니다.
     def CleanUp(self) -> None:
