@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from typing import final, Iterator, List, Dict, Type, TypeVar
+from typing import final, Iterator, List, Dict, Type, TypeVar, Sequence
 
 from Core.Components.Object import Object
 
@@ -61,23 +61,23 @@ class ComponentManager:
     #endregion
     #region [Methods]
     # 관리 중인 Component를 가져옵니다.
-    def GetComponent(self, _component: Type[TComponent]) -> TComponent:
-        return self.__components[_component] if _component in self.__components.keys() else None
+    def GetComponent(self, _componentType: Type[TComponent]) -> TComponent:
+        return self.__components[_componentType] if _componentType in self.__components.keys() else None
 
     # 관리 중인 Component들을 가져옵니다.
-    def GetComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
-        return [self.__components[component] for component in _components if component in self.__components]
+    def GetComponents(self, *_componentsType: Type[TComponent]) -> Sequence[TComponent]:
+        return [self.__components[component] for component in _componentsType if component in self.__components]
 
     def AddComponent(self, _component: Type[TComponent]) -> TComponent:
         if _component in self.__components:
             raise ValueError(f"[Oops!] 중복된 Component는 허용하지 않습니다! {type(_component)}")
 
         newComponent: TComponent = _component(self.__owner)
-        self.__addComponents[_component] = newComponent
         newComponent.Start()
+        self.__addComponents[_component] = newComponent
         return newComponent
 
-    def AddComponents(self, *_components: Type[TComponent]) -> List[TComponent]:
+    def AddComponents(self, *_components: Type[TComponent]) -> Sequence[TComponent]:
         newComponents: List[TComponent] = []
         for currentComponent in _components:
             if currentComponent in self.__components:

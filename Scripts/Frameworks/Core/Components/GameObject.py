@@ -104,7 +104,7 @@ class GameObjectManager:
 
             # 컴포넌트 Destroy.
             if currentObject.isDestroy:
-                index = self.__gameObjects.index(currentObject)
+                index: int = self.__gameObjects.index(currentObject)
                 self.__gameObjects.pop(index).OnDestroy()
 
     def Render(self):
