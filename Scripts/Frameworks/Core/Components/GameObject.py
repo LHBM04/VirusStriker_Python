@@ -59,6 +59,11 @@ class GameObject(Object):
 
         self.__componentManager.FixedUpdate(_fixedDeltaTime)
         self.__behaviorManager.FixedUpdate(_fixedDeltaTime)
+
+    def OnDestroy(self):
+        map(lambda component: Object.Destroy(component), self.__componentManager)   # 컴포넌트 파괴
+        map(lambda behavior: Object.Destroy(behavior), self.__behaviorManager)      # 행동 파괴
+        map(lambda child : Object.Destroy(child), self.transform.children)          # 자식 파괴
     # endregion
     # region [Component Methods]
     from Core.Components.Component import Component
@@ -137,6 +142,6 @@ class GameObjectManager:
 
             if currentObject.isDestroy:
                 index: int = self.__gameObjects.index(currentObject)
-                self.__gameObjects.pop(index)
+                self.__gameObjects.pop(index).OnDestroy()
     # endregion
     

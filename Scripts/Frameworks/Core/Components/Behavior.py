@@ -129,6 +129,7 @@ class BehaviorManager:
 
     def Update(self, _deltaTime: float):
         if self.__addBehaviors:
+            map(lambda behavior: behavior.Start(), self.__addBehaviors)
             self.__behaviors.update(self.__addBehaviors)
             self.__addBehaviors.clear()
 
