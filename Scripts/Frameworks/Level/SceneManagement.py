@@ -12,12 +12,6 @@ class Scene(metaclass = ABCMeta):
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         self.OnFixedUpdate(_fixedDeltaTime)
-
-    def RenderObject(self) -> None:
-        self.OnRenderObject()
-
-    def RenderUI(self) -> None:
-        self.OnRenderGUI()
     #endregion
     #region [abstract methods]
     @abstractmethod
@@ -107,12 +101,4 @@ class SceneManager(metaclass = Singleton):
     def FixedUpdate(self, _fixedDeltaTime: float):
         if self.__currentScene is not None:
             self.__currentScene.FixedUpdate(_fixedDeltaTime)
-
-    def RenderObject(self):
-        if self.__currentScene is not None:
-            self.__currentScene.RenderObject()
-
-    def RenderUI(self):
-        if self.__currentScene is not None:
-            self.__currentScene.RenderUI()
     #endregion
