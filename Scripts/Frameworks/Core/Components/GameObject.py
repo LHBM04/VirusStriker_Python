@@ -23,18 +23,22 @@ class GameObject(Object):
     #endregion
     # region [Life-Cycle Methods]
     def Update(self, _deltaTime: float):
+        super().Update(_deltaTime)
         self.__componentManager.Update(_deltaTime)
 
     def FixedUpdate(self, _fixedDeltaTime: float):
+        super().FixedUpdate(_fixedDeltaTime)
         self.__componentManager.FixedUpdate(_fixedDeltaTime)
 
     def Render(self):
+        super().Render()
         self.__componentManager.Render()
 
     def RenderDebug(self):
+        super().RenderDebug()
         self.__componentManager.RenderDebug()
     # endregion
-    # region [Methods]
+    # region [Component Methods]
     from Core.Components.Component import Component
     TComponent: TypeVar = TypeVar('TComponent', bound=Component)
 
@@ -70,7 +74,8 @@ class GameObjectManager:
 
     def __len__(self) -> int:
         return len(self.__gameObjects)
-    #endregion
+    # endregion
+    # region [Life-Cycle Methods]
     def Update(self, _deltaTime: float):
         # 새로운 컴포넌트 추가
         if len(self.__addGameObjects) > 0:
@@ -105,3 +110,5 @@ class GameObjectManager:
         if len(self.__gameObjects) > 0:
             for currentObject in self.__gameObjects:
                 currentObject.RenderDebug()
+    # endregion
+    
