@@ -2,7 +2,7 @@ from pico2d import Image
 
 from Core.Components.GameObject import GameObject
 from Core.Components.ESoringLayer import ESortingLayer
-from GUI.UIBehaivor import UIBehavior
+from Core.GUI.UIBehaivor import UIBehavior
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
 

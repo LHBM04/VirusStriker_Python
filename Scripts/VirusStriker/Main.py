@@ -51,7 +51,7 @@ def SendEvent(_events: List[Event]) -> None:
 def Initialize() -> None:
     from Core.SystemManagement import SystemManager
     from Level.SceneManagement import SceneManager
-    from Level.TestScene import TestScene
+    from Levels.TestScene import TestScene
 
     open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기
     SDL_SetWindowTitle(pico2d.window, SystemManager().windowName.encode('utf-8'))  # 윈도우 이름 변

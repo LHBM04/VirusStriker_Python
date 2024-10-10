@@ -103,7 +103,6 @@ class Transform(Component):
     def parent(self) -> 'Transform':
         return self.__parent
 
-    @parent.setter
     def parent(self, _parent: 'Transform') -> None:
         self.__parent = _parent
         _parent.__children.append(self)
