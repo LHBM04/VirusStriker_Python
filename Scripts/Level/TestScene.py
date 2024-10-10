@@ -3,8 +3,8 @@ from typing import final
 from pico2d import *
 
 from Core.Behaviors.Animator import Animator, Animation
-from Core.Objects.GameObject import GameObject
 from Core.Components.SpriteRenderer import SpriteRenderer
+from Core.Objects.GameObject import GameObject
 from Core.SystemManagement import SystemManager
 from Core.Utilities.InputManagement import InputManager
 from Core.Utilities.Mathematics import Vector2

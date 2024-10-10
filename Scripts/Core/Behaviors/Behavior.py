@@ -20,12 +20,12 @@ class Behavior(Component, metaclass = ABCMeta):
 
     @isEnable.setter
     def isEnable(self, _enable) -> None:
-        self.__isEnable = _enable
-        if _enable:
+        if _enable and not self.__isEnabled:
+            self.__isEnabled = True
             self.OnEnable()
-            return
-
-        self.OnDisable()
+        elif not _enable and self.__isEnabled:
+            self.__isEnabled = False
+            self.OnDisable()
 
     @property
     def isActiveAndEnabled(self) -> bool:

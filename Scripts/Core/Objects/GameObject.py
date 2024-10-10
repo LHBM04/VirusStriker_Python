@@ -9,16 +9,22 @@ class GameObject(Object):
         from Core.Components.Component import ComponentManager
         from Core.Behaviors.Behavior import BehaviorManager
         from Core.Components.Transform import Transform
+        from Core.Components.SpriteRenderer import SpriteRenderer
 
         self.__behaviorManager: BehaviorManager     = BehaviorManager(self)
         self.__componentManager: ComponentManager   = ComponentManager(self)
         self.__transform: Transform                 = self.__componentManager.AddComponent(Transform)
+        self.__spriteRenderer: SpriteRenderer       = self.__componentManager.AddComponent(SpriteRenderer)
         self.__isActiveSelf: bool                   = True
 
     #region [Properties]
     @property
     def transform(self) -> 'Transform':
         return self.__transform
+
+    @property
+    def spriteRenderer(self) -> 'SpriteRenderer':
+        return self.__spriteRenderer
 
     @property
     def gameObject(self) -> 'GameObject':

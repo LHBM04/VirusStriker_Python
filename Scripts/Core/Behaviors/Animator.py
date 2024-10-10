@@ -13,7 +13,6 @@ class Animation:
                  _animator: 'Animator',
                  _isLoop: bool = True):
         self.__animator: 'Animator'             = _animator
-        self.__spriteRenderer: SpriteRenderer   = _animator.gameObject.GetComponent(SpriteRenderer)
 
         self.__isLoop: bool                 = _isLoop   # 해당 스프라이트의 루프 여부.
         self.__isEnd: bool                  = False     # 해당 스프라이트의 루프 종료 여부.
