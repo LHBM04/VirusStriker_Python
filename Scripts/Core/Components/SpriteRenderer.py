@@ -2,7 +2,7 @@ from pico2d import *
 
 from Core.Components.Component import Component
 from Core.Components.ESoringLayer import ESortingLayer
-from Core.Components.GameObject import GameObject
+from Core.Objects.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.Color import Color
 

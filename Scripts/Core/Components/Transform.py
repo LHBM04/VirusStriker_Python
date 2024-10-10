@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from Core.Components.Component import Component
-from Core.Components.GameObject import GameObject
+from Core.Objects.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2, Vector3
 
 # 객체의 위치, 크기, 회전값 등의 정보를 담고 있습니다.

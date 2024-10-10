@@ -5,7 +5,7 @@ from Core.Components.Component import Component
 
 class Behavior(Component, metaclass = ABCMeta):
     def __init__(self, _actor: 'GameObject'):
-        from Core.Components.GameObject import GameObject
+        from Core.Objects.GameObject import GameObject
 
         self.__actor: GameObject        = _actor
         self.__isEnabled: bool          = True
@@ -63,7 +63,7 @@ TBehavior: TypeVar = TypeVar('TBehavior', bound = Behavior)
 @final
 class BehaviorManager:
     def __init__(self, _actor: 'GameObject'):
-        from Core.Components.GameObject import GameObject
+        from Core.Objects.GameObject import GameObject
 
         self.__actor: GameObject                                = _actor    # 행동 수행자
         self.__behaviors: Dict[Type[TBehavior], Behavior]       = {}        # 행동

@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from collections import deque as stack
 from typing import final, Dict
 
-from Core.Components.GameObject import GameObjectManager
+from Core.Objects.GameObject import GameObjectManager
 
 
 class Scene(metaclass = ABCMeta):

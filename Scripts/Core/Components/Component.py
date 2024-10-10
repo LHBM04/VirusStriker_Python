@@ -1,11 +1,11 @@
 from abc import ABCMeta
 from typing import final, Iterator, List, Dict, Type, TypeVar, Sequence
 
-from Core.Components.Object import Object
+from Core.Objects.Object import Object
 
 class Component(Object, metaclass = ABCMeta):
     def __init__(self, _owner: 'GameObject'):
-        from Core.Components.GameObject import GameObject
+        from Core.Objects.GameObject import GameObject
 
         super().__init__()
 

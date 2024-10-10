@@ -1,14 +1,13 @@
 from typing import final, List, Iterator, Type, TypeVar, Sequence
 
-from Core.Components.Behavior import Behavior, BehaviorManager
-from Core.Components.Object import Object
+from Core.Objects.Object import Object
 
 class GameObject(Object):
     def __init__(self):
         super().__init__()
 
         from Core.Components.Component import ComponentManager
-        from Core.Components.Behavior import BehaviorManager
+        from Core.Behaviors.Behavior import BehaviorManager
         from Core.Components.Transform import Transform
 
         self.__behaviorManager: BehaviorManager     = BehaviorManager(self)
@@ -85,8 +84,8 @@ class GameObject(Object):
     def AddComponents(self, *_components: Type[TComponent]) -> Sequence[TComponent]:
         return self.__componentManager.AddComponents(*_components)
     # endregion
-    # region [Behavior Method]
-    from Core.Components.Behavior import Behavior
+    # region [Behaviors Method]
+    from Core.Behaviors.Behavior import Behavior
     TBehavior: TypeVar = TypeVar('TBehavior', bound = Behavior)
 
     # 관리 중인 Component를 가져옵니다
