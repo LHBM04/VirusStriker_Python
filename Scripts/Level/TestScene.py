@@ -2,7 +2,7 @@ from typing import final
 
 from pico2d import *
 
-from Core.Components.Animator import Animator, Animation
+from Core.Behaviors.Animator import Animator, Animation
 from Core.Components.GameObject import GameObject
 from Core.Components.SpriteRenderer import SpriteRenderer
 from Core.SystemManagement import SystemManager

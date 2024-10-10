@@ -3,7 +3,7 @@ from typing import Dict, List, final, Union
 
 from pico2d import Image
 
-from Core.Components.Behavior import Behavior
+from Core.Behaviors.Behavior import Behavior
 from Core.Components.GameObject import GameObject
 from Core.Components.SpriteRenderer import SpriteRenderer
 from Core.Utilities.ResourceManagement import ResourceLoader

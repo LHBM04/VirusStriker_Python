@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import final
 
-from Core.Components.Behavior import Behavior
+from Core.Behaviors.Behavior import Behavior
 
 class UIBehavior(Behavior):
     @final
