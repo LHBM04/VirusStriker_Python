@@ -1,7 +1,7 @@
 from pico2d import Font
 
 from Core.Components.GameObject import GameObject
-from Core.GUI.UIBehaivor import UIBehavior
+from GUI.UIBehaivor import UIBehavior
 from Core.Utilities.Color import Color
 
 class Text(UIBehavior):
