@@ -1,9 +1,9 @@
 from typing import List
 
-from Core.Behaviors.Behavior import Behavior
+from Core.Components.Behavior import Behavior
 from Core.Components.Component import Component
 from Core.Components.GameObject import GameObject
-from UI.UIBehaivor import UIBehavior
+from GUI.UIBehaivor import UIBehavior
 
 class Canvas(Behavior):
     def __init__(self, _actor: GameObject):
