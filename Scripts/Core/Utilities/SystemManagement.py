@@ -71,4 +71,6 @@ class SystemManager:
         clear_canvas()
         close_canvas()
     # endregion
+    def Quit(self):
+        self.__isGameRunning = False
 

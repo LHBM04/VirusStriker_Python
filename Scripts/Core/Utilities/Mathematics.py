@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import final
 
 from multipledispatch import dispatch
@@ -235,6 +236,8 @@ class MathF:
         return self.PositiveArc_Degree(_lhs, _angle) <= self.PositiveAngle_Degree(_rhs)
 
 
+from typing import final
+
 @final
 class Vector2:
     """
@@ -250,14 +253,14 @@ class Vector2:
         self.__y: float = _y
 
     # [Operation Override] #
-    def __neg__(self) -> 'Vector2':
+    def __neg__(self) -> Vector2:
         """
         벡터의 반대 방향 벡터를 반환합니다.
         :return: 현재 벡터의 반대 방향을 나타내는 Vector2 객체.
         """
         return Vector2(-self.__x, -self.__y)
 
-    def __add__(self, _other: 'Vector2') -> 'Vector2':
+    def __add__(self, _other: Vector2) -> Vector2:
         """
         두 벡터를 더합니다.
         :param _other: 더할 다른 Vector2 객체.
@@ -265,7 +268,7 @@ class Vector2:
         """
         return Vector2(self.__x + _other.__x, self.__y + _other.__y)
 
-    def __sub__(self, _other: 'Vector2') -> 'Vector2':
+    def __sub__(self, _other: Vector2) -> Vector2:
         """
         두 벡터를 뺍니다.
         :param _other: 뺄 다른 Vector2 객체.
@@ -273,7 +276,7 @@ class Vector2:
         """
         return Vector2(self.__x - _other.__x, self.__y - _other.__y)
 
-    def __mul__(self, _other: float) -> 'Vector2':
+    def __mul__(self, _other: float) -> Vector2:
         """
         벡터를 스칼라 값으로 곱합니다.
         :param _other: 곱할 스칼라 값.
@@ -281,7 +284,7 @@ class Vector2:
         """
         return Vector2(self.__x * _other, self.__y * _other)
 
-    def __truediv__(self, _other: float) -> 'Vector2':
+    def __truediv__(self, _other: float) -> Vector2:
         """
         벡터를 스칼라 값으로 나눕니다.
         :param _other: 나눌 스칼라 값.
@@ -289,7 +292,7 @@ class Vector2:
         """
         return Vector2(self.__x / _other, self.__y / _other)
 
-    def __eq__(self, _other: 'Vector2') -> bool:
+    def __eq__(self, _other: Vector2) -> bool:
         """
         두 벡터가 같은지 비교합니다.
         :param _other: 비교할 다른 Vector2 객체.
@@ -297,7 +300,7 @@ class Vector2:
         """
         return MathF.Equalf(float(self.__x), _other.__x) and MathF.Equalf(float(self.__y), _other.__y)
 
-    def __ne__(self, _other: 'Vector2') -> bool:
+    def __ne__(self, _other: Vector2) -> bool:
         """
         두 벡터가 다른지 비교합니다.
         :param _other: 비교할 다른 Vector2 객체.
@@ -339,7 +342,7 @@ class Vector2:
         self.__y = _y
 
     @staticmethod
-    def Zero() -> 'Vector2':
+    def Zero() -> Vector2:
         """
         원점(0, 0)을 나타내는 벡터를 반환합니다.
         :return: (0.0, 0.0)을 나타내는 Vector2 객체.
@@ -347,7 +350,7 @@ class Vector2:
         return Vector2(0.0, 0.0)
 
     @staticmethod
-    def Up() -> 'Vector2':
+    def Up() -> Vector2:
         """
         위 방향을 나타내는 벡터를 반환합니다.
         :return: (0.0, 1.0)을 나타내는 Vector2 객체.
@@ -355,7 +358,7 @@ class Vector2:
         return Vector2(0.0, 1.0)
 
     @staticmethod
-    def Down() -> 'Vector2':
+    def Down() -> Vector2:
         """
         아래 방향을 나타내는 벡터를 반환합니다.
         :return: (0.0, -1.0)을 나타내는 Vector2 객체.
@@ -363,7 +366,7 @@ class Vector2:
         return Vector2(0.0, -1.0)
 
     @staticmethod
-    def Left() -> 'Vector2':
+    def Left() -> Vector2:
         """
         왼쪽 방향을 나타내는 벡터를 반환합니다.
         :return: (-1.0, 0.0)을 나타내는 Vector2 객체.
@@ -371,35 +374,34 @@ class Vector2:
         return Vector2(-1.0, 0.0)
 
     @staticmethod
-    def Right() -> 'Vector2':
+    def Right() -> Vector2:
         """
         오른쪽 방향을 나타내는 벡터를 반환합니다.
         :return: (1.0, 0.0)을 나타내는 Vector2 객체.
         """
         return Vector2(1.0, 0.0)
 
+from typing import final
+
 @final
 class Vector3:
     """
     3D 벡터를 나타내는 클래스.
     """
-    def __init__(self,
-                 _x: float = 0.0,
-                 _y: float = 0.0,
-                 _z: float = 0.0):
+    def __init__(self, _x: float = 0.0, _y: float = 0.0, _z: float = 0.0) -> None:
         self.__x: float = _x
         self.__y: float = _y
         self.__z: float = _z
 
     # [Operation Override] #
-    def __neg__(self) -> 'Vector3':
+    def __neg__(self) -> Vector3:
         """
         벡터의 반대 방향 벡터를 반환합니다.
         :return: 현재 벡터의 반대 방향을 나타내는 Vector3 객체.
         """
         return Vector3(-self.x, -self.y, -self.z)
 
-    def __add__(self, _other: 'Vector3') -> 'Vector3':
+    def __add__(self, _other: Vector3) -> Vector3:
         """
         두 벡터를 더합니다.
         :param _other: 더할 다른 Vector3 객체.
@@ -407,7 +409,7 @@ class Vector3:
         """
         return Vector3(self.x + _other.x, self.y + _other.y, self.z + _other.z)
 
-    def __sub__(self, _other: 'Vector3') -> 'Vector3':
+    def __sub__(self, _other: Vector3) -> Vector3:
         """
         두 벡터를 뺍니다.
         :param _other: 뺄 다른 Vector3 객체.
@@ -415,7 +417,7 @@ class Vector3:
         """
         return Vector3(self.x - _other.x, self.y - _other.y, self.z - _other.z)
 
-    def __mul__(self, _other: float) -> 'Vector3':
+    def __mul__(self, _other: float) -> Vector3:
         """
         벡터를 스칼라 값으로 곱합니다.
         :param _other: 곱할 스칼라 값.
@@ -423,7 +425,7 @@ class Vector3:
         """
         return Vector3(self.x * _other, self.y * _other, self.z * _other)
 
-    def __truediv__(self, _other: float) -> 'Vector3':
+    def __truediv__(self, _other: float) -> Vector3:
         """
         벡터를 스칼라 값으로 나눕니다.
         :param _other: 나눌 스칼라 값.
@@ -431,7 +433,7 @@ class Vector3:
         """
         return Vector3(self.x / _other, self.y / _other, self.z / _other)
 
-    def __eq__(self, _other: 'Vector3') -> bool:
+    def __eq__(self, _other: Vector3) -> bool:
         """
         두 벡터가 같은지 비교합니다.
         :param _other: 비교할 다른 Vector3 객체.
@@ -439,7 +441,7 @@ class Vector3:
         """
         return self.x is _other.x and self.y is _other.y and self.z is _other.z
 
-    def __ne__(self, _other: 'Vector3') -> bool:
+    def __ne__(self, _other: Vector3) -> bool:
         """
         두 벡터가 다른지 비교합니다.
         :param _other: 비교할 다른 Vector3 객체.
@@ -497,7 +499,7 @@ class Vector3:
         self.__z = _z
 
     @staticmethod
-    def Zero() -> 'Vector3':
+    def Zero() -> Vector3:
         """
         원점(0, 0, 0)을 나타내는 벡터를 반환합니다.
         :return: (0.0, 0.0, 0.0)을 나타내는 Vector3 객체.
@@ -505,7 +507,7 @@ class Vector3:
         return Vector3(0.0, 0.0, 0.0)
 
     @staticmethod
-    def Up() -> 'Vector3':
+    def Up() -> Vector3:
         """
         위 방향을 나타내는 벡터를 반환합니다.
         :return: (0.0, 1.0, 0.0)을 나타내는 Vector3 객체.
@@ -513,7 +515,7 @@ class Vector3:
         return Vector3(0.0, 1.0, 0.0)
 
     @staticmethod
-    def Down() -> 'Vector3':
+    def Down() -> Vector3:
         """
         아래 방향을 나타내는 벡터를 반환합니다.
         :return: (0.0, -1.0, 0.0)을 나타내는 Vector3 객체.
@@ -521,7 +523,7 @@ class Vector3:
         return Vector3(0.0, -1.0, 0.0)
 
     @staticmethod
-    def Left() -> 'Vector3':
+    def Left() -> Vector3:
         """
         왼쪽 방향을 나타내는 벡터를 반환합니다.
         :return: (-1.0, 0.0, 0.0)을 나타내는 Vector3 객체.
@@ -529,7 +531,7 @@ class Vector3:
         return Vector3(-1.0, 0.0, 0.0)
 
     @staticmethod
-    def Right() -> 'Vector3':
+    def Right() -> Vector3:
         """
         오른쪽 방향을 나타내는 벡터를 반환합니다.
         :return: (1.0, 0.0, 0.0)을 나타내는 Vector3 객체.
@@ -537,7 +539,7 @@ class Vector3:
         return Vector3(1.0, 0.0, 0.0)
 
     @staticmethod
-    def Forward() -> 'Vector3':
+    def Forward() -> Vector3:
         """
         앞 방향을 나타내는 벡터를 반환합니다.
         :return: (0.0, 0.0, 1.0)을 나타내는 Vector3 객체.
@@ -545,7 +547,7 @@ class Vector3:
         return Vector3(0.0, 0.0, 1.0)
 
     @staticmethod
-    def Backward() -> 'Vector3':
+    def Backward() -> Vector3:
         """
         뒤 방향을 나타내는 벡터를 반환합니다.
         :return: (0.0, 0.0, -1.0)을 나타내는 Vector3 객체.
