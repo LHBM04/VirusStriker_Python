@@ -7,24 +7,12 @@ from Core.Components.Component import Component
 from Core.Objects.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2
 
-
-class Renderer(metaclass = ABCMeta):
-    """
-    렌더링 작동을 정의합니다.
-    """
-    @abstractmethod
-    def Render(self) -> None:
-        """
-        렌더링을 진행합니다.
-        """
-        pass
-
 @final
 class SpriteRenderer(Component):
     def __init__(self, _owner: GameObject):
         super().__init__(_owner)
 
-        self.__sprite: Optional[Image]  = None
+        self.__sprite: Image            = None
         self.__color: SDL_Color         = SDL_Color(255, 255, 255, 255)
         self.__isFlipX: bool            = False
         self.__isFlipY: bool            = False
@@ -62,7 +50,7 @@ class SpriteRenderer(Component):
 
     @rotation.setter
     def rotation(self, _rotation: Vector2) -> None:
-        self.Entity(gameObject).transform.rotation = _rotation
+        self.gameObject.transform.rotation = _rotation
 
     @property
     def color(self) -> SDL_Color:
@@ -88,7 +76,6 @@ class SpriteRenderer(Component):
     def orderInLayer(self, _orderInLayer: int) -> None:
         self.__orderInLayer = _orderInLayer
     # endregion
-
     def Render(self):
         if self.__sprite is None:
             raise ValueError("[Oops!] 렌더링할 Sprite가 존재하지 않습니다.")
@@ -99,11 +86,6 @@ class SpriteRenderer(Component):
                                      self.gameObject.transform.position.y,
                                      self.gameObject.transform.scale.x,
                                      self.gameObject.transform.scale.y)
-        SDL_SetTextureColorMod(self.__sprite.texture,
-                               int(self.color.r),
-                               int(self.color.g),
-                               int(self.color.b))
-        SDL_SetTextureAlphaMod(self.__sprite.texture,
-                               int(self.color.a))
-        SDL_SetTextureBlendMode(self.__sprite.texture,
-                                SDL_BLENDMODE_BLEND)
+        SDL_SetTextureColorMod(self.__sprite.texture, self.color)
+        SDL_SetTextureAlphaMod(self.__sprite.texture, self.color)
+        SDL_SetTextureBlendMode(self.__sprite.texture, SDL_BLENDMODE_BLEND)

@@ -45,28 +45,28 @@ class SystemManager:
     # region Life-Cycle
     def Update(self, _deltaTime: float) -> None:
         """
-        매 프레임마다 실행됩니다.
-        :param _deltaTime: 현재 시간 변화량.
+        매 프레임마다 실행되며 게임의 상태를 갱신합니다.
+        :param _deltaTime: 이전 프레임과 현재 프레임 사이의 시간 변화량(초 단위).
         """
         InputManager().Update()
 
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
         """
-        0.02초마다 고정적으로 실행됩니다.
-        :param _fixedDeltaTime: 현재 시간 변화량.
+        고정된 주기마다 실행되며 물리 연산 및 시간에 의존하는 처리를 수행합니다.
+        :param _fixedDeltaTime: 고정 업데이트 주기 동안의 시간 변화량(초 단위).
         """
         pass
 
     def Render(self) -> None:
         """
-        게임 내 그래픽을 렌더링합니다.
+        게임 내 그래픽을 렌더링하며 캔버스를 업데이트합니다.
         """
         clear_canvas()      # 캔버스를 정리합니다.
         update_canvas()     # 업데이트된 오브젝트를 토대로 캔버스를 다시 그립니다.
 
     def CleanUp(self) -> None:
         """
-        게임 내 캔버스를 닫습니다.
+        게임 종료 시 리소스를 정리하고 캔버스를 닫습니다.
         """
         clear_canvas()
         close_canvas()

@@ -103,7 +103,7 @@ class ComponentController:
     # region Component Methods
     def AddComponent(self, _component: Type[TComponent]) -> TComponent:
         """
-        새로운 Component를 추가합니다.
+        새로운 Component를 추가합니다.\n
         (※ 중복되는 Component는 허용하지 않습니다.)
         :param _component: 추가할 Component의 타입.
         :return: 추가한 Component의 인스턴스.
@@ -116,7 +116,8 @@ class ComponentController:
 
     def AddComponents(self, *_components: Type[TComponent]) -> Sequence[TComponent]:
         """
-        새로운 Component들을 추가합니다.
+        새로운 Component들을 추가합니다.\n
+        (※ 중복되는 Component는 허용하지 않습니다.)
         :param _components: 추가할 Component들의 타입들.
         :return: 추가한 Component들의 인스턴스 List.
         """
@@ -149,6 +150,9 @@ class ComponentController:
     # endregion
     # region Life-Cycle
     def FixedUpdate(self) -> None:
+        """
+        고정된 주기마다 삭제할 Component가 있다면 삭제합니다.
+        """
         if self.__components:
             toRemove: List[TComponent] = []
             for component in self.__components.values():

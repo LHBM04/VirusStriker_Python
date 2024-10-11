@@ -25,6 +25,11 @@ class Object(metaclass = ABCMeta):
         :return: 해당 Object의 파괴 여부.
         """
         return self.__isDestroy
+
+    @isDestroy.setter
+    def isDestroy(self, _destroy: bool) -> None:
+        if _destroy:
+            self.__isDestroy = True
     # endregion
     # region Life-Cycle
     @abstractmethod
