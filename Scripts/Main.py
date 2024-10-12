@@ -1,7 +1,9 @@
+from time import time as GetTime
 from typing import List
 
 from pico2d import *
 
+from Core.Level.SceneManagement import SceneManager
 from Core.Utilities.InputManagement import EInputState, InputManager
 from Core.Utilities.Mathematics import Vector2
 from Core.Utilities.SystemManagement import SystemManager
@@ -63,6 +65,49 @@ def SendEvent(_events: List[Event]) -> None:
             InputManager().SetMouseButtonState(event.button, state)
             InputManager().mousePosition = Vector2(event.x, event.y)
 
+def Initialize() -> None:
+    open_canvas(SystemManager().windowsWidth,
+                SystemManager().windowsHeight,
+                False,
+                False)  # 캔버스 열기
+    SDL_SetWindowTitle(pico2d.window,
+                       SystemManager().windowsTitle.encode('utf-8'))
+
+def Main() -> None:
+    previousTime: float = GetTime()  # 이전 시간
+    currentTime: float = 0.0  # 현재 시간
+
+    fixedUpdateTime: float = 1.0 / 50.0
+    fixedDeltaTime: float = 0.0
+
+    fpsDeltaTime: float = 0.0  # 프레임을 계산하기 위한 시간 변화량.
+
+    while SystemManager().isGameRunning:
+        SendEvent(ReceiveEvent())
+        clear_canvas()
+        if SceneManager().isResetDeltaTime:
+            previousTime = GetTime()
+
+        # Delta Time 계산
+        currentTime = GetTime()
+        deltaTime = currentTime - previousTime
+
+        fixedDeltaTime += deltaTime
+        if fixedDeltaTime >= 2.0:
+            fixedDeltaTime = 2.0
+
+        while fixedDeltaTime > fixedUpdateTime:
+            fixedDeltaTime -= fixedUpdateTime
+            SystemManager().FixedUpdate(fixedUpdateTime)
+
+        SystemManager().Update(deltaTime)
+        SystemManager().Render()
+
+        previousTime = currentTime
+        update_canvas()
+
+    SystemManager().CleanUp()
 
 if __name__ == "__main__":
-    print("Hello, World!")
+    Initialize()
+    Main()
