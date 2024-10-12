@@ -4,8 +4,10 @@ from typing import final, Dict, Deque, Optional, Iterable
 
 from Core.Utilities.Singleton import Singleton
 
-
 class Scene(metaclass = ABCMeta):
+    """
+    게임 내 모든 Scene의 베이스 클래스.
+    """
     def __init__(self) -> None:
         # TODO: Game Object, UI Object 컨테이너 생성하기
         pass
