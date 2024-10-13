@@ -66,12 +66,12 @@ def SendEvent(_events: List[Event]) -> None:
             InputManager().mousePosition = Vector2(event.x, event.y)
 
 def Initialize() -> None:
-    open_canvas(SystemManager().windowsWidth,
-                SystemManager().windowsHeight,
-                False,
-                False)  # 캔버스 열기
-    SDL_SetWindowTitle(pico2d.window,
-                       SystemManager().windowsTitle.encode('utf-8'))
+    open_canvas(SystemManager().windowWidth,
+                SystemManager().windowHeight,
+                SystemManager().isSync,
+                SystemManager().isFullScreen)
+    SDL_SetWindowTitle(SystemManager().window,
+                       SystemManager().windowTitle.encode('utf-8'))
 
 def Main() -> None:
     previousTime: float = GetTime()  # 이전 시간
@@ -88,10 +88,11 @@ def Main() -> None:
         if SceneManager().isResetDeltaTime:
             previousTime = GetTime()
 
-        # Delta Time 계산
         currentTime = GetTime()
         deltaTime = currentTime - previousTime
+        previousTime = currentTime
 
+        # region Fixed Update
         fixedDeltaTime += deltaTime
         if fixedDeltaTime >= 2.0:
             fixedDeltaTime = 2.0
@@ -103,7 +104,6 @@ def Main() -> None:
         SystemManager().Update(deltaTime)
         SystemManager().Render()
 
-        previousTime = currentTime
         update_canvas()
 
     SystemManager().CleanUp()

@@ -6,6 +6,9 @@ from Core.Objects.GameObject import GameObject
 from Core.Utilities.Mathematics import Vector2, Vector3
 
 class Transform(Component):
+    """
+    게임 내 Object의 위치, 크기, 회전 각도(Z축)과 부모, 자식 Transform의 정보를 관리합니다.
+    """
     def __init__(self, _owner: GameObject):  # GameObject를 문자열로 사용
         super().__init__(_owner)
 

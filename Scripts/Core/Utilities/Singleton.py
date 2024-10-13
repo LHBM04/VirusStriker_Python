@@ -3,7 +3,7 @@ from threading import Lock
 
 class Singleton(type):
     __instances: ClassVar[Dict[Type[Any], Any]] = {}
-    __lock: ClassVar[Lock]                      = Lock()  # 스레드 안전성을 위한 락 추가
+    __lock: ClassVar[Lock]                      = Lock()
 
     def __call__(cls, *args, **kwargs) -> Any:
         # 인스턴스 생성 시 스레드 안전성 보장

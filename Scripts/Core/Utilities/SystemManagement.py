@@ -4,48 +4,83 @@ from pico2d import *
 
 from Core.Level.SceneManagement import SceneManager
 from Core.Utilities.InputManagement import InputManager
+from Core.Utilities.Singleton import Singleton
 
 @final
-class SystemManager:
+class SystemManager(metaclass = Singleton):
     """
     게임 내 중요 정보들을 관리하고, 게임 내 흐름을 제어합니다.
     """
     def __init__(self):
-        self.__windowsTitle: str = "Virus Striker"  # 윈도우 창 타이틀.
-        self.__windowsWidth: int = 1280             # 윈도우 창 폭.
-        self.__windowsHeight: int = 720             # 윈도우 창 높이.
+        self.__windowTitle: str = "Virus Striker"  # 윈도우 창 타이틀.
+        self.__windowWidth: int = 1280             # 윈도우 창 폭.
+        self.__windowHeight: int = 720             # 윈도우 창 높이.
+        self.__isFullScreen: bool = False
+        self.__isSync: bool = True
 
-        self.__isGameRunning: bool = True           # 게임 구동 여부.
+        self.__isGameRunning: bool = True          # 게임 구동 여부.
 
     # region Properties
     @property
-    def windowsTitle(self) -> str:
+    def window(self) -> SDL_Window:
         """
-        윈도우 창의 타이틀 이름을 가져옵니다.
+        해당 게임의 윈도우를 반환합니다.
+        :return: 해당 게임의 윈도우.
+        """
+        return pico2d.window
+
+    @property
+    def renderer(self) -> SDL_Renderer:
+        """
+        해당 게임의 렌더러를 반환합니다.
+        :return: 해당 게임의 렌더러.
+        """
+        return pico2d.renderer
+
+    @property
+    def windowTitle(self) -> str:
+        """
+        윈도우 창의 타이틀 이름을 반환합니다.
         :return: 윈도우 창의 상단 이름.
         """
-        return self.__windowsTitle
+        return self.__windowTitle
 
     @property
-    def windowsWidth(self) -> int:
+    def windowWidth(self) -> int:
         """
-        윈도우 창의 폭을 가져옵니다.
+        윈도우 창의 폭을 반환합니다.
         :return: 윈도우 창의 폭.
         """
-        return self.__windowsWidth
+        return self.__windowWidth
 
     @property
-    def windowsHeight(self) -> int:
+    def windowHeight(self) -> int:
         """
-        윈도우 창의 높이를 가져옵니다.
+        윈도우 창의 높이를 반환합니다.
         :return: 윈도우 창의 높이.
         """
-        return self.__windowsHeight
+        return self.__windowHeight
+
+    @property
+    def isFullScreen(self) -> bool:
+        """
+        윈도우 창의 풀 스크린 여부를 반환합니다.
+        :return:
+        """
+        return self.__isFullScreen
+
+    @property
+    def isSync(self) -> bool:
+        """
+        윈도우 창의 수직 동기화 여부를 반환합니다.
+        :return: 윈도우 창의 수직 동기화 여부.
+        """
+        return self.__isSync
 
     @property
     def isGameRunning(self) -> bool:
         """
-        해당 게임의 구동 여부를 가져옵니다.
+        해당 게임의 구동 여부를 반환합니다.
         :return: 해당 게임의 구동 여부.
         """
         return self.__isGameRunning
@@ -85,4 +120,5 @@ class SystemManager:
     # endregion
     def Quit(self):
         self.__isGameRunning = False
+        print(self.__isGameRunning)
 

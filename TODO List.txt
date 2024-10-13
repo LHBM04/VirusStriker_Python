@@ -11,10 +11,6 @@ Object
           └── AudioSource
           └── Camera
           └── Animator
-          └── Joint
-                └── HingeJoint
-                └── FixedJoint
-                └── SpringJoint
           └── UI
                 └── Canvas
                 └── CanvasRenderer
