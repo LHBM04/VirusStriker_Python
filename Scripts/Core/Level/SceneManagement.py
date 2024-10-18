@@ -17,7 +17,7 @@ class Scene(metaclass = ABCMeta):
         """
         해당 Scene에 진입했을 때 한번만 실행됩니다.
         """
-        self.OnEnter()
+        pass
 
     @final
     def Update(self, _deltaTime: float) -> None:
@@ -26,7 +26,7 @@ class Scene(metaclass = ABCMeta):
         :param _deltaTime: 이전 프레임과 현재 프레임 사이의 시간 간격(초 단위).
         """
         # TODO: Game Object, UI Object 컨테이너 업데이트하기
-        self.OnUpdate(_deltaTime)
+        pass
 
     @final
     def FixedUpdate(self, _fixedDeltaTime: float) -> None:
@@ -35,7 +35,7 @@ class Scene(metaclass = ABCMeta):
         :param _fixedDeltaTime: 고정 업데이트 주기 동안의 시간 간격(초 단위).
         """
         # TODO: Game Object, UI Object 컨테이너 업데이트하기
-        self.OnFixedUpdate(_fixedDeltaTime)
+        pass
 
     @final
     def Render(self) -> None:
@@ -59,53 +59,7 @@ class Scene(metaclass = ABCMeta):
         해당 Scene을 빠져나왔을 때 한번만 실행됩니다.
         :return:
         """
-        self.OnExit()
-    # region Life-Cycle
-    @abstractmethod
-    def OnEnter(self) -> None:
-        """
-        Enter()가 불려지는 시점에서 같이 불려집니다.
-        """
         pass
-
-    @abstractmethod
-    def OnUpdate(self, _deltaTime: float) -> None:
-        """
-        Update()가 불려지는 시점에서 같이 불려집니다.
-        :param _deltaTime: 이전 프레임과 현재 프레임 사이의 시간 간격(초 단위).
-        """
-        pass
-
-    @abstractmethod
-    def OnFixedUpdate(self, _fixedDeltaTime: float) -> None:
-        """
-        FixedUpdate()가 불려지는 시점에서 같이 불려집니다.
-        :param _fixedDeltaTime: 고정 업데이트 주기 동안의 시간 간격(초 단위).
-        """
-        pass
-
-    @abstractmethod
-    def OnRender(self) -> None:
-        """
-        Render()가 불려지는 시점에서 같이 불려집니다.
-        """
-        pass
-
-    @abstractmethod
-    def OnRenderUI(self) -> None:
-        """
-        RenderUI()가 불려지는 시점에서 같이 불려집니다.
-        """
-        pass
-
-    @abstractmethod
-    def OnExit(self) -> None:
-        """
-        Exit()가 불려지는 시점에서 같이 불려집니다.
-        :return:
-        """
-        pass
-    # endregion
 
 @final
 class SceneManager(metaclass = Singleton):

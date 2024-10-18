@@ -1,13 +1,13 @@
+from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 
 from Core.Components.Component import Component
-from Core.Objects.GameObject import GameObject
 
 class Behavior(Component, metaclass = ABCMeta):
     """
     Game Object의 행동, 흐름을 관리하고 제어합니다.
     """
-    def __init__(self, _actor: GameObject):
+    def __init__(self, _actor: 'GameObject'):
         super().__init__(_actor)
 
         self.__isEnabled: bool = True

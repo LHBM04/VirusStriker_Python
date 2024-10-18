@@ -38,9 +38,16 @@ class Sprite(Resource):
 
     def Render(self,
                _transform: Transform,
-               _color: SDL_Color,
+               _color: SDL_Color = SDL_Color(255, 255, 255, 255),
                _isFlipX: bool = False,
                _isFlipY: bool = False):
+        """
+        Sprite를 그립니다.
+        :param _transform: 그릴 위치.
+        :param _color: 컬러값.
+        :param _isFlipX: X축 뒤집기 여부.
+        :param _isFlipY: Y축 뒤집기 여부.
+        """
         if self.__image is None:
             raise ValueError("[Oops!] 렌더링할 Texture가 존재하지 않습니다.")
 
@@ -50,7 +57,7 @@ class Sprite(Resource):
                                     _transform.position.y,
                                     _transform.scale.x,
                                     _transform.scale.y)
-        SDL_SetTextureColorMod(self.__image.texture, _color.r, _color.g, _color.b)  # 색상 정보 수정
+        SDL_SetTextureColorMod(self.__image.texture, _color.r, _color.g, _color.b)
         SDL_SetTextureAlphaMod(self.__image.texture, _color.a)
         SDL_SetTextureBlendMode(self.__image.texture, SDL_BLENDMODE_BLEND)
 
@@ -66,7 +73,6 @@ class BGM(Resource):
         :return: 해당 리소스의 확장자 명.
         """
         return ".flac"
-
 
 @final
 class SFX(Resource):

@@ -1,20 +1,20 @@
 from abc import ABCMeta, abstractmethod
 
-from Core.Objects.GameObject import GameObject
 from Core.Objects.Object import Object
 
 class Component(Object, metaclass = ABCMeta):
     """
     Game Object의 정보 및 속성을 저장 및 제어합니다.
     """
-    def __init__(self, _owner: GameObject):
+    def __init__(self, _owner: 'GameObject'):
         super().__init__()
 
+        from Core.Objects.GameObject import GameObject
         self.__owner: GameObject = _owner # 해당 Component의 주인.
 
     # region Properties
     @property
-    def gameObject(self) -> GameObject:
+    def gameObject(self) -> 'GameObject':
         """
         해당 Component의 Owner를 반환합니다.
         :return: 해당 Component의 Owner.

@@ -74,23 +74,22 @@ def Initialize() -> None:
                        SystemManager().windowTitle.encode('utf-8'))
 
 def Main() -> None:
-    previousTime: float = GetTime()  # 이전 시간
-    currentTime: float = 0.0  # 현재 시간
+    previousTime: float = GetTime()     # 이전 시간
+    currentTime: float  = 0.0           # 현재 시간
 
-    fixedUpdateTime: float = 1.0 / 50.0
-    fixedDeltaTime: float = 0.0
-
-    fpsDeltaTime: float = 0.0  # 프레임을 계산하기 위한 시간 변화량.
+    fixedUpdateTime: float  = 1.0 / 50.0
+    fixedDeltaTime: float   = 0.0
 
     while SystemManager().isGameRunning:
         SendEvent(ReceiveEvent())
         clear_canvas()
+
         if SceneManager().isResetDeltaTime:
             previousTime = GetTime()
 
-        currentTime = GetTime()
-        deltaTime = currentTime - previousTime
-        previousTime = currentTime
+        currentTime     = GetTime()
+        deltaTime       = currentTime - previousTime
+        previousTime    = currentTime
 
         # region Fixed Update
         fixedDeltaTime += deltaTime
@@ -100,6 +99,7 @@ def Main() -> None:
         while fixedDeltaTime > fixedUpdateTime:
             fixedDeltaTime -= fixedUpdateTime
             SystemManager().FixedUpdate(fixedUpdateTime)
+        # endregion
 
         SystemManager().Update(deltaTime)
         SystemManager().Render()

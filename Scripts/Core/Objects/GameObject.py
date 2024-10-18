@@ -4,18 +4,18 @@ from typing import Dict, Iterable, List, Type, TypeVar
 
 from Core.Behaviors.Behavior import Behavior
 from Core.Components.Component import Component
-from Core.Components.Transform import Transform
 from Core.Objects.Object import Object
 
-# 제네릭(Component를 상속받은 클래스만 가능하게끔 제한).
+# 제네릭 타입(Component를 상속받은 클래스만 가능하게끔 제한).
 TComponent: TypeVar = TypeVar('TComponent', bound = Component)
 
-# 제네릭(Behavior를 상속받은 클래스만 가능하게끔 제한).
+# 제네릭 타입(Behavior를 상속받은 클래스만 가능하게끔 제한).
 TBehavior: TypeVar = TypeVar('TBehavior', bound = Behavior)
 
 class GameObject(Object):
     """
-    게임 내 렌더링되는 모든 객체입니다.
+    게임 내 사용될 객체입니다.\n
+    (예: 플레이어, 적군, 아이템 등)
     """
     def __init__(self):
         super().__init__()
@@ -23,10 +23,6 @@ class GameObject(Object):
 
         self.__components: Dict[Type[TComponent], TComponent] = {}
         self.__behaviors: Dict[Type[TBehavior], TBehavior]    = {}
-
-        from Core.Components.Transform import Transform
-
-        self.__transform: Transform = self.AddComponent(Transform)
 
     # region Properties
     @property
@@ -38,8 +34,17 @@ class GameObject(Object):
         return self
 
     @property
-    def transform(self) -> Transform:
+    def transform(self) -> 'Transform':
+        """
+        해당 Game Object의 Transform을 반환합니다.
+        :return: 해당 Game Object의 Transform.
+        """
+        from Core.Components.Transform import Transform
         return self.GetComponent(Transform)
+
+    def renderer(self) -> 'SpriteRenderer':
+        from Core.Components.SpriteRenderer import SpriteRenderer
+        return self.GetComponent(SpriteRenderer)
 
     @property
     def isActiveSelf(self) -> bool:
@@ -100,17 +105,17 @@ class GameObject(Object):
                 self.__components.pop(type(key))
 
         if self.__behaviors:
-            removeBehaviors: List[TBehavior] = []
+            toRemove: List[TBehavior] = []
             for behavior in self.__behaviors.values():
                 if behavior.isEnable:
                     behavior.FixedUpdate(_fixedDeltaTime)
 
                 if behavior.isDestroy:
-                    removeBehaviors.append(Type[behavior])
+                    toRemove.append(Type[behavior])
 
-            if removeBehaviors:
-                for removeBehavior in removeBehaviors:
-                    self.__behaviors.pop(type(removeBehavior)).OnDestroy()
+            if toRemove:
+                for behavior in toRemove:
+                    self.__behaviors.pop(type(behavior)).OnDestroy()
 
     @abstractmethod
     def OnDestroy(self) -> None:
@@ -187,7 +192,7 @@ class GameObject(Object):
         return self.__components[_componentType] if _componentType in self.__components.keys() else None
 
     # 관리 중인 Component들을 가져옵니다.
-    def GetComponents(self, *_componentsType: Type[TComponent]) -> Sequence[TComponent]:
+    def GetComponents(self, *_componentsType: Type[TComponent]) -> Iterable[TComponent]:
         """
         관리하고 있는 Components를 반환합니다.
         :param _componentsType: 검색할 Component의 타입들.

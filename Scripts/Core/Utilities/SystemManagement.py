@@ -12,13 +12,13 @@ class SystemManager(metaclass = Singleton):
     게임 내 중요 정보들을 관리하고, 게임 내 흐름을 제어합니다.
     """
     def __init__(self):
-        self.__windowTitle: str = "Virus Striker"  # 윈도우 창 타이틀.
-        self.__windowWidth: int = 1280             # 윈도우 창 폭.
-        self.__windowHeight: int = 720             # 윈도우 창 높이.
-        self.__isFullScreen: bool = False
-        self.__isSync: bool = True
+        self.__isGameRunning: bool = True               # 프로그램 구동 여부.
 
-        self.__isGameRunning: bool = True          # 게임 구동 여부.
+        self.__windowTitle: str     = "Virus Striker"   # 윈도우 창 타이틀.
+        self.__windowWidth: int     = 1280              # 윈도우 창 폭.
+        self.__windowHeight: int    = 720               # 윈도우 창 높이.
+        self.__isFullScreen: bool   = False             # 전체 화면 여부.
+        self.__isSync: bool         = True              # 수직 동기화 여부.
 
     # region Properties
     @property
