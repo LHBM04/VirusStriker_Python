@@ -1,89 +1,97 @@
-import time as Time
+from time import time as GetTime
 from typing import List
 
 from pico2d import *
 
-from Level.SceneManagement import SceneManager
+from Core.Level.SceneManagement import SceneManager
+from Core.Utilities.InputManagement import EInputState, InputManager
+from Core.Utilities.Mathematics import Vector2
+from Core.Utilities.SystemManagement import SystemManager
 
-
-# 이벤트를 받아, 이를 처리한 후 수신합니다.
 def ReceiveEvent() -> List[Event]:
-    gotEvent: 'SDL_Event' = SDL_Event()
-    events: List['Event'] = []
+    """
+    이벤트를 받아, 이를 처리한 후 수신합니다.
+    :return: 처리한 이벤트.
+    """
+    gotEvent: SDL_Event = SDL_Event()
+    events: List[Event] = []
 
+    # SDL 이벤트 처리 루프
     while SDL_PollEvent(ctypes.byref(gotEvent)):
         event: Event = Event(gotEvent.type)
-        if event.type in (SDL_QUIT, SDL_KEYDOWN, SDL_KEYUP, SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP):
-            if event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:  # 키보드 입력
-                if not gotEvent.key.repeat:
-                    event.key = gotEvent.key.keysym.sym
-            elif event.type == SDL_MOUSEMOTION:  # 마우스 조작
+
+        # 이벤트 타입 확인 및 관련 정보 저장
+        if event.type in {SDL_QUIT,
+                          SDL_KEYDOWN,
+                          SDL_KEYUP,
+                          SDL_MOUSEMOTION,
+                          SDL_MOUSEBUTTONDOWN,
+                          SDL_MOUSEBUTTONUP}:
+            if (event.type in {SDL_KEYDOWN, SDL_KEYUP} and
+                not gotEvent.key.repeat):  # 키보드 입력
+                event.key = gotEvent.key.keysym.sym
+
+            elif event.type == SDL_MOUSEMOTION:  # 마우스 이동
                 event.x, event.y = gotEvent.motion.x, gotEvent.motion.y
-            elif event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:  # 마우스 클릭
+
+            elif event.type in {SDL_MOUSEBUTTONUP, SDL_MOUSEBUTTONDOWN}:  # 마우스 버튼
                 event.button, event.x, event.y = gotEvent.button.button, gotEvent.button.x, gotEvent.button.y
 
             events.append(event)
 
     return events
 
-
-# 수신한 이벤트를 받아 처리합니다.
 def SendEvent(_events: List[Event]) -> None:
-    from Core.SystemManagement import SystemManager
-    from Core.Utilities.Mathematics import Vector2
-    from Core.Utilities.InputManagement import EInputState, InputManager
-
+    """
+    이벤트를 수신하여 처리합니다.
+    :param _events: 수신 받은 이벤트.
+    """
     for event in _events:
         if event.type == SDL_QUIT:
             SystemManager().Quit()
-        elif event.type == SDL_KEYDOWN or event.type == SDL_KEYUP:
-            if event.type == SDL_KEYDOWN:
-                InputManager().isPressKey = True
-                InputManager().SetKeyState(event.key, EInputState.DOWN)
-            elif event.type == SDL_KEYUP:
-                InputManager().isPressKey = False
-                InputManager().SetKeyState(event.key, EInputState.UP)
+
+        elif event.type in {SDL_KEYDOWN,
+                            SDL_KEYUP}:
+            InputManager().isPressKey = event.type == SDL_KEYDOWN
+            state = EInputState.DOWN if event.type == SDL_KEYDOWN else EInputState.UP
+            InputManager().SetKeyState(event.key, state)
+
         elif event.type == SDL_MOUSEMOTION:
             InputManager().mousePosition = Vector2(event.x, event.y)
-        elif event.type == SDL_MOUSEBUTTONUP or event.type == SDL_MOUSEBUTTONDOWN:
-            InputManager().isPressKey = True
-            InputManager().SetMouseState(event.key, EInputState.DOWN)
+
+        elif event.type in {SDL_MOUSEBUTTONDOWN,
+                            SDL_MOUSEBUTTONUP}:
+            state = EInputState.DOWN if event.type == SDL_MOUSEBUTTONDOWN else EInputState.UP
+            InputManager().SetMouseButtonState(event.button, state)
             InputManager().mousePosition = Vector2(event.x, event.y)
 
-
 def Initialize() -> None:
-    from Core.SystemManagement import SystemManager
-    from Level.SceneManagement import SceneManager
-    from Level.TestScene import TestScene
-
-    open_canvas(SystemManager().windowWidth, SystemManager().windowHeight, False, False)  # 캔버스 열기
-    SDL_SetWindowTitle(pico2d.window, SystemManager().windowName.encode('utf-8'))  # 윈도우 이름 변
-
-    SceneManager().AddLevel("Test Scene", TestScene())
-    SceneManager().LoadLevel("Test Scene")
-
+    open_canvas(SystemManager().windowWidth,
+                SystemManager().windowHeight,
+                SystemManager().isSync,
+                SystemManager().isFullScreen)
+    SDL_SetWindowTitle(SystemManager().window,
+                       SystemManager().windowTitle.encode('utf-8'))
 
 def Main() -> None:
-    from Core.SystemManagement import SystemManager
+    previousTime: float = GetTime()     # 이전 시간
+    currentTime: float  = 0.0           # 현재 시간
 
-    previousTime: float = Time.time()  # 이전 시간
-    currentTime: float = 0.0  # 현재 시간
+    fixedUpdateTime: float  = 1.0 / 50.0
+    fixedDeltaTime: float   = 0.0
 
-    fixedUpdateTime: float = 1.0 / 50.0
-    fixedDeltaTime: float = 0.0
-
-    fpsDeltaTime: float = 0.0  # 프레임을 계산하기 위한 시간 변화량.
-
-    while SystemManager().isRunning:
+    while SystemManager().isGameRunning:
         SendEvent(ReceiveEvent())
         clear_canvas()
+
         if SceneManager().isResetDeltaTime:
-            previousTime = Time.time()
+            previousTime = GetTime()
 
-        # Delta Time 계산
-        currentTime = Time.time()
-        deltaTime = currentTime - previousTime
+        currentTime     = GetTime()
+        deltaTime       = currentTime - previousTime
+        previousTime    = currentTime
 
+        # region Fixed Update
         fixedDeltaTime += deltaTime
         if fixedDeltaTime >= 2.0:
             fixedDeltaTime = 2.0
@@ -91,23 +99,14 @@ def Main() -> None:
         while fixedDeltaTime > fixedUpdateTime:
             fixedDeltaTime -= fixedUpdateTime
             SystemManager().FixedUpdate(fixedUpdateTime)
-
-        # 초당 프레임 계산
-        SystemManager().fps += 1
-        fpsDeltaTime += deltaTime
-
-        if fpsDeltaTime > 1.0:
-            SystemManager().gameFPS = 0
-            fpsDeltaTime = 0.0
+        # endregion
 
         SystemManager().Update(deltaTime)
         SystemManager().Render()
 
-        previousTime = currentTime  # 현재 시간으로 prevTime 업데이트
         update_canvas()
 
     SystemManager().CleanUp()
-
 
 if __name__ == "__main__":
     Initialize()

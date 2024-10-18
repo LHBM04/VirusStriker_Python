@@ -1,121 +1,48 @@
-from abc import ABCMeta
-from typing import final, Iterator, List, Dict, Type, TypeVar, Sequence
+from abc import ABCMeta, abstractmethod
 
 from Core.Objects.Object import Object
 
 class Component(Object, metaclass = ABCMeta):
+    """
+    Game Object의 정보 및 속성을 저장 및 제어합니다.
+    """
     def __init__(self, _owner: 'GameObject'):
-        from Core.Objects.GameObject import GameObject
-
         super().__init__()
 
-        self.__owner: GameObject        = _owner
+        from Core.Objects.GameObject import GameObject
+        self.__owner: GameObject = _owner # 해당 Component의 주인.
 
-        self.Awake()
+    # region Properties
+    @property
+    def gameObject(self) -> 'GameObject':
+        """
+        해당 Component의 Owner를 반환합니다.
+        :return: 해당 Component의 Owner.
+        """
+        return self.__owner
 
-    #region [Properties]
     @property
     def name(self) -> str:
+        """
+        해당 Component의 Owner의 이름을 반환합니다.
+        :return: 해당 Component의 Owner의 이름.
+        """
         return self.__owner.name
-
-    @name.setter
-    def name(self, _name) -> None:
-        self.__owner.name = _name
-
-    @property
-    def gameObject(self) -> 'GameObject':
-        return self.__owner
-
-    @property
-    def transform(self) -> 'Transform':
-        return self.__owner.transform
-
-    def Awake(self):
-        pass
-
-    def Start(self):
-        pass
-
-    def OnDestroy(self):
-        pass
-
-# 타입 검색을 위한 제너릭 타입 선언.
-TComponent: TypeVar = TypeVar('TComponent', bound = Component)
-
-@final
-class ComponentManager:
-    def __init__(self, _owner: 'GameObject'):
-        self.__owner                                                = _owner
-        self.__components: Dict[Type[TComponent], TComponent]       = {}
-        self.__addComponents: Dict[Type[TComponent], TComponent]    = {}
-
-    #region [Properties]
-    @property
-    def gameObject(self) -> 'GameObject':
-        return self.__owner
-
-    @property
-    def transform(self) -> 'Transform':
-        return self.__owner.transform
-    #endregion
-    #region [Operators Override]
-    def __iter__(self) -> Iterator[TComponent]:
-        return iter(self.__components)
-
-    def __getitem__(self, _index: Type[TComponent]) -> TComponent:
-        return self.GetComponent(_index)
-
-    def __len__(self) -> int:
-        return len(self.__components)
-    #endregion
-    #region [Methods]
-    # 관리 중인 Component를 가져옵니다.
-    def GetComponent(self, _componentType: Type[TComponent]) -> TComponent:
-        return self.__components[_componentType] if _componentType in self.__components.keys() else None
-
-    # 관리 중인 Component들을 가져옵니다.
-    def GetComponents(self, *_componentsType: Type[TComponent]) -> Sequence[TComponent]:
-        return [self.__components[component] for component in _componentsType if component in self.__components]
-
-    def AddComponent(self, _component: Type[TComponent]) -> TComponent:
-        if _component in self.__components:
-            raise ValueError(f"[Oops!] 중복된 Component는 허용하지 않습니다! {type(_component)}")
-
-        newComponent: TComponent = _component(self.__owner)
-        self.__addComponents[_component] = newComponent
-        return newComponent
-
-    def AddComponents(self, *_components: Type[TComponent]) -> Sequence[TComponent]:
-        newComponents: List[TComponent] = []
-        for currentComponent in _components:
-            if currentComponent in self.__components:
-                raise ValueError(f"[Oops!] 중복된 Component는 허용하지 않습니다! {currentComponent}")
-            else:
-                newComponent: TComponent = currentComponent(self.__owner)
-                self.__addComponents[currentComponent] = newComponent
-                newComponents.append(newComponent)
-
-        return newComponents
-
-    def RemoveComponent(self, _component: Type[TComponent]) -> bool:
-        return True
-
-    def RemoveComponents(self, *_components: Type[TComponent]) -> bool:
-        return True
-
-    def RemoveAllComponents(self) -> bool:
-        return True
     # endregion
-    def Update(self, _deltaTime: float):
-        if self.__addComponents:
-            for newComponent in self.__addComponents.values():
-                self.__components[type(newComponent)] = newComponent  # __components에 추가
-                newComponent.Start()  # Start 메서드 호출
-            self.__addComponents.clear()
+    # region Life-Cycle
+    @abstractmethod
+    def Start(self) -> None:
+        """
+        해당 Component가 추가되었을 때 한번 실행됩니다.
+        (※ 해당 Component를 사용하는 Game Object에 추가된 시점을 의미합니다.)
+        """
+        super().Start()
 
-    def FixedUpdate(self, _fixedDeltaTime: float):
-        if len(self.__components) > 0:
-            for component in self.__components.values():
-                if component.isDestroy:
-                    key: Type[TComponent] = next(key for key, value in self.__components.items() if value is component)
-                    self.__components.pop(key).OnDestroy()
+    @abstractmethod
+    def OnDestroy(self) -> None:
+        """
+        해당 Component가 파괴될 때 한번 실행됩니다.
+        (※ 해당 Component를 관리하는 Controller/Manager로부터 삭제된 시점을 의미합니다. 완전한 삭제는 '가비지 컬렉터'에 의존합니다.)
+        """
+        super().OnDestroy()
+    # endregion

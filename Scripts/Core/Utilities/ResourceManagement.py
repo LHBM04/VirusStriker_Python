@@ -1,67 +1,143 @@
-from pathlib import Path
-from typing import Dict, Sequence, List, final
+from abc import ABCMeta, abstractmethod
+from typing import final, Dict, Optional, Sequence, List
 
+from pathlib import *
 from pico2d import *
 
+from Core.Components.Transform import Transform
 from Core.Utilities.Singleton import Singleton
 
-# 게임 내 사용될 리소스를 불러온 뒤, 저장합니다.
+class Resource(metaclass = ABCMeta):
+    """
+    게임 내 사용되는 모든 리소스의 베이스 클래스.
+    """
+    @classmethod
+    @abstractmethod
+    def fileSuffix(cls) -> str:
+        """
+        해당 리소스의 확장자 명을 반환합니다.
+        :return: 해당 리소스의 확장자 명.
+        """
+        raise NotImplementedError("[Oops!] 해당 함수/메서드/프로퍼티가 정의되지 않았습니다!")
+
 @final
-class ResourceLoader(metaclass=Singleton):
+class Sprite(Resource):
+    """
+    게임 내 사용되는 Sprite를 정의합니다.
+    """
+    def __init__(self, _image: Image = None):
+        self.__image: Optional[Image] = None
+
+    @classmethod
+    def fileSuffix(cls) -> str:
+        """
+        해당 리소스의 확장자 명을 반환합니다.
+        :return: 해당 리소스의 확장자 명.
+        """
+        return '.png'
+
+    def Render(self,
+               _transform: Transform,
+               _color: SDL_Color = SDL_Color(255, 255, 255, 255),
+               _isFlipX: bool = False,
+               _isFlipY: bool = False):
+        """
+        Sprite를 그립니다.
+        :param _transform: 그릴 위치.
+        :param _color: 컬러값.
+        :param _isFlipX: X축 뒤집기 여부.
+        :param _isFlipY: Y축 뒤집기 여부.
+        """
+        if self.__image is None:
+            raise ValueError("[Oops!] 렌더링할 Texture가 존재하지 않습니다.")
+
+        self.__image.composite_draw(_transform.rotation,
+                                    ('w' if _isFlipX else '') + ('h' if _isFlipY else ''),
+                                    _transform.position.x,
+                                    _transform.position.y,
+                                    _transform.scale.x,
+                                    _transform.scale.y)
+        SDL_SetTextureColorMod(self.__image.texture, _color.r, _color.g, _color.b)
+        SDL_SetTextureAlphaMod(self.__image.texture, _color.a)
+        SDL_SetTextureBlendMode(self.__image.texture, SDL_BLENDMODE_BLEND)
+
+@final
+class BGM(Resource):
+    """
+    게임 내 사용되는 BGM을 정의합니다.
+    """
+    @classmethod
+    def fileSuffix(cls) -> str:
+        """
+        해당 리소스의 확장자 명을 반환합니다.
+        :return: 해당 리소스의 확장자 명.
+        """
+        return ".flac"
+
+@final
+class SFX(Resource):
+    """
+    게임 내 사용되는 SFX를 정의합니다.
+    """
+    @classmethod
+    def fileSuffix(cls) -> str:
+        """
+        해당 리소스의 확장자 명을 반환합니다.
+        :return: 해당 리소스의 확장자 명.
+        """
+        return ".flac"
+
+@final
+class ResourceManager(metaclass = Singleton):
+    """
+    게임 내 사용되는 리소스를 일기 및 저장합니다.
+    """
     def __init__(self):
-        self.__spriteBank: Dict[str, List[Image]]   = {}        # 이미지 리소스가 담길 Dictionary.
-        self.__spriteResourceSuffix: str            = ".png"    # 이미지 리소스의 확장자.
+        self.__spriteBank: Dict[str, List[Sprite]]  = {}    # 읽어온 Sprite를 이곳에 경로와 함께 저장합니다.
+        self.__bgmBank: Dict[str, BGM]              = {}    # 읽어온 BGM을 이곳에 경로와 함께 저장합니다.
+        self.__sfxBank: Dict[str, SFX]              = {}    # 읽어온 SFX를 이곳에 경로와 함께 저장합니다.
+        self.__fontBank: Dict[str, Font]            = {}    # 읽어온 Font를 이곳에 경로와 함께 저장합니다.
 
-        self.__bgmBank: Dict[str, Music]            = {}        # BGM 리소스가 담길 Dictionary.
-        self.__sfxBank: Dict[str, Wav]              = {}        # SFX 리소스가 담길 Dictionary.
-        self.__audioResourceSuffix: str             = '.flac'   # 오디오 리소스의 확장자.
-
-        self.__fontBank: Dict[str, Font]            = {}        # 폰트 리소스가 담길 Dictionary.
-        self.__fontResourceSuffix: str              = '.otf'    # 폰트 리소스의 확장자.
-
-    # 이미지 리소스를 로드합니다.
-    def LoadSprite(self, _filePath: str) -> Sequence[Image]:
+    # region Resource Loader
+    def LoadSprite(self, _filePath: str) -> Sequence[Sprite]:
+        """
+        Sprite 리소스를 읽어옵니다.
+        :param _filePath: Sprite 리소스의 파일 경로.
+        :return: 읽어온 Sprite 리소스.
+        """
         filePath: Path = Path(_filePath)
-        if not filePath.exists() or not filePath.is_file():
+        if (not filePath.exists() or
+            not filePath.is_file()):
             raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
 
-        yield load_image(str(filePath))
+        elif filePath.suffix != Sprite.fileSuffix():
+            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
 
-    # 이미지 리소스를 통째로 로드합니다.
-    def LoadSprites(self, _directoryPath: str) -> Sequence[Image]:
+        yield Sprite(load_image(str(filePath)))
+
+    def LoadSprites(self, _directoryPath: str) -> Sequence[Sprite]:
+        """
+        Sprite 리소스들을 읽어옵니다.
+        :param _directoryPath: Sprite 리소스의 폴더 경로.
+        :return: 읽어온 Sprite 리소스들.
+        """
         directoryPath: Path = Path(_directoryPath)
         if not directoryPath.exists() or not directoryPath.is_dir():
             raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(directoryPath)}\"였습니다.")
 
         for filePath in directoryPath.iterdir():
-            if filePath.is_file() and filePath.suffix == self.__spriteResourceSuffix:
-                yield load_image(str(filePath))
-
-    # BGM 리소스를 로드합니다.
-    def LoadBGM(self, _filePath: str) -> Sequence[Music]:
-        filePath: Path = Path(_filePath)
-        if not filePath.exists() or not filePath.is_file():
-            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
-
-        yield load_music(str(filePath))
-
-    # SFX 리소스를 로드합니다.
-    def LoadSFX(self, _filePath: str) -> Sequence[Wav]:
-        filePath: Path = Path(_filePath)
-        if not filePath.exists() or not filePath.is_file():
-            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
-
-        yield load_wav(str(_filePath))
-
-    def LoadFont(self, _filePath: str, _size: int = 20) ->  Sequence[Font]:
-        filePath: Path = Path(_filePath)
-        if not filePath.exists() or not filePath.is_file():
-            raise IOError(f"[Oops!] 해당 경로는 존재하지 않거나 허용되지 않습니다! 경로는 \"{str(filePath)}\"였습니다.")
-
-        yield load_font(str(_filePath), _size)
-
+            yield self.LoadSprite(str(filePath))
+    # endregion
+    # region Resource Getter
     # 로드된 스프라이트 리소스를 가져옵니다.
-    def GetSprite(self, _key: str, _index: int = 0) -> Image:
+    def GetSprite(self, _key: str, _index: int = 0) -> Sprite:
+        """
+        불러온 Sprite 리소스를 반환합니다.\n
+        (※ 보통 한 장만 있는 Sprite를 가져오는 용도로 사용됩니다.)
+        :param _key: 불러온 Sprite 리소스의 경로.
+        :param _index: 불러온 Sprite 리소스의 인덱스 번호.
+        :return: 불러온 Sprite 리소스.
+        """
         if _key not in self.__spriteBank.keys():
             self.__spriteBank[_key] = []
             for image in self.LoadSprite(_key):
@@ -69,34 +145,18 @@ class ResourceLoader(metaclass=Singleton):
 
         return self.__spriteBank[_key][_index]
 
-    # 로드된 스프라이트 리소스를 통쨰로 가져옵니다.
-    def GetSprites(self, _key: str) -> Sequence[Image]:
+        # 로드된 스프라이트 리소스를 통쨰로 가져옵니다.
+
+    def GetSprites(self, _key: str) -> Sequence[Sprite]:
+        """
+        불러온 Sprite를을 반환합니다.
+        :param _key: 불러온 Sprite 리소스의 경로.
+        :return: 불러온 Sprite 리소스들.
+        """
         if _key not in self.__spriteBank:
             self.__spriteBank[_key] = []
             for image in self.LoadSprites(_key):
                 self.__spriteBank[_key].append(image)
 
         return self.__spriteBank[_key]
-
-    # 로드된 BGM 리소스를 가져옵니다.
-    def GetBGM(self, _key: str) -> Music:
-        if _key not in self.__bgmBank:
-            for bgm in self.LoadBGM(_key):
-                self.__bgmBank[_key] = bgm
-
-        return self.__bgmBank[_key]
-
-    # 로드된 SFX 리소스를 가져옵니다.
-    def GetSFX(self, _key: str) -> Wav:
-        if _key not in self.__sfxBank:
-            for sfx in self.LoadSFX(_key):
-                self.__sfxBank[_key] = sfx
-
-        return self.__sfxBank[_key]
-
-    def GetFont(self, _key: str, _size: int = 20) -> Font:
-        if _key not in self.__fontBank:
-            for font in self.LoadFont(_key, _size):
-                self.__fontBank[_key] = font
-
-        return self.__fontBank[_key]
+    # endregion
