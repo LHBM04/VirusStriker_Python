@@ -37,10 +37,6 @@ class InputManager(metaclass = Singleton):
 
         elif _event.type == SDL_MOUSEMOTION:
             self.__mousePosition = Vector2(_event.x, _event.y)
-            print(self.__mousePosition.x)
-
-        else:
-            return
 
     @property
     def isKeyPressed(self) -> bool:

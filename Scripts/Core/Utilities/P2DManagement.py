@@ -3,6 +3,7 @@ from time import time as GetTime
 
 from pico2d import *
 
+from Core.Utilities.ResourceManagement import ResourceManager
 from Core.Utilities.Singleton import Singleton
 from Core.Utilities.InputManagement import InputManager
 from Level.SceneManagement import SceneManager
@@ -25,6 +26,14 @@ class P2DManager(metaclass = Singleton):
         :return: 해당 게임의 구동 여부.
         """
         return self.__isGameRunning
+
+    @property
+    def windowHandle(self) -> SDL_Window:
+        return pico2d.window
+
+    @property
+    def rendererHandle(self) -> SDL_Renderer:
+        return pico2d.renderer
 
     @property
     def windowTitle(self) -> str:
@@ -72,17 +81,23 @@ class P2DManager(metaclass = Singleton):
             self.__windowHeight,
             self.__isSync,
             self.__isFullScreen)
+
         SDL_SetWindowTitle(
-            pico2d.window,
+            self.windowHandle,
             self.__windowTitle.encode('utf-8'))
+
+        SDL_SetRenderDrawColor(self.rendererHandle, 0, 0, 0, 255)
+        SDL_RenderClear(self.rendererHandle)
+        SDL_RenderPresent(self.rendererHandle)
+
+        ResourceManager().Initialize()
 
     def Run(self) -> None:
         self.__isGameRunning = True
 
-        previousTime: float = GetTime()
-
-        fixedUpdateTime: float = 1.0 / 50.0
-        fixedDeltaTime: float = 0.0
+        previousTime: float     = GetTime()
+        fixedUpdateTime: float  = 1.0 / 50.0
+        fixedDeltaTime: float   = 0.0
 
         while self.__isGameRunning:
             self.ProceedEvent()
@@ -109,7 +124,6 @@ class P2DManager(metaclass = Singleton):
             SceneManager().Render()
             update_canvas()
 
-        clear_canvas()
         close_canvas()
 
     def ProceedEvent(self) -> None:
@@ -127,5 +141,3 @@ class P2DManager(metaclass = Singleton):
                     event.button, event.x, event.y = gotEvent.button.button, gotEvent.button.x, gotEvent.button.y
 
                 InputManager().ProceedInput(event)
-            else:
-                pass
