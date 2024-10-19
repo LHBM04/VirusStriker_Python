@@ -85,7 +85,7 @@ class P2DManager(metaclass = Singleton):
         fixedDeltaTime: float = 0.0
 
         while self.__isGameRunning:
-            self.ProceedMessage()
+            self.ProceedEvent()
             clear_canvas()
 
             if SceneManager().isResetDeltaTime:
@@ -112,7 +112,7 @@ class P2DManager(metaclass = Singleton):
         clear_canvas()
         close_canvas()
 
-    def ProceedMessage(self) -> None:
+    def ProceedEvent(self) -> None:
         gotEvent: SDL_Event = SDL_Event()
         while SDL_PollEvent(ctypes.byref(gotEvent)):
             event: Event = Event(gotEvent.type)
