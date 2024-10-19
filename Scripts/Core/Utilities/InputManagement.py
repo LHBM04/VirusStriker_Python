@@ -27,13 +27,12 @@ class InputManager(metaclass = Singleton):
         self.__mousePosition: Vector2                 = Vector2()
 
     def ProceedInput(self, _event: Event) -> None:
-        if _event.type == SDL_KEYUP | SDL_KEYDOWN:
+        if _event.type in { SDL_KEYUP, SDL_KEYDOWN }:
             self.__keyState[_event.key] = (
                 InputManager.EState.DOWN) if _event.type == SDL_KEYDOWN else InputManager.EState.UP
 
-        elif _event.type == SDL_MOUSEBUTTONDOWN | SDL_MOUSEBUTTONUP:
-            self.__buttonState[_event.key] = (
-                InputManager.EState.DOWN) if _event.type == SDL_MOUSEBUTTONDOWN else InputManager.EState.UP
+        elif _event.type in { SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP }:
+            self.__buttonState[_event.key] = InputManager.EState.DOWN if _event.type == SDL_MOUSEBUTTONDOWN else InputManager.EState.UP
             self.__mousePosition = Vector2(_event.x, _event.y)
 
         elif _event.type == SDL_MOUSEMOTION:
