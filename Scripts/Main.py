@@ -1,5 +1,5 @@
-from Core.Utilities.P2DManagement import P2DManager
+from Core.CoreManagement import Core
 
 if __name__ == "__main__":
-    P2DManager().Initialize()
-    P2DManager().Run()
+    Core().Initialize()
+    Core().Run()

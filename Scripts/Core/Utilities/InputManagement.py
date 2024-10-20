@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import final, Dict
 
-from pico2d import *
+from sdl2 import *
 
 from Core.Utilities.Singleton import Singleton
 from Core.Utilities.Mathematics import Vector2
@@ -26,17 +26,16 @@ class InputManager(metaclass = Singleton):
         self.__isKeyPressed: bool                       = False
         self.__mousePosition: Vector2                 = Vector2()
 
-    def ProceedInput(self, _event: Event) -> None:
+    def ProceedInput(self, _event: SDL_Event) -> None:
         if _event.type in { SDL_KEYUP, SDL_KEYDOWN }:
-            self.__keyState[_event.key] = (
-                InputManager.EState.DOWN) if _event.type == SDL_KEYDOWN else InputManager.EState.UP
+            self.__keyState[_event.key.keysym.sym] = InputManager.EState.DOWN if _event.type == SDL_KEYDOWN else InputManager.EState.UP
 
         elif _event.type in { SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP }:
-            self.__buttonState[_event.key] = InputManager.EState.DOWN if _event.type == SDL_MOUSEBUTTONDOWN else InputManager.EState.UP
-            self.__mousePosition = Vector2(_event.x, _event.y)
+            self.__buttonState[_event.button.button] = InputManager.EState.DOWN if _event.type == SDL_MOUSEBUTTONDOWN else InputManager.EState.UP
+            self.__mousePosition = Vector2(_event.button.x, _event.button.y)
 
         elif _event.type == SDL_MOUSEMOTION:
-            self.__mousePosition = Vector2(_event.x, _event.y)
+            self.__mousePosition = Vector2(_event.button.x, _event.button.y)
 
     @property
     def isKeyPressed(self) -> bool:
