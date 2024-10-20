@@ -106,8 +106,8 @@ class P2DManager(metaclass = Singleton):
             if SceneManager().isResetDeltaTime:
                 previousTime = GetTime()
 
-            currentTime: float  = GetTime()
-            deltaTime:float     = currentTime - previousTime
+            currentTime: float      = GetTime()
+            deltaTime: float        = currentTime - previousTime
 
             previousTime = currentTime
 
@@ -117,7 +117,7 @@ class P2DManager(metaclass = Singleton):
 
             while fixedDeltaTime > fixedUpdateTime:
                 fixedDeltaTime -= fixedUpdateTime
-                SceneManager().FixedUpdate(fixedDeltaTime)
+                SceneManager().FixedUpdate(fixedUpdateTime)
 
             InputManager().Update()
             SceneManager().Update(deltaTime)
