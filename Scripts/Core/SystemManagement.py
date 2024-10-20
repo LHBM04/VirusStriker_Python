@@ -6,11 +6,12 @@ from sdl2 import *
 from pathlib import *
 
 from Core.Utilities.InputManagement import InputManager
+from Core.Utilities.ResourceManagement import Resources
 from Core.Utilities.Singleton import Singleton
 from Level.SceneManagement import SceneManager
 
 @final
-class Core(metaclass = Singleton):
+class System(metaclass = Singleton):
     def __init__(self):
         # region Const Field
         self.__GAME_TITLE: str              = "Virus Striker"
@@ -82,6 +83,8 @@ class Core(metaclass = Singleton):
         # Fallback
         if self.__rendererHandle is None:
             self.__rendererHandle = SDL_CreateRenderer(self.__windowHandle, -1, SDL_RENDERER_SOFTWARE)
+
+        Resources().Initialize()
 
     def Run(self) -> None:
         self.__isRunning = True

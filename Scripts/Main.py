@@ -1,5 +1,5 @@
-from Core.CoreManagement import Core
+from Core.SystemManagement import System
 
 if __name__ == "__main__":
-    Core().Initialize()
-    Core().Run()
+    System().Initialize()
+    System().Run()
