@@ -46,10 +46,10 @@ class System(metaclass = Singleton):
 
     def Initialize(self) -> None:
         settingFile: Path = Path(r"Resources\Setting.json")
-        print("Setting.json을 찾고 있습니다.")
+        print("[Notice] Setting.json을 찾고 있습니다.")
 
         if not settingFile.exists() or not settingFile.is_file():
-            print("Setting.json을 찾지 못했습니다. 기본 설정으로 기동합니다...")
+            print("[Oops!] Setting.json을 찾지 못했습니다. 기본 설정으로 기동합니다...")
             self.__windowWidth     = self.__DEFAULT_WINDOW_WIDTH
             self.__windowHeight    = self.__DEFAULT_WINDOW_HEIGHT
             self.__screenState     = self.__DEFAULT_WINDOW_STATE
@@ -59,13 +59,14 @@ class System(metaclass = Singleton):
             with settingFile.open('r') as file:
                 settingData: Dict[str, bytes] = load(file)
 
-                print("Setting.json을 찾았습니다 해당 설정으로 기동합니다...")
+                print("[Notice] Setting.json을 찾았습니다. 해당 설정으로 기동합니다.")
                 self.__windowWidth  = settingData.get("Window Width")
                 self.__windowHeight = settingData.get('Window Height')
                 self.__screenState  = settingData.get('Screen State')
                 self.__syncState    = settingData.get('Sync State')
 
         SDL_Init(SDL_INIT_EVERYTHING)
+        print("[Notice] Window를 생성합니다.")
         self.__windowHandle = SDL_CreateWindow(
             f"{self.__GAME_TITLE} Ver. {self.__GAME_VERSION} ({self.__windowWidth} x {self.__windowHeight})".encode('utf-8'),
             SDL_WINDOWPOS_CENTERED,
@@ -74,6 +75,7 @@ class System(metaclass = Singleton):
             self.__windowHeight,
             self.__screenState)
 
+        print("[Notice] Renderer를 생성합니다.")
         self.__rendererHandle = SDL_CreateRenderer(
             self.__windowHandle,
             -1,
@@ -82,11 +84,13 @@ class System(metaclass = Singleton):
 
         # Fallback
         if self.__rendererHandle is None:
+            print("[Oops!] Renderer 생성에 실패했습니다. 기본 설정으로 재생성합니다...")
             self.__rendererHandle = SDL_CreateRenderer(self.__windowHandle, -1, SDL_RENDERER_SOFTWARE)
 
         Resources().Initialize()
 
     def Run(self) -> None:
+        print("[Notice] 프로그램을 기동합니다.")
         self.__isRunning = True
 
         previousTime: int       = SDL_GetTicks()
