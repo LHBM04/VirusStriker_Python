@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import final
+from typing import *
 
 from multipledispatch import dispatch
 from numpy import *
