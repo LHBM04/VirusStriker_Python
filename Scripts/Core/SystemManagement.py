@@ -108,8 +108,8 @@ class SystemManager(metaclass = Singleton):
             if self.__rendererHandle is None:
                 raise ValueError("[Oops!] Renderer 핸들 생성에 실패했습니다!")
 
-        from Core.Utilities.ResourceManagement import Resources
-        Resources().Initialize()
+        from Core.Utilities.ResourceManagement import ResourceManager
+        ResourceManager().Initialize()
 
     def Run(self) -> None:
         print("[Notice] 프로그램을 기동합니다.")
