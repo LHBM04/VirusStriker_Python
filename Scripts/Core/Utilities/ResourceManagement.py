@@ -6,6 +6,7 @@ from sdl2 import *
 from sdl2.sdlimage import *
 from sdl2.sdlttf import *
 from sdl2.sdlmixer import *
+from pathlib import *
 
 from Core.SystemManagement import SystemManager
 from Core.Utilities.Singleton import Singleton
@@ -52,6 +53,16 @@ class ResourceManager(metaclass = Singleton):
         self.__sfxBank: Dict[str, Mix_Music]        = { }
         self.__ttfBank: Dict[str, TTF_Font]         = { }
 
+        self.__textureResourcePath: Path    = Path(r"Resources\Sprites")
+        self.__textureResourceSuffix: str   = "*.png"
+
+        self.__bgmResourcePath: Path    = Path(r"Resources\Audio\BGM")
+        self.__sfxResourcePath: Path    = Path(r"Resources\Audio\SFX")
+        self.__audioResourceSuffix: str = "*.flac"
+
+        self.__fontResourcePath: Path   = Path(r"Resources\Fonts")
+        self.__fontResourceSuffix: str  = "*.otf"
+
         IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP)
         TTF_Init()
 
@@ -60,5 +71,54 @@ class ResourceManager(metaclass = Singleton):
         IMG_Quit()
 
     def Initialize(self) -> None:
-        ...
+        self.LoadImages()
+        self.LoadBGM()
+        self.LoadSFX()
+        self.LoadFont()
 
+    def LoadImages(self) -> None:
+        if not self.__spriteResourcePath.exists() or not self.__spriteResourcePath.is_dir():
+            pass
+
+        for filePath in self.__spriteResourcePath.rglob(self.__spriteResourceSuffix):
+            if not filePath.exists() or not filePath.is_file():
+                raise IOError
+
+            if filePath.name not in self.__spriteBank:
+                self.__spriteBank[filePath.name] = []
+
+            print(str(filePath))
+            self.__spriteBank[filePath.name].append(load_image(str(filePath)))
+
+    def LoadBGM(self) -> None:
+        if not self.__bgmResourcePath.exists() or not self.__bgmResourcePath.is_dir():
+            raise IOError
+
+        for filePath in self.__bgmResourcePath.rglob(self.__audioResourceSuffix):
+            if not filePath.exists() or not filePath.is_file():
+                raise IOError
+
+            print(str(filePath))
+            self.__bgmBank[filePath.name] = load_music(str(filePath))
+
+    def LoadSFX(self) -> None:
+        if not self.__sfxResourcePath.exists() or not self.__sfxResourcePath.is_dir():
+            raise IOError
+
+        for filePath in self.__sfxResourcePath.rglob(self.__audioResourceSuffix):
+            if not filePath.exists() or not filePath.is_file():
+                raise IOError
+
+            print(str(filePath))
+            self.__sfxBank[filePath.name] = load_music(str(filePath))
+
+    def LoadFont(self) -> None:
+        if not self.__fontResourcePath.exists() or not self.__fontResourcePath.is_dir():
+            raise IOError
+
+        for filePath in self.__fontResourcePath.rglob(self.__fontResourceSuffix):
+            if not filePath.exists() or not filePath.is_file():
+                raise IOError
+
+            print(str(filePath))
+            self.__fontBank[filePath.name] = load_font(str(filePath), 20)
