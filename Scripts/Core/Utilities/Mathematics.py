@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import *
+from typing import final
 
-from numpy import *
+from multipledispatch import dispatch
+from numpy import abs, atan2, ceil, cos, dot, floor, rad2deg, sin, sqrt, tan
 
 @final
 class MathF:
@@ -48,28 +49,41 @@ class MathF:
         """
         return 6.283185
 
+    @dispatch(float, float)
     @staticmethod
-    def Equalf(*args: float) -> bool:
+    def Equalf(_lhs: float, _rhs: float) -> bool:
         """
-        여러 시그니처의 Equalf 메서드를 하나의 메서드로 구현.
-        입력에 따라 다른 방식으로 부동소수점 비교를 수행.
+        두 부동소수점 수를 비교하여, 차이가 엡실론 값보다 작은지 확인합니다.
+        :param _lhs: 비교할 첫 번째 값
+        :param _rhs: 비교할 두 번째 값
+        :return: 두 값이 거의 동일하면 True, 그렇지 않으면 False
         """
-        if len(args) == 2:
-            _lhs: float = args[0]
-            _rhs: float = args[1]
-            return abs(_lhs - _rhs) < MathF.epsilon
-        elif len(args) == 3:
-            _lhs: float = args[0]
-            _rhs: float = args[1]
-            _epsilon: float = args[2]
-            return abs(_lhs - _rhs) < _epsilon
-        elif len(args) == 1:
-            return MathF.Equalf(args[0], 0.0)
-        else:
-            raise TypeError()
+        return abs(_lhs - _rhs) < MathF.epsilon()
+
+    @dispatch(float, float, float)
+    @staticmethod
+    def Equalf(_lhs: float, _rhs: float, _epsilon: float) -> bool:
+        """
+        두 부동소수점 수를 주어진 엡실론 값으로 비교합니다.
+        :param _lhs: 비교할 첫 번째 값
+        :param _rhs: 비교할 두 번째 값
+        :param _epsilon: 비교에 사용할 엡실론 값
+        :return: 두 값이 주어진 엡실론 내에서 동일하면 True
+        """
+        return abs(_lhs - _rhs) < _epsilon
+
+    @dispatch(float)
+    @staticmethod
+    def Equalf(_value: float) -> bool:
+        """
+        입력된 부동소수점 수가 0과 동일한지 확인합니다.
+        :param _value: 비교할 값
+        :return: 값이 0과 거의 동일하면 True
+        """
+        return MathF.Equalf(_value, 0.0)
 
     @staticmethod
-    def Proportion(_a: float, _b: float, _d: float) -> float:
+    def Proportion(self, _a: float, _b: float, _d: float) -> float:
         """
         주어진 두 값의 비율을 계산합니다.
         :param _a: 첫 번째 값
@@ -80,7 +94,7 @@ class MathF:
         return _a / _b * _d
 
     @staticmethod
-    def Flip(_value: float, _over: float = 0.0) -> float:
+    def Flip(self, _value: float, _over: float = 0.0) -> float:
         """
         주어진 값을 기준 값(_over)을 중심으로 뒤집습니다.
         :param _value: 뒤집을 값
@@ -90,7 +104,7 @@ class MathF:
         return -(_value - _over) + _over
 
     @staticmethod
-    def Ceil(_value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
+    def Ceil(self, _value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
         """
         주어진 값을 특정 간격(interval)으로 올림한 결과를 반환합니다.
         :param _value: 올림할 값
@@ -98,13 +112,12 @@ class MathF:
         :param _offset: 오프셋 값 (기본값은 0.0)
         :return: 올림된 값
         """
-        if MathF.Equalf(_interval, 0.0):
+        if self.Equalf(_interval, 0.0):
             _interval = 1.0
-
         return ceil((_value - _offset) / _interval) * _interval + _offset
 
     @staticmethod
-    def Round(_value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
+    def Round(self, _value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
         """
         주어진 값을 특정 간격(interval)으로 반올림한 결과를 반환합니다.
         :param _value: 반올림할 값
@@ -116,83 +129,92 @@ class MathF:
             _interval = 1.0
         return round((_value - _offset) / _interval) * _interval + _offset
 
+    @dispatch(int, int)
     @staticmethod
-    def Modp(_dividend: Union[int, float], _divisor: Union[int, float]):
+    def Modp(self, _dividend: int, _divisor: int) -> int:
         """
-        두 정수 또는 실수의 모듈로 연산 결과를 반환합니다. 결과는 항상 양수입니다.
-        :param _dividend: 피제수 (나누어지는 수), 정수 또는 실수
-        :param _divisor: 제수 (나누는 수), 정수 또는 실수
+        두 정수의 모듈로 연산 결과를 반환합니다. 결과는 양수입니다.
+        :param _dividend: 피제수 (나누어지는 수)
+        :param _divisor: 제수 (나누는 수)
         :return: 양수 모듈로 연산 결과
         """
-        if isinstance(_dividend, int) and isinstance(_divisor, int):
-            return (_dividend % _divisor + _divisor) % _divisor
-        elif isinstance(_dividend, float) and isinstance(_divisor, float):
-            return (_dividend % _divisor + _divisor) % _divisor
-        else:
-            raise TypeError()
+        return (_dividend % _divisor + _divisor) % _divisor
 
+    @dispatch(float, float)
     @staticmethod
-    def ShortestArc(_lhs: float, _rhs: float) -> float:
+    def Modp(self, _dividend: float, _divisor: float) -> float:
+        """
+        두 실수의 모듈로 연산 결과를 반환합니다. 결과는 양수입니다.
+        :param _dividend: 피제수 (나누어지는 수)
+        :param _divisor: 제수 (나누는 수)
+        :return: 양수 모듈로 연산 결과
+        """
+        return (_dividend % _divisor + _divisor) % _divisor
+
+    @dispatch(float, float)
+    @staticmethod
+    def ShortesArc(self, _lhs: float, _rhs: float) -> float:
         """
         두 각도 간의 최단 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 최단 호 값
         """
-        return MathF.Modp(_rhs - _lhs + MathF.pi(), MathF.doublePi()) - MathF.pi()
+        return self.Modp(_rhs - _lhs + self.pi, self.doublePi) - self.pi
 
+    @dispatch(float, float)
     @staticmethod
-    def ShortestArc_Degree(_lhs: float, _rhs: float) -> float:
+    def ShortesArc(self, _lhs: float, _rhs: float) -> float:
         """
         주어진 각도 범위에서 최단 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 최단 호 값
         """
-        return MathF.Modp(_rhs - _lhs + 180.0, 360.0) - 180.0
+        return self.Modp(_rhs - _lhs + 100.0, 360.0) - 180.0
 
     @staticmethod
-    def PositiveArc(_lhs: float, _rhs: float) -> float:
+    def PositiveArc(self, _lhs: float, _rhs: float) -> float:
         """
         두 각도 사이의 양의 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 양의 호 값
         """
-        diff: float = MathF.PositiveAngle(_rhs) - MathF.PositiveAngle(_lhs)
-        return diff if diff < 0.0 else diff + MathF.doublePi()
+        diff: float = self.PositiveAngle(_rhs) - self.PositiveAngle(_lhs)
+        return diff if diff < 0.0 else diff + self.doublePi
 
     @staticmethod
-    def PositiveArc_Degree(_lhs: float, _rhs: float) -> float:
+    def PositiveArc_Degree(self, _lhs: float, _rhs: float) -> float:
         """
         주어진 각도 사이의 양의 호(arc)를 계산하여 반환합니다. 각도는 도(degree) 단위입니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 양의 호 값 (도 단위)
         """
-        diff: float = MathF.PositiveAngle_Degree(_rhs) - MathF.PositiveAngle_Degree(_lhs)
+        diff: float = self.PositiveAngle_Degree(_rhs) - self.PositiveAngle_Degree(_lhs)
         return diff if diff < 0.0 else diff + 360.0
 
     @staticmethod
-    def PositiveAngle(_angle: float) -> float:
+    def PositiveAngle(self, _angle: float) -> float:
         """
         주어진 각도를 양의 각도로 변환합니다.
         :param _angle: 변환할 각도
         :return: 양의 각도로 변환된 값
         """
-        return MathF.Modp(_angle, MathF.doublePi())
+        return self.Modp(_angle, self.doublePi)
 
     @staticmethod
-    def PositiveAngle_Degree(_angle: float) -> float:
+    def PositiveAngle_Degree(self, _angle: float) -> float:
         """
         주어진 각도를 0도에서 360도 사이의 양의 각도로 변환합니다.
         :param _angle: 변환할 각도
         :return: 양의 각도로 변환된 값 (도 단위)
         """
-        return MathF.Modp(_angle, 360.0)
+        return self.Modp(_angle, 360.0)
 
     @staticmethod
-    def AngleInRange(_angle: float, _lhs: float, _rhs: float) -> bool:
+    def AngleInRange(self, _angle: float, _lhs: float, _rhs: float) -> bool:
         """
         주어진 각도가 특정 범위 내에 있는지 확인합니다.
         :param _angle: 확인할 각도
@@ -200,10 +222,10 @@ class MathF:
         :param _rhs: 범위의 끝 각도
         :return: 각도가 범위 내에 있으면 True
         """
-        return MathF.PositiveAngle(_lhs) <= MathF.PositiveAngle(_rhs)
+        return self.PositiveAngle(_lhs) <= self.PositiveAngle(_rhs)
 
     @staticmethod
-    def AngleInRange_Degree(_angle: float, _lhs: float, _rhs: float) -> bool:
+    def AngleInRange_Degree(self, _angle: float, _lhs: float, _rhs: float) -> bool:
         """
         주어진 각도가 특정 범위 내에 있는지 확인합니다. 각도는 도(degree) 단위입니다.
         :param _angle: 확인할 각도
@@ -211,7 +233,7 @@ class MathF:
         :param _rhs: 범위의 끝 각도
         :return: 각도가 범위 내에 있으면 True
         """
-        return MathF.PositiveArc_Degree(_lhs, _angle) <= MathF.PositiveAngle_Degree(_rhs)
+        return self.PositiveArc_Degree(_lhs, _angle) <= self.PositiveAngle_Degree(_rhs)
 
 @final
 class Vector2:
@@ -293,12 +315,12 @@ class Vector2:
         return self.__x
 
     @x.setter
-    def x(self, _value: float) -> None:
+    def x(self, _x: float) -> None:
         """
         x 좌표를 설정합니다.
-        :param _value: 설정할 x 좌표의 값.
+        :param _x: 설정할 x 좌표의 값.
         """
-        self.__x = _value
+        self.__x = _x
 
     @property
     def y(self) -> float:
@@ -309,12 +331,12 @@ class Vector2:
         return self.__y
 
     @y.setter
-    def y(self, _value: float) -> None:
+    def y(self, _y: float) -> None:
         """
         y 좌표를 설정합니다.
-        :param _value: 설정할 y 좌표의 값.
+        :param _y: 설정할 y 좌표의 값.
         """
-        self.__y = _value
+        self.__y = _y
 
     @staticmethod
     def Zero() -> Vector2:
@@ -356,179 +378,6 @@ class Vector2:
         """
         return Vector2(1.0, 0.0)
 
-from typing import final
-
-@final
-class Vector3:
-    """
-    3D 벡터를 나타내는 클래스.
-    """
-    def __init__(self, _x: float = 0.0, _y: float = 0.0, _z: float = 0.0) -> None:
-        self.__x: float = _x
-        self.__y: float = _y
-        self.__z: float = _z
-
-    # [Operation Override] #
-    def __neg__(self) -> Vector3:
-        """
-        벡터의 반대 방향 벡터를 반환합니다.
-        :return: 현재 벡터의 반대 방향을 나타내는 Vector3 객체.
-        """
-        return Vector3(-self.x, -self.y, -self.z)
-
-    def __add__(self, _other: Vector3) -> Vector3:
-        """
-        두 벡터를 더합니다.
-        :param _other: 더할 다른 Vector3 객체.
-        :return: 두 벡터의 합을 나타내는 Vector3 객체.
-        """
-        return Vector3(self.x + _other.x, self.y + _other.y, self.z + _other.z)
-
-    def __sub__(self, _other: Vector3) -> Vector3:
-        """
-        두 벡터를 뺍니다.
-        :param _other: 뺄 다른 Vector3 객체.
-        :return: 두 벡터의 차를 나타내는 Vector3 객체.
-        """
-        return Vector3(self.x - _other.x, self.y - _other.y, self.z - _other.z)
-
-    def __mul__(self, _other: float) -> Vector3:
-        """
-        벡터를 스칼라 값으로 곱합니다.
-        :param _other: 곱할 스칼라 값.
-        :return: 곱셈 결과를 나타내는 Vector3 객체.
-        """
-        return Vector3(self.x * _other, self.y * _other, self.z * _other)
-
-    def __truediv__(self, _other: float) -> Vector3:
-        """
-        벡터를 스칼라 값으로 나눕니다.
-        :param _other: 나눌 스칼라 값.
-        :return: 나눗셈 결과를 나타내는 Vector3 객체.
-        """
-        return Vector3(self.x / _other, self.y / _other, self.z / _other)
-
-    def __eq__(self, _other: Vector3) -> bool:
-        """
-        두 벡터가 같은지 비교합니다.
-        :param _other: 비교할 다른 Vector3 객체.
-        :return: 두 벡터가 같으면 True, 아니면 False.
-        """
-        return self.x is _other.x and self.y is _other.y and self.z is _other.z
-
-    def __ne__(self, _other: Vector3) -> bool:
-        """
-        두 벡터가 다른지 비교합니다.
-        :param _other: 비교할 다른 Vector3 객체.
-        :return: 두 벡터가 다르면 True, 같으면 False.
-        """
-        return not self.__eq__(_other)
-
-    # [Properties] #
-    @property
-    def x(self) -> float:
-        """
-        x 좌표를 가져옵니다.
-        :return: x 좌표의 값.
-        """
-        return self.__x
-
-    @x.setter
-    def x(self, _value: float) -> None:
-        """
-        x 좌표를 설정합니다.
-        :param _value: 설정할 x 좌표의 값.
-        """
-        self.__x = _value
-
-    @property
-    def y(self) -> float:
-        """
-        y 좌표를 가져옵니다.
-        :return: y 좌표의 값.
-        """
-        return self.__y
-
-    @y.setter
-    def y(self, _value: float) -> None:
-        """
-        y 좌표를 설정합니다.
-        :param _value: 설정할 y 좌표의 값.
-        """
-        self.__y = _value
-
-    @property
-    def z(self) -> float:
-        """
-        z 좌표를 가져옵니다.
-        :return: z 좌표의 값.
-        """
-        return self.__z
-
-    @z.setter
-    def z(self, _value: float) -> None:
-        """
-        z 좌표를 설정합니다.
-        :param _value: 설정할 z 좌표의 값.
-        """
-        self.__z = _value
-
-    @staticmethod
-    def Zero() -> Vector3:
-        """
-        원점(0, 0, 0)을 나타내는 벡터를 반환합니다.
-        :return: (0.0, 0.0, 0.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(0.0, 0.0, 0.0)
-
-    @staticmethod
-    def Up() -> Vector3:
-        """
-        위 방향을 나타내는 벡터를 반환합니다.
-        :return: (0.0, 1.0, 0.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(0.0, 1.0, 0.0)
-
-    @staticmethod
-    def Down() -> Vector3:
-        """
-        아래 방향을 나타내는 벡터를 반환합니다.
-        :return: (0.0, -1.0, 0.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(0.0, -1.0, 0.0)
-
-    @staticmethod
-    def Left() -> Vector3:
-        """
-        왼쪽 방향을 나타내는 벡터를 반환합니다.
-        :return: (-1.0, 0.0, 0.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(-1.0, 0.0, 0.0)
-
-    @staticmethod
-    def Right() -> Vector3:
-        """
-        오른쪽 방향을 나타내는 벡터를 반환합니다.
-        :return: (1.0, 0.0, 0.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(1.0, 0.0, 0.0)
-
-    @staticmethod
-    def Forward() -> Vector3:
-        """
-        앞 방향을 나타내는 벡터를 반환합니다.
-        :return: (0.0, 0.0, 1.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(0.0, 0.0, 1.0)
-
-    @staticmethod
-    def Backward() -> Vector3:
-        """
-        뒤 방향을 나타내는 벡터를 반환합니다.
-        :return: (0.0, 0.0, -1.0)을 나타내는 Vector3 객체.
-        """
-        return Vector3(0.0, 0.0, -1.0)
-
 @final
 class MathVec:
     """
@@ -549,9 +398,8 @@ class MathVec:
         벡터를 정규화합니다. (크기를 1로 만듭니다)
         :return: 정규화된 Vector2 객체.
         """
-        magnitude: float = MathVec.Magnitude(_vec)
-
-        if MathF.Equalf(magnitude):
+        magnitude = MathVec.Magnitude(_vec)
+        if magnitude == 0:
             return Vector2.Zero()  # 크기가 0인 경우 Zero 벡터 반환
 
         return Vector2(_vec.x / magnitude, _vec.y / magnitude)
@@ -629,155 +477,203 @@ class MathVec:
         """
         return Vector2(cos(_angle), sin(_angle))
 
+    @dispatch(Vector2, Vector2, float)
     @staticmethod
-    def Highest(_lhs: Vector2, _rhs: Vector2, _direction: Optional[float] = None) -> float:
+    def Highest(self, _lhs: Vector2, _rhs: Vector2, _direction: float) -> float:
         """
         두 벡터의 방향에 따라 높은 값을 반환합니다.
         :param _lhs: 첫 번째 Vector2 객체.
         :param _rhs: 두 번째 Vector2 객체.
-        :param _direction: 비교할 방향의 각도. None이면 기본적으로 y축을 기준으로 비교.
+        :param _direction: 비교할 방향의 각도.
         :return: 두 벡터 중 높은 값.
         """
-        if _direction is None:
-            # 기본적으로 y축을 기준으로 비교
-            return MathVec.Highest(_lhs, _rhs, MathF.halfPi())
-
         if MathF.Equalf(_direction, 0.0): return _lhs.x - _rhs.x
         if MathF.Equalf(_direction, MathF.halfPi()): return _lhs.y - _rhs.y
         if MathF.Equalf(_direction, MathF.pi()): return _rhs.x - _lhs.x
         if MathF.Equalf(_direction, MathF.oneThreeFourthsPi()): return _rhs.y - _lhs.y
 
-        diff: Vector2 = MathVec.Project(_lhs, _direction) - MathVec.Project(_rhs, _direction)
-        return MathVec.Magnitude(diff) if (abs(MathVec.Angle(diff) - _direction) < MathF.halfPi) else -MathVec.Magnitude(diff)
+        diff: Vector2 = self.Project(_lhs, _direction) - self.Project(_rhs, _direction)
+        return self.Magnitude(diff) if (abs(MathVec.Angle(diff) - _direction) < MathF.halfPi()) else -MathVec.Magnitude(diff)
 
+    @dispatch(Vector2, Vector2)
     @staticmethod
-    def Project(_lhs: Vector2, _rhs_or_angle: Union[Vector2, float], _angle: Optional[float] = None) -> Vector2:
+    def Highest(_lhs: Vector2, _rhs: Vector2) -> float:
         """
-        주어진 벡터(혹은 두 벡터)를 특정 각도로 투영합니다.
+        두 벡터의 높이를 비교하여 높은 값을 반환합니다.
         :param _lhs: 첫 번째 Vector2 객체.
-        :param _rhs_or_angle: 두 번째 Vector2 객체 혹은 투영할 각도.
-        :param _angle: 선택적 투영 각도.
+        :param _rhs: 두 번째 Vector2 객체.
+        :return: 높은 값을 나타내는 float.
+        """
+        return MathVec.Highest(_lhs, _rhs, MathF.halfPi)
+
+    @dispatch(Vector2, float)
+    @staticmethod
+    def Project(_vec: Vector2, _angle: float) -> Vector2:
+        """
+        주어진 벡터를 특정 각도로 투영합니다.
+        :param _vec: 투영할 Vector2 객체.
+        :param _angle: 투영할 각도.
         :return: 투영된 Vector2 객체.
         """
-        if isinstance(_rhs_or_angle, Vector2) and _angle is not None:
-            _rhs: Vector2 = _rhs_or_angle
-            return MathF.Proportion(_lhs, _rhs, _rhs + Vector2(cos(_angle), sin(_angle)))
-        elif isinstance(_rhs_or_angle, float):
-            _angle: float = _rhs_or_angle
-            return MathVec.Highest(_lhs, Vector2(), _angle)
-        else:
-            raise TypeError("Invalid arguments passed to Project method.")
+        return MathVec.Highest(_vec, Vector2(), _angle)
+
+    @dispatch(Vector2, Vector2, float)
+    @staticmethod
+    def Project(_lhs: Vector2, _rhs: Vector2, _angle: float) -> Vector2:
+        """
+        두 벡터를 특정 각도로 투영합니다.
+        :param _lhs: 첫 번째 Vector2 객체.
+        :param _rhs: 두 번째 Vector2 객체.
+        :param _angle: 투영할 각도.
+        :return: 투영된 Vector2 객체.
+        """
+        return MathF.Proportion(_lhs, _rhs, _rhs + (Vector2(cos(_angle), sin(_angle))))
 
     @staticmethod
-    def IsPerp(self, _lhs: Vector2, _rhs: Vector2) -> bool:
+    def IsPerp(_lhs: Vector2, _rhs: Vector2) -> bool:
         """
         두 벡터가 수직인지 확인합니다.
         :param _lhs: 첫 번째 Vector2 객체.
         :param _rhs: 두 번째 Vector2 객체.
         :return: 수직이면 True, 아니면 False.
         """
-        return MathF.Equalf(0.0, self.Dot(_lhs, _rhs))
+        return MathF.Equalf(0.0, MathVec.Dot(_lhs, _rhs))
 
+    @dispatch(Vector2, float)
     @staticmethod
-    def Project(_vec_or_lhs: Vector2, _rhs_or_lineA: Union[Vector2, float], _angle_or_lineB: Optional[Union[float, Vector2]] = None) -> Vector2:
+    def Project(self, _vec: Vector2, _angle: float) -> Vector2:
         """
-        주어진 벡터를 특정 각도 또는 선분에 투영합니다.
-        :param _vec_or_lhs: 첫 번째 Vector2 객체 또는 투영할 벡터.
-        :param _rhs_or_lineA: 두 번째 Vector2 객체 또는 선분의 한쪽 끝 또는 투영할 각도.
-        :param _angle_or_lineB: 투영할 각도 또는 선분의 다른 쪽 끝 (옵션).
+        주어진 벡터를 특정 각도로 투영합니다.
+        :param _vec: 투영할 Vector2 객체.
+        :param _angle: 투영할 각도.
         :return: 투영된 Vector2 객체.
         """
-        if isinstance(_rhs_or_lineA, float) and _angle_or_lineB is None:
-            # 주어진 벡터를 특정 각도로 투영
-            return MathVec.Project(_vec_or_lhs, Vector2(0.0, 0.0), _rhs_or_lineA)
-        elif isinstance(_rhs_or_lineA, Vector2) and isinstance(_angle_or_lineB, float):
-            # 두 벡터를 특정 각도로 투영
-            return MathVec.Project(_vec_or_lhs, _rhs_or_lineA, _rhs_or_lineA + Vector2(cos(_angle_or_lineB), sin(_angle_or_lineB)))
-        elif isinstance(_rhs_or_lineA, Vector2) and isinstance(_angle_or_lineB, Vector2):
-            # 주어진 벡터를 두 선분에 투영
-            ab: Vector2 = _angle_or_lineB - _rhs_or_lineA
-            return _rhs_or_lineA + MathVec.Dot(_vec_or_lhs - _rhs_or_lineA, ab) / MathVec.Dot(ab, ab) * ab
-        else:
-            raise TypeError("Invalid arguments for Project method")
+        return self.Project2(_vec, Vector2(0.0, 0.0), _angle)
 
+    @dispatch(Vector2, Vector2, float)
     @staticmethod
-    def ScalarProjection(_lhs: Vector2, _rhs_or_theta: Union[Vector2, float]) -> float:
+    def Project(self, _lhs: Vector2, _rhs: Vector2, _angle: float) -> Vector2:
         """
-        두 벡터 간 또는 주어진 각도로의 스칼라 투영을 계산합니다.
+        두 벡터를 특정 각도로 투영합니다.
         :param _lhs: 첫 번째 Vector2 객체.
-        :param _rhs_or_theta: 두 번째 Vector2 객체 또는 각도 (float).
+        :param _rhs: 두 번째 Vector2 객체.
+        :param _angle: 투영할 각도.
+        :return: 투영된 Vector2 객체.
+        """
+        return self.Project(_lhs, _rhs, _rhs + Vector2(cos(_angle), sin(_angle)))
+
+    @dispatch(Vector2, Vector2, Vector2)
+    @staticmethod
+    def Project(self, _vec: Vector2, _lineA: Vector2, _lineB: Vector2) -> 'Vector2':
+        """
+        주어진 벡터를 두 선분에 투영합니다.
+        :param _vec: 투영할 Vector2 객체.
+        :param _lineA: 선분의 한쪽 끝.
+        :param _lineB: 선분의 다른 쪽 끝.
+        :return: 투영된 Vector2 객체.
+        """
+        ab: Vector2 = _lineB - _lineA
+        return _lineA + self.Dot(_vec - _lineA, ab) / self.Dot(ab, ab) * ab
+
+    @dispatch(Vector2, Vector2)
+    @staticmethod
+    def ScalarProjection(self, _lhs: Vector2, _rhs: Vector2) -> float:
+        """
+        두 벡터 간의 스칼라 투영을 계산합니다.
+        :param _lhs: 첫 번째 Vector2 객체.
+        :param _rhs: 두 번째 Vector2 객체.
         :return: 스칼라 투영 값.
         """
-        if isinstance(_rhs_or_theta, Vector2):
-            # 두 벡터 간의 스칼라 투영
-            return MathVec.ScalarProjection(_lhs, MathVec.Angle(_lhs) - MathVec.Angle(_rhs_or_theta))
-        elif isinstance(_rhs_or_theta, float):
-            # 주어진 각도로의 스칼라 투영
-            return MathVec.Magnitude(_lhs) * cos(_rhs_or_theta)
-        else:
-            raise TypeError("Invalid argument type for _rhs_or_theta")
+        return self.ScalarProjection(_lhs, self.Angle(_lhs) - self.Angle(_rhs))
+
+    @dispatch(Vector2, float)
+    @staticmethod
+    def ScalarProjection(self, _vec: Vector2, _theta: float) -> float:
+        """
+        주어진 벡터의 스칼라 투영을 계산합니다.
+        :param _vec: 스칼라 투영할 Vector2 객체.
+        :param _theta: 각도.
+        :return: 스칼라 투영 값.
+        """
+        return self.megitude * cos(_theta)
 
     @staticmethod
-    def ScalarProjectionAbs(_vec: Vector2, _theta: float) -> float:
+    def ScalarProjectionAbs(self, _vec: Vector2, _theta: float) -> float:
         """
         주어진 벡터의 절대 스칼라 투영을 계산합니다.
         :param _vec: 절대 스칼라 투영할 Vector2 객체.
         :param _theta: 각도.
         :return: 절대 스칼라 투영 값.
         """
-        return MathVec.Magnitude(_vec) * cos(MathVec.Angle(_vec) - _theta)
+        return self.Magnitude(_vec) * cos(self.Angle(_vec) - _theta)
 
+    @dispatch(Vector2, float)
     @staticmethod
-    def RotateBy(_point: Vector2, _angle: float, _origin: Optional[Vector2] = None) -> Vector2:
+    def RotateBy(self, _point: Vector2, _angle: float) -> Vector2:
         """
-        주어진 포인트를 특정 각도로 회전하며, 선택적으로 기준점을 지정합니다.
+        주어진 포인트를 특정 각도로 회전합니다.
         :param _point: 회전할 Vector2 객체.
         :param _angle: 회전할 각도.
-        :param _origin: 선택적 회전 기준점 (없으면 (0,0)을 기준으로 회전).
         :return: 회전된 Vector2 객체.
         """
-        if _origin is None:
-            return MathVec.RotateBy(_point, _angle, Vector2(0.0, 0.0))
-        else:
-            s: float = sin(_angle)
-            c: float = cos(_angle)
+        return self.RotateBy(_point, _angle, Vector2(0.0, 0.0))
 
-            nPoint: Vector2 = _point - _origin
-
-            return Vector2(nPoint.x * c - nPoint.y * s + _origin.x, nPoint.x * s + nPoint.y * c + _origin.y)
-
+    @dispatch(Vector2, float, Vector2)
     @staticmethod
-    def RotateTo(_point: Vector2, _angle: float, _origin: Optional[Vector2] = None) -> Vector2:
+    def RotateBy(_point: Vector2, _angle: float, _origin: Vector2) -> Vector2:
         """
-        주어진 포인트를 특정 각도로 회전하며, 선택적으로 기준점을 지정합니다.
+        주어진 포인트를 특정 각도로 회전하고 기준점을 지정합니다.
         :param _point: 회전할 Vector2 객체.
         :param _angle: 회전할 각도.
-        :param _origin: 선택적 회전 기준점 (없으면 (0,0)을 기준으로 회전).
+        :param _origin: 회전 기준점.
         :return: 회전된 Vector2 객체.
         """
-        if _origin is None:
-            return MathVec.RotateBy(_point, _angle - MathVec.Angle(_point))
-        else:
-            return MathVec.RotateBy(_point, _angle - atan2(_point.y - _origin.y, _point.x - _origin.x), _origin)
+        s: float = sin(_angle)
+        c: float = cos(_angle)
+
+        nPoint: Vector2 = _point - _origin
+
+        return Vector2(nPoint.x * c - nPoint.y * s + _origin.x, nPoint.x * s + nPoint.y * c + _origin.y)
+
+    @dispatch(Vector2, float)
+    @staticmethod
+    def RotateTo(self, _point: Vector2, _angle: float) -> Vector2:
+        """
+        주어진 포인트를 특정 각도로 회전합니다.
+        :param _point: 회전할 Vector2 객체.
+        :param _angle: 회전할 각도.
+        :return: 회전된 Vector2 객체.
+        """
+        return self.RotateBy(_point, _angle - self.Angle(_point))
+
+    @dispatch(Vector2, float, Vector2)
+    @staticmethod
+    def RotateTo(self, _point: Vector2, _angle: float, _origin: Vector2) -> Vector2:
+        """
+        주어진 포인트를 특정 각도로 회전하고 기준점을 지정합니다.
+        :param _point: 회전할 Vector2 객체.
+        :param _angle: 회전할 각도.
+        :param _origin: 회전 기준점.
+        :return: 회전된 Vector2 객체.
+        """
+        return self.RotateBy(_point, _angle - atan2(_point.y - _origin.y, _point.x - _origin.x), _origin)
 
     @staticmethod
-    def ShortesArc(_lhs: Vector2, _rhs: Vector2) -> float:
+    def ShortesArc(self, _lhs: Vector2, _rhs: Vector2) -> float:
         """
         두 벡터 간의 가장 짧은 호의 각도를 계산합니다.
         :param _lhs: 첫 번째 Vector2 객체.
         :param _rhs: 두 번째 Vector2 객체.
         :return: 두 벡터 간의 가장 짧은 호의 각도.
         """
-        return MathVec.ShortesArc(MathVec.Angle(_lhs), MathVec.Angle(_rhs))
+        return MathF.ShortesArc(MathVec.Angle(_lhs), MathVec.Angle(_rhs))
 
     @staticmethod
-    def ShortesArc_Degree(_lhs: Vector2, _rhs: Vector2) -> float:
+    def ShortesArcToDegree(_lhs: Vector2, _rhs: Vector2) -> float:
         """
         두 벡터 간의 가장 짧은 호의 각도를 도 단위로 계산합니다.
         :param _lhs: 첫 번째 Vector2 객체.
         :param _rhs: 두 번째 Vector2 객체.
         :return: 두 벡터 간의 가장 짧은 호의 각도 (도 단위).
         """
-        return MathVec.ShortesArc(MathVec.Angle(_lhs) * rad2deg(1), MathVec.Angle(_rhs) * rad2deg(1))
-
-
+        return MathF.ShortesArc(MathVec.Angle(_lhs) * rad2deg(1), MathVec.Angle(_rhs) * rad2deg(1))
