@@ -6,7 +6,6 @@ class Singleton(type):
     __lock: ClassVar[Lock]                      = Lock()
 
     def __call__(cls, *args, **kwargs) -> Any:
-        # 인스턴스 생성 시 스레드 안전성 보장
         with cls.__lock:
             if cls not in cls.__instances:
                 cls.__instances[cls] = super().__call__(*args, **kwargs)
