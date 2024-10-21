@@ -10,7 +10,7 @@ from Core.Utilities.Singleton import Singleton
 from Level.SceneManagement import SceneManager
 
 @final
-class System(metaclass = Singleton):
+class SystemManager(metaclass = Singleton):
     def __init__(self):
         # region Const Field
         self.__GAME_TITLE: str              = "Virus Striker"
@@ -30,6 +30,13 @@ class System(metaclass = Singleton):
         self.__windowHeight: int    = self.__DEFAULT_WINDOW_HEIGHT
         self.__screenState: int     = self.__DEFAULT_WINDOW_STATE
         self.__syncState: int       = self.__DEFAULT_WINDOW_SYNC
+
+        SDL_Init(SDL_INIT_EVERYTHING)
+
+    def __del__(self):
+        SDL_DestroyRenderer(self.__rendererHandle)
+        SDL_DestroyWindow(self.__windowHandle)
+        SDL_Quit()
 
     @property
     def windowHandle(self) -> SDL_Window:
@@ -74,7 +81,6 @@ class System(metaclass = Singleton):
                 self.__screenState  = settingData.get('Screen State')
                 self.__syncState    = settingData.get('Sync State')
 
-        SDL_Init(SDL_INIT_EVERYTHING)
         print("[Notice] Window를 생성합니다.")
         self.__windowHandle = SDL_CreateWindow(
             f"{self.__GAME_TITLE} Ver. {self.__GAME_VERSION} ({self.__windowWidth} x {self.__windowHeight})".encode('utf-8'),
@@ -83,6 +89,9 @@ class System(metaclass = Singleton):
             self.__windowWidth,
             self.__windowHeight,
             self.__screenState)
+
+        if self.__windowHandle is None:
+            raise ValueError("[Oops!] Window 핸들 생성에 실패했습니다!")
 
         print("[Notice] Renderer를 생성합니다.")
         self.__rendererHandle = SDL_CreateRenderer(
@@ -93,8 +102,11 @@ class System(metaclass = Singleton):
 
         # Fallback
         if self.__rendererHandle is None:
-            print("[Oops!] Renderer 생성에 실패했습니다. 기본 설정으로 재생성합니다...")
+            print("[Oops!] Renderer 핸들 생성에 실패했습니다. 기본 설정으로 재생성합니다...")
             self.__rendererHandle = SDL_CreateRenderer(self.__windowHandle, -1, SDL_RENDERER_SOFTWARE)
+
+            if self.__rendererHandle is None:
+                raise ValueError("[Oops!] Renderer 핸들 생성에 실패했습니다!")
 
         from Core.Utilities.ResourceManagement import Resources
         Resources().Initialize()
@@ -134,10 +146,6 @@ class System(metaclass = Singleton):
             SceneManager().Render()
 
             SDL_RenderPresent(self.__rendererHandle)
-
-        SDL_DestroyRenderer(self.__rendererHandle)
-        SDL_DestroyWindow(self.__windowHandle)
-        SDL_Quit()
 
     def Quit(self) -> None:
         self.__isRunning = False
