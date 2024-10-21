@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from collections import deque
 from typing import final, Dict, Deque, Optional, Iterable
 
@@ -54,8 +54,7 @@ class Scene(metaclass = ABCMeta):
         :return:
         """
         pass
-
-@final
+    
 class SceneManager(metaclass = Singleton):
     """
     게임 내 모든 Scene을 관리하고 제어합니다.
