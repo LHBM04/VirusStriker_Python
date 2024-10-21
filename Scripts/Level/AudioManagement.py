@@ -1,5 +1,8 @@
 from typing import final
 
+from sdl2 import *
+from sdl2.sdlmixer import *
+
 from Core.Utilities.Singleton import Singleton
 
 @final
