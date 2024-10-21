@@ -21,14 +21,9 @@ class Sprite:
     def __InitSDLRect(self, _x: int, _y: int, _w: int, _h: int) -> SDL_Rect:
         return SDL_Rect(int(_x), int(-_y + System().windowHeight - _h), int(_w), int(_h))
 
-    @overload
-    def Draw(self, _x: int, _y: int, _rotate: int) -> None:
-        ...
-
     def Draw(self, _x: int, _y: int, _rotate: int, _width: Optional[int] = None, _height: Optional[int] = None, _flipX: bool = False, _flipY: bool = False) -> None:
         if _width is None and _height is None:
             _width, _height = self.__width, self.__height
-
 
         rect: SDL_Rect = self.__InitSDLRect((_x - _width) // 2, (_y - _height) // 2, _width, _height)
         flipFlag: int = (SDL_FLIP_VERTICAL if _flipX else SDL_FLIP_NONE) | (SDL_FLIP_HORIZONTAL if _flipY else SDL_FLIP_NONE)
