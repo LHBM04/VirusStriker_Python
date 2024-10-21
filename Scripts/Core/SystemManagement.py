@@ -61,11 +61,11 @@ class SystemManager(metaclass = Singleton):
         return self.__rendererHandle
 
     def Initialize(self) -> None:
-        settingFile: Path = Path(r"Resources\Setting.json")
-        print("[Notice] Setting.json을 찾고 있습니다.")
+        print("[Notice] Configuration.json을 찾고 있습니다.")
+        settingFile: Path = Path(r"Resources\Configuration.json")
 
         if not settingFile.exists() or not settingFile.is_file():
-            print("[Oops!] Setting.json을 찾지 못했습니다. 기본 설정으로 기동합니다...")
+            print("[Caution!] Configuration.json을 찾지 못했습니다. 기본 설정으로 기동합니다...")
             self.__windowWidth     = self.__DEFAULT_WINDOW_WIDTH
             self.__windowHeight    = self.__DEFAULT_WINDOW_HEIGHT
             self.__screenState     = self.__DEFAULT_WINDOW_STATE
@@ -102,7 +102,7 @@ class SystemManager(metaclass = Singleton):
 
         # Fallback
         if self.__rendererHandle is None:
-            print("[Oops!] Renderer 핸들 생성에 실패했습니다. 기본 설정으로 재생성합니다...")
+            print("[Caution!] Renderer 핸들 생성에 실패했습니다. 기본 설정으로 재생성합니다...")
             self.__rendererHandle = SDL_CreateRenderer(self.__windowHandle, -1, SDL_RENDERER_SOFTWARE)
 
             if self.__rendererHandle is None:
