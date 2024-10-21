@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import final
 
 from multipledispatch import dispatch
-from numpy import abs, atan2, ceil, cos, dot, floor, rad2deg, sin, sqrt, tan
+from numpy import *
 
 @final
 class MathF:
@@ -117,7 +117,7 @@ class MathF:
         return ceil((_value - _offset) / _interval) * _interval + _offset
 
     @staticmethod
-    def Round(self, _value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
+    def Round(_value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
         """
         주어진 값을 특정 간격(interval)으로 반올림한 결과를 반환합니다.
         :param _value: 반올림할 값
@@ -131,7 +131,7 @@ class MathF:
 
     @dispatch(int, int)
     @staticmethod
-    def Modp(self, _dividend: int, _divisor: int) -> int:
+    def Modp(_dividend: int, _divisor: int) -> int:
         """
         두 정수의 모듈로 연산 결과를 반환합니다. 결과는 양수입니다.
         :param _dividend: 피제수 (나누어지는 수)
@@ -142,7 +142,7 @@ class MathF:
 
     @dispatch(float, float)
     @staticmethod
-    def Modp(self, _dividend: float, _divisor: float) -> float:
+    def Modp(_dividend: float, _divisor: float) -> float:
         """
         두 실수의 모듈로 연산 결과를 반환합니다. 결과는 양수입니다.
         :param _dividend: 피제수 (나누어지는 수)
@@ -153,68 +153,68 @@ class MathF:
 
     @dispatch(float, float)
     @staticmethod
-    def ShortesArc(self, _lhs: float, _rhs: float) -> float:
+    def ShortesArc(_lhs: float, _rhs: float) -> float:
         """
         두 각도 간의 최단 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 최단 호 값
         """
-        return self.Modp(_rhs - _lhs + self.pi, self.doublePi) - self.pi
+        return MathF.Modp(_rhs - _lhs + MathF.pi(), MathF.doublePi()) - MathF.pi()
 
     @dispatch(float, float)
     @staticmethod
-    def ShortesArc(self, _lhs: float, _rhs: float) -> float:
+    def ShortesArc(_lhs: float, _rhs: float) -> float:
         """
         주어진 각도 범위에서 최단 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 최단 호 값
         """
-        return self.Modp(_rhs - _lhs + 100.0, 360.0) - 180.0
+        return MathF.Modp(_rhs - _lhs + 100.0, 360.0) - 180.0
 
     @staticmethod
-    def PositiveArc(self, _lhs: float, _rhs: float) -> float:
+    def PositiveArc(_lhs: float, _rhs: float) -> float:
         """
         두 각도 사이의 양의 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 양의 호 값
         """
-        diff: float = self.PositiveAngle(_rhs) - self.PositiveAngle(_lhs)
-        return diff if diff < 0.0 else diff + self.doublePi
+        diff: float = MathF.PositiveAngle(_rhs) - MathF.PositiveAngle(_lhs)
+        return diff if diff < 0.0 else diff + MathF.doublePi()
 
     @staticmethod
-    def PositiveArc_Degree(self, _lhs: float, _rhs: float) -> float:
+    def PositiveArc_Degree(_lhs: float, _rhs: float) -> float:
         """
         주어진 각도 사이의 양의 호(arc)를 계산하여 반환합니다. 각도는 도(degree) 단위입니다.
         :param _lhs: 첫 번째 각도
         :param _rhs: 두 번째 각도
         :return: 양의 호 값 (도 단위)
         """
-        diff: float = self.PositiveAngle_Degree(_rhs) - self.PositiveAngle_Degree(_lhs)
+        diff: float = MathF.PositiveAngle_Degree(_rhs) - MathF.PositiveAngle_Degree(_lhs)
         return diff if diff < 0.0 else diff + 360.0
 
     @staticmethod
-    def PositiveAngle(self, _angle: float) -> float:
+    def PositiveAngle(_angle: float) -> float:
         """
         주어진 각도를 양의 각도로 변환합니다.
         :param _angle: 변환할 각도
         :return: 양의 각도로 변환된 값
         """
-        return self.Modp(_angle, self.doublePi)
+        return MathF.Modp(_angle, MathF.doublePi())
 
     @staticmethod
-    def PositiveAngle_Degree(self, _angle: float) -> float:
+    def PositiveAngle_Degree(_angle: float) -> float:
         """
         주어진 각도를 0도에서 360도 사이의 양의 각도로 변환합니다.
         :param _angle: 변환할 각도
         :return: 양의 각도로 변환된 값 (도 단위)
         """
-        return self.Modp(_angle, 360.0)
+        return MathF.Modp(_angle, 360.0)
 
     @staticmethod
-    def AngleInRange(self, _angle: float, _lhs: float, _rhs: float) -> bool:
+    def AngleInRange(_angle: float, _lhs: float, _rhs: float) -> bool:
         """
         주어진 각도가 특정 범위 내에 있는지 확인합니다.
         :param _angle: 확인할 각도
@@ -222,10 +222,10 @@ class MathF:
         :param _rhs: 범위의 끝 각도
         :return: 각도가 범위 내에 있으면 True
         """
-        return self.PositiveAngle(_lhs) <= self.PositiveAngle(_rhs)
+        return MathF.PositiveAngle(_lhs) <= MathF.PositiveAngle(_rhs)
 
     @staticmethod
-    def AngleInRange_Degree(self, _angle: float, _lhs: float, _rhs: float) -> bool:
+    def AngleInRange_Degree(_angle: float, _lhs: float, _rhs: float) -> bool:
         """
         주어진 각도가 특정 범위 내에 있는지 확인합니다. 각도는 도(degree) 단위입니다.
         :param _angle: 확인할 각도
@@ -233,7 +233,7 @@ class MathF:
         :param _rhs: 범위의 끝 각도
         :return: 각도가 범위 내에 있으면 True
         """
-        return self.PositiveArc_Degree(_lhs, _angle) <= self.PositiveAngle_Degree(_rhs)
+        return MathF.PositiveArc_Degree(_lhs, _angle) <= MathF.PositiveAngle_Degree(_rhs)
 
 @final
 class Vector2:
