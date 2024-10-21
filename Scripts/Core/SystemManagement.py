@@ -6,7 +6,6 @@ from sdl2 import *
 from pathlib import *
 
 from Core.Utilities.InputManagement import InputManager
-from Core.Utilities.ResourceManagement import Resources
 from Core.Utilities.Singleton import Singleton
 from Level.SceneManagement import SceneManager
 
@@ -34,6 +33,9 @@ class System(metaclass = Singleton):
 
     @property
     def windowHandle(self) -> SDL_Window:
+        if self.__windowHandle is None:
+            raise ValueError()
+
         return self.__windowHandle
 
     @property
@@ -43,6 +45,13 @@ class System(metaclass = Singleton):
     @property
     def windowHeight(self) -> int:
         return self.__windowHeight
+
+    @property
+    def rendererHandle(self) -> SDL_Renderer:
+        if self.__rendererHandle is None:
+            raise ValueError()
+
+        return self.__rendererHandle
 
     def Initialize(self) -> None:
         settingFile: Path = Path(r"Resources\Setting.json")
@@ -87,6 +96,7 @@ class System(metaclass = Singleton):
             print("[Oops!] Renderer 생성에 실패했습니다. 기본 설정으로 재생성합니다...")
             self.__rendererHandle = SDL_CreateRenderer(self.__windowHandle, -1, SDL_RENDERER_SOFTWARE)
 
+        from Core.Utilities.ResourceManagement import Resources
         Resources().Initialize()
 
     def Run(self) -> None:
