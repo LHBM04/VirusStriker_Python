@@ -104,7 +104,7 @@ class MathF:
         return -(_value - _over) + _over
 
     @staticmethod
-    def Ceil(self, _value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
+    def Ceil(_value: float, _interval: float = 1.0, _offset: float = 0.0) -> float:
         """
         주어진 값을 특정 간격(interval)으로 올림한 결과를 반환합니다.
         :param _value: 올림할 값
@@ -112,8 +112,9 @@ class MathF:
         :param _offset: 오프셋 값 (기본값은 0.0)
         :return: 올림된 값
         """
-        if self.Equalf(_interval, 0.0):
+        if MathF.Equalf(_interval, 0.0):
             _interval = 1.0
+
         return ceil((_value - _offset) / _interval) * _interval + _offset
 
     @staticmethod
@@ -127,6 +128,7 @@ class MathF:
         """
         if MathF.Equalf(_interval, 0.0):
             _interval = 1.0
+
         return round((_value - _offset) / _interval) * _interval + _offset
 
     @dispatch(int, int)
@@ -400,7 +402,7 @@ class MathVec:
         """
         magnitude = MathVec.Magnitude(_vec)
         if magnitude == 0:
-            return Vector2.Zero()  # 크기가 0인 경우 Zero 벡터 반환
+            return Vector2.Zero()
 
         return Vector2(_vec.x / magnitude, _vec.y / magnitude)
 
@@ -515,7 +517,7 @@ class MathVec:
         :param _angle: 투영할 각도.
         :return: 투영된 Vector2 객체.
         """
-        return MathVec.Highest(_vec, Vector2(), _angle)
+        return MathVec.Project(_vec, Vector2(), _angle)
 
     @dispatch(Vector2, Vector2, float)
     @staticmethod
@@ -527,7 +529,7 @@ class MathVec:
         :param _angle: 투영할 각도.
         :return: 투영된 Vector2 객체.
         """
-        return MathF.Proportion(_lhs, _rhs, _rhs + (Vector2(cos(_angle), sin(_angle))))
+        return MathVec.Project(_lhs, _rhs, _rhs + (Vector2(cos(_angle), sin(_angle))))
 
     @staticmethod
     def IsPerp(_lhs: Vector2, _rhs: Vector2) -> bool:
@@ -573,7 +575,7 @@ class MathVec:
         :return: 투영된 Vector2 객체.
         """
         ab: Vector2 = _lineB - _lineA
-        return _lineA + MathVec.Dot(_vec - _lineA, ab) / MathVec.Dot(ab, ab) * ab
+        return _lineA + (MathVec.Dot(_vec - _lineA, ab) / MathVec.Dot(ab, ab)) * ab
 
     @dispatch(Vector2, Vector2)
     @staticmethod
