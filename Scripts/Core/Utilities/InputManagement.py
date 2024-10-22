@@ -1,10 +1,67 @@
 from enum import Enum
-from typing import final, Dict
+from typing import final, Dict, Any
 
 from sdl2 import *
 
 from Core.Utilities.Singleton import Singleton
 from Core.Utilities.Mathematics import Vector2
+
+@final
+class Input:
+    class EState(Enum):
+        NONE    = 0,
+        UP      = 1,
+        DOWN    = 2,
+        PRESS   = 3
+
+    class EType(Enum):
+        NONE    = 0,
+        UP      = 1,
+        DOWN    = 2,
+        LEFT    = 3,
+        RIGHT   = 4,
+        OK      = 5,
+        NO      = 6,
+        SHOOT   = 7,
+        BOMB    = 8,
+        SWITCH  = 9,
+        ENTER   = 10,
+        ESCAPE  = 11,
+
+    def __init__(self, _value: int, _type: EType) -> None:
+        self.__value: int           = _value
+        self.__type: Input.EType    = Input.EType.NONE
+        self.__state: Input.EState  = Input.EState.NONE
+
+    def __dict__(self) -> Dict[str, Any]:
+        return {
+            "value" : self.__value,
+            "type" : self.__type
+        }
+
+    @property
+    def value(self) -> int:
+        return self.__value
+
+    @value.setter
+    def value(self, _value: int) -> None:
+        self.__value = _value
+
+    @property
+    def type(self) -> EType:
+        return self.__type
+
+    @type.setter
+    def type(self, _value: EType) -> None:
+        self.__type = _value
+
+    @property
+    def state(self) -> EState:
+        return self.__state
+
+    @state.setter
+    def state(self, _value: EState) -> None:
+        self.__state = _value
 
 @final
 class InputManager(metaclass = Singleton):
@@ -25,6 +82,9 @@ class InputManager(metaclass = Singleton):
         self.__buttonState: Dict[int, InputManager.EState]    = {}
         self.__isKeyPressed: bool                       = False
         self.__mousePosition: Vector2                 = Vector2()
+
+    def __del__(self):
+        ...
 
     def ProceedInput(self, _event: SDL_Event) -> None:
         if _event.type in { SDL_KEYUP, SDL_KEYDOWN }:
