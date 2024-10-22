@@ -183,8 +183,8 @@ class MathF:
         :param _rhs: 두 번째 각도
         :return: 양의 호 값
         """
-        diff: float = MathF.PositiveAngle(_rhs) - MathF.PositiveAngle(_lhs)
-        return diff if diff < 0.0 else diff + MathF.doublePi()
+        differ: float = MathF.PositiveAngle(_rhs) - MathF.PositiveAngle(_lhs)
+        return differ if differ < 0.0 else differ + MathF.doublePi()
 
     @staticmethod
     def PositiveArc_Degree(_lhs: float, _rhs: float) -> float:
@@ -194,8 +194,8 @@ class MathF:
         :param _rhs: 두 번째 각도
         :return: 양의 호 값 (도 단위)
         """
-        diff: float = MathF.PositiveAngle_Degree(_rhs) - MathF.PositiveAngle_Degree(_lhs)
-        return diff if diff < 0.0 else diff + 360.0
+        differ: float = MathF.PositiveAngle_Degree(_rhs) - MathF.PositiveAngle_Degree(_lhs)
+        return differ if differ < 0.0 else differ + 360.0
 
     @staticmethod
     def PositiveAngle(_angle: float) -> float:
@@ -511,8 +511,8 @@ class MathVec:
         if MathF.Equalf(_direction, MathF.pi()): return _rhs.x - _lhs.x
         if MathF.Equalf(_direction, MathF.oneThreeFourthsPi()): return _rhs.y - _lhs.y
 
-        diff: Vector2 = MathVec.Project(_lhs, _direction) - MathVec.Project(_rhs, _direction)
-        return MathVec.Magnitude(diff) if (abs(MathVec.Angle(diff) - _direction) < MathF.halfPi()) else -MathVec.Magnitude(diff)
+        differ: Vector2 = MathVec.Project(_lhs, _direction) - MathVec.Project(_rhs, _direction)
+        return MathVec.Magnitude(differ) if (abs(MathVec.Angle(differ) - _direction) < MathF.halfPi()) else -MathVec.Magnitude(differ)
 
     @dispatch(Vector2, Vector2)
     @staticmethod
