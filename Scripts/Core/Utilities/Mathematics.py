@@ -83,7 +83,7 @@ class MathF:
         return MathF.Equalf(_value, 0.0)
 
     @staticmethod
-    def Proportion(self, _a: float, _b: float, _d: float) -> float:
+    def Proportion(_a: float, _b: float, _d: float) -> float:
         """
         주어진 두 값의 비율을 계산합니다.
         :param _a: 첫 번째 값
@@ -94,7 +94,7 @@ class MathF:
         return _a / _b * _d
 
     @staticmethod
-    def Flip(self, _value: float, _over: float = 0.0) -> float:
+    def Flip(_value: float, _over: float = 0.0) -> float:
         """
         주어진 값을 기준 값(_over)을 중심으로 뒤집습니다.
         :param _value: 뒤집을 값
@@ -275,21 +275,38 @@ class Vector2:
         """
         return Vector2(self.__x - _other.__x, self.__y - _other.__y)
 
-    def __mul__(self, _other: float) -> Vector2:
+    def __mul__(self, _other: Union[int, float, Vector2]) -> Vector2:
         """
-        벡터를 스칼라 값으로 곱합니다.
+        벡터의 곱셉을 구현합니다.
         :param _other: 곱할 스칼라 값.
         :return: 곱셈 결과를 나타내는 Vector2 객체.
         """
-        return Vector2(self.__x * _other, self.__y * _other)
+        if isinstance(_other, (int, float)):
+            return Vector2(self.__x * _other, self.__y * _other)
 
-    def __truediv__(self, _other: float) -> Vector2:
+        elif isinstance(_other, Vector2):
+            return Vector2(self.__x * _other.__x, self.__y * _other.__y)
+
+        else:
+            raise TypeError()
+
+    def __truediv__(self, _other: Union[int, float, Vector2]) -> Vector2:
         """
-        벡터를 스칼라 값으로 나눕니다.
+        벡터의 나눗셈을 구현합니다.
         :param _other: 나눌 스칼라 값.
         :return: 나눗셈 결과를 나타내는 Vector2 객체.
         """
-        return Vector2(self.__x / _other, self.__y / _other)
+        if isinstance(_other, (int, float)):
+            return Vector2(self.__x / _other, self.__y / _other)
+
+        elif isinstance(_other, Vector2):
+            if MathF.Equalf(_other.__x) or MathF.Equalf(_other.__y):
+                raise ZeroDivisionError()
+
+            return Vector2(self.__x / _other.__x, self.__y / _other.__y)
+
+        else:
+            raise TypeError()
 
     def __eq__(self, _other: Vector2) -> bool:
         """
@@ -575,7 +592,7 @@ class MathVec:
         :return: 투영된 Vector2 객체.
         """
         ab: Vector2 = _lineB - _lineA
-        return _lineA + (MathVec.Dot(_vec - _lineA, ab) / MathVec.Dot(ab, ab)) * ab
+        return _lineA + ab * (MathVec.Dot(_vec - _lineA, ab) / MathVec.Dot(ab, ab))
 
     @dispatch(Vector2, Vector2)
     @staticmethod
