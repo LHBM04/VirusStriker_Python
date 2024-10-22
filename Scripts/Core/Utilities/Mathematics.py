@@ -155,7 +155,7 @@ class MathF:
 
     @dispatch(float, float)
     @staticmethod
-    def ShortesArc(_lhs: float, _rhs: float) -> float:
+    def ShortestArc(_lhs: float, _rhs: float) -> float:
         """
         두 각도 간의 최단 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
@@ -164,9 +164,9 @@ class MathF:
         """
         return MathF.Modp(_rhs - _lhs + MathF.pi(), MathF.doublePi()) - MathF.pi()
 
-    @dispatch(float, float)
     @staticmethod
-    def ShortesArc(_lhs: float, _rhs: float) -> float:
+    @dispatch(float, float)
+    def ShortestArc(_lhs: float, _rhs: float) -> float:
         """
         주어진 각도 범위에서 최단 호(arc)를 계산하여 반환합니다.
         :param _lhs: 첫 번째 각도
@@ -685,7 +685,7 @@ class MathVec:
         :param _rhs: 두 번째 Vector2 객체.
         :return: 두 벡터 간의 가장 짧은 호의 각도.
         """
-        return MathF.ShortesArc(MathVec.Angle(_lhs), MathVec.Angle(_rhs))
+        return MathF.ShortestArc(MathVec.Angle(_lhs), MathVec.Angle(_rhs))
 
     @staticmethod
     def ShortestArcToDegree(_lhs: Vector2, _rhs: Vector2) -> float:
@@ -695,4 +695,4 @@ class MathVec:
         :param _rhs: 두 번째 Vector2 객체.
         :return: 두 벡터 간의 가장 짧은 호의 각도 (도 단위).
         """
-        return MathF.ShortesArc(MathVec.Angle(_lhs) * rad2deg(1), MathVec.Angle(_rhs) * rad2deg(1))
+        return MathF.ShortestArc(MathVec.Angle(_lhs) * rad2deg(1), MathVec.Angle(_rhs) * rad2deg(1))
