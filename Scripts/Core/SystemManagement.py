@@ -134,7 +134,7 @@ class SystemManager(metaclass = Singleton):
 
             SDL_RenderClear(self.__rendererHandle)
 
-            rectangle: SDL_Rect = __InitSDLRect(0 - width.value // 2, 0 - height.value // 2, width.value, height.value)
+            rectangle: SDL_Rect = SDL_Rect(0, 0, width.value, height.value)
             SDL_RenderCopyEx(self.__rendererHandle, testTexture, None, rectangle, 0.0, None, 0)
 
             if SceneManager().isResetDeltaTime:
