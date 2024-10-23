@@ -10,6 +10,22 @@ from Core.Objects.GameObject import GameObject
 from Core.SystemManagement import SystemManager
 
 @final
+class Sprite:
+    def __init__(self, _texture: SDL_Texture):
+        self.__texture: SDL_Texture = _texture
+
+        width: c_int    = c_int(0)
+        height: c_int   = c_int(0)
+
+        SDL_QueryTexture(self.__texture, None, None, byref(width), byref(height))
+
+        self.__point    = SDL_Point(width.value // 2, height.value // 2)
+        self.__rect     = SDL_Rect(0, 0, width.value, height.value)
+
+    def __del__(self):
+        SDL_DestroyTexture(self.__texture)
+
+@final
 class SpriteRenderer(Component):
     def __init__(self, _owner: GameObject):
         super().__init__(_owner)
