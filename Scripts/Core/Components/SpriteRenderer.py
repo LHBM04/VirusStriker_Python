@@ -18,9 +18,8 @@ class SpriteRenderer(Component):
         self.__color: SDL_Color                 = SDL_Color(255, 255, 255, 255)
         self.__flipFlag: int                    = SDL_FLIP_NONE
 
-        self.__width: c_int                     = c_int(0)
-        self.__height: c_int                    = c_int(0)
         self.__rect: SDL_Rect                   = SDL_Rect()
+        self.__point: SDL_Point                 = SDL_Point()
 
         self.__sortingLayer: int                = 0
         self.__orderInLayer: int                = 0
@@ -36,7 +35,13 @@ class SpriteRenderer(Component):
     @texture.setter
     def texture(self, _value: SDL_Texture) -> None:
         self.__texture = _value
-        SDL_QueryTexture(self.__texture, None, None, byref(self.__width), byref(self.__height))
+
+        width: c_int    = c_int(0)
+        height: c_int   = c_int(0)
+        SDL_QueryTexture(self.__texture, None, None, byref(width), byref(height))
+
+        self.__point    = SDL_Point(width.value // 2, height.value // 2)
+        self.__rect     = SDL_Rect(0, 0, width.value, height.value)
 
     @property
     def color(self) -> SDL_Color:
@@ -87,21 +92,10 @@ class SpriteRenderer(Component):
         self.__orderInLayer = _value
     # endregion
 
-
-
     @dispatch(int, int)
     def Draw(self, _x: int, _y: int) -> None:
-        rectangle: SDL_Rect = self.__InitSDLRect(_x - self.__width // 2, _y - self.__height // 2, self.__width, self.__height)
-        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, rectangle, 0.0, None, self.__flipFlag)
+        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, self.__rect, 0.0, self.__point, self.__flipFlag)
 
     @dispatch(int, int, int)
     def Draw(self, _x: int, _y: int, _rotate: int) -> None:
-        rectangle: SDL_Rect = self.__InitSDLRect((_x - self.__width) // 2, (_y - self.__height) // 2, self.__width, self.__height)
-        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, rectangle, degrees(-_rotate), None, SDL_FLIP_NONE)
-
-    @dispatch(int, int, int, int, int)
-    def Draw(self, _x: int, _y: int, _rotate: int, _width: int, _height: int, _flipX: bool, _flipY: bool) -> None:
-        rectangle: SDL_Rect  = self.__InitSDLRect((_x - _width) // 2, (_y - _height) // 2, _width, _height)
-        flipFlag: int   = ((SDL_FLIP_VERTICAL if _flipX else SDL_FLIP_NONE) | (SDL_FLIP_HORIZONTAL if _flipY else SDL_FLIP_NONE))
-
-        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, rectangle, degrees(-_rotate), None, flipFlag)
+        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, self.__rect, degrees(-_rotate), self.__point, self.__flipFlag)

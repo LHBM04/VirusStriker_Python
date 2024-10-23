@@ -121,21 +121,18 @@ class SystemManager(metaclass = Singleton):
 
         from Core.Utilities.ResourceManagement import ResourceManager
 
-        def __InitSDLRect(_x: int, _y: int, _w: int, _h: int) -> SDL_Rect:
-            return SDL_Rect(int(_x), int(-_y + SystemManager().windowHeight - _h), int(_w), int(_h))
-
         testTexture: SDL_Texture = ResourceManager().GetTexture("Sprite_Background_Initialize.png")
         width: c_int = c_int(0)
         height: c_int = c_int(0)
         SDL_QueryTexture(testTexture, None, None, byref(width), byref(height))
+        center      = SDL_Point(width.value // 2, height.value // 2)
+        rectangle   = SDL_Rect(0, 0, width.value, height.value)
 
         while self.__isRunning:
             self.ProceedEvent()
 
             SDL_RenderClear(self.__rendererHandle)
-
-            rectangle: SDL_Rect = SDL_Rect(0, 0, width.value, height.value)
-            SDL_RenderCopyEx(self.__rendererHandle, testTexture, None, rectangle, 0.0, None, 0)
+            SDL_RenderCopyEx(self.__rendererHandle, testTexture, None, rectangle, 0.0, center, 0)
 
             if SceneManager().isResetDeltaTime:
                 previousTime = SDL_GetTicks()

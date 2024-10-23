@@ -9,8 +9,8 @@ class Transform(Component):
     def __init__(self, _owner: GameObject):  # GameObject를 문자열로 사용
         super().__init__(_owner)
 
-        self.__position: Vector2            = Vector2()     # 포지션
-        self.__scale: Vector2               = Vector2()     # 크기
+        self.__position: Vector2            = Vector2(0, 0)     # 포지션
+        self.__scale: Vector2               = Vector2(0, 0)     # 크기
         self.__rotation: float              = 0             # 회전 각도(Z축)
 
         self.__parent: Optional[Transform]  = None          # 부모 Transform
