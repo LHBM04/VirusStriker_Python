@@ -650,9 +650,9 @@ class MathVec:
         s: float = sin(_angle)
         c: float = cos(_angle)
 
-        nPoint: Vector2 = _point - _origin
+        point: Vector2 = _point - _origin
 
-        return Vector2(nPoint.x * c - nPoint.y * s + _origin.x, nPoint.x * s + nPoint.y * c + _origin.y)
+        return Vector2(point.x * c - point.y * s + _origin.x, point.x * s + point.y * c + _origin.y)
 
     @dispatch(Vector2, float)
     @staticmethod
