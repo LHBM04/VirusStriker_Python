@@ -1,6 +1,7 @@
 from numpy import *
 from typing import *
 
+from sdl2 import *
 from sdl2.sdlimage import *
 from sdl2.sdlttf import *
 from sdl2.sdlmixer import *
@@ -88,3 +89,9 @@ class ResourceManager(metaclass = Singleton):
             print(str(filePath))
             # TODO: Font 파일 읽어오기
             # self.__fontBank[filePath.name] = load_font(str(filePath), 20)
+
+    def GetTextures(self, _name: str) -> List[SDL_Texture]:
+        return self.__textureBank[_name]
+
+    def GetTexture(self, _name: str, _index: int = 0) -> SDL_Texture:
+        return self.GetTextures(_name)[_index]

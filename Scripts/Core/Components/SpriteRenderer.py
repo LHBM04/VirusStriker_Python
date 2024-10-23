@@ -87,8 +87,7 @@ class SpriteRenderer(Component):
         self.__orderInLayer = _value
     # endregion
 
-    def __InitSDLRect(self, _x: int, _y: int, _w: int, _h: int) -> SDL_Rect:
-        return SDL_Rect(int(_x), int(-_y + SystemManager().windowHeight - _h), int(_w), int(_h))
+
 
     @dispatch(int, int)
     def Draw(self, _x: int, _y: int) -> None:
