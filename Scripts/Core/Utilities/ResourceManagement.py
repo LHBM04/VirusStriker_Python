@@ -1,4 +1,4 @@
-from numpy import *
+from abc import ABCMeta, abstractmethod
 from typing import *
 
 from sdl2 import *
@@ -7,8 +7,18 @@ from sdl2.sdlttf import *
 from sdl2.sdlmixer import *
 from pathlib import *
 
+from Core.Objects.Object import Object
 from Core.SystemManagement import SystemManager
 from Core.Utilities.Singleton import Singleton
+
+class ScriptableObject(Object, metaclass = ABCMeta):
+    @abstractmethod
+    def ToJson(self):
+        ...
+
+    @abstractmethod
+    def FromJson(self):
+        ...
 
 @final
 class ResourceManager(metaclass = Singleton):

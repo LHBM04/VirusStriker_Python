@@ -3,11 +3,12 @@ from typing import final, Dict, Any
 
 from sdl2 import *
 
+from Core.Utilities.ResourceManagement import ScriptableObject
 from Core.Utilities.Singleton import Singleton
 from Core.Utilities.Mathematics import Vector2
 
 @final
-class Input:
+class Input(ScriptableObject):
     class EState(Enum):
         NONE    = 0,
         UP      = 1,
@@ -32,12 +33,6 @@ class Input:
         self.__value: int           = _value
         self.__type: Input.EType    = Input.EType.NONE
         self.__state: Input.EState  = Input.EState.NONE
-
-    def __dict__(self) -> Dict[str, Any]:
-        return {
-            "value" : self.__value,
-            "type" : self.__type
-        }
 
     @property
     def value(self) -> int:
