@@ -7,6 +7,7 @@ from pathlib import *
 
 from Core.Utilities.InputManagement import InputManager
 from Core.Utilities.Singleton import Singleton
+from Level.AudioManagement import AudioManager
 from Level.SceneManagement import SceneManager
 
 @final
@@ -109,6 +110,8 @@ class SystemManager(metaclass = Singleton):
             if self.__rendererHandle is None:
                 raise ValueError("[Oops!] Renderer 핸들 생성에 실패했습니다!")
 
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, True)
+
         from Core.Utilities.ResourceManagement import ResourceManager
         ResourceManager().Initialize()
 
@@ -120,7 +123,9 @@ class SystemManager(metaclass = Singleton):
         fixedUpdateTime: float  = 1.0 / 50.0
         fixedDeltaTime: float   = 0.0
 
-         # "1"은 Linear Filtering(부드러운 스케일링)
+        from Core.Utilities.ResourceManagement import ResourceManager
+        temp = ResourceManager().GetBGM("BGM_Title.flac")
+        AudioManager().PlayPrimaryBGM(temp)
 
         while self.__isRunning:
             self.ProceedEvent()

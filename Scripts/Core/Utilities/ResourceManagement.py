@@ -15,8 +15,8 @@ class ResourceManager(metaclass = Singleton):
     # TODO: 멀티 스레딩으로 리소스 긁어오는 거 고려해보자.
     def __init__(self):
         self.__textureBank: Dict[str, List[SDL_Texture]]    = { }
-        self.__bgmBank: Dict[str, Mix_Music]                = { }
-        self.__sfxBank: Dict[str, Mix_Music]                = { }
+        self.__bgmBank: Dict[str, Mix_Chunk]                = { }
+        self.__sfxBank: Dict[str, Mix_Chunk]                = { }
         self.__ttfBank: Dict[str, TTF_Font]                 = { }
 
         self.__textureResourcePath: Path    = Path(r"Resources\Sprites")
@@ -38,10 +38,24 @@ class ResourceManager(metaclass = Singleton):
         IMG_Quit()
 
     def Initialize(self) -> None:
+        # Initialize SDL audio
+        if SDL_Init(SDL_INIT_AUDIO) != 0:
+            print(f"Failed to initialize SDL audio: {SDL_GetError()}")
+            return
+
+        # Open the audio device
+        if Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) < 0:
+            print(f"Failed to initialize audio: {Mix_GetError()}")
+            return
+
+        # Set number of channels (should be after Mix_OpenAudio)
+        if Mix_AllocateChannels(MIX_CHANNELS) == 0:
+            print(f"Failed to allocate channels: {Mix_GetError()}")
+
         # self.LoadTextures()
-        # self.LoadBGM()
-        # self.LoadSFX()
-        self.LoadFont()
+        self.LoadBGM()
+        self.LoadSFX()
+        #self.LoadFont()
 
     def LoadTextures(self) -> None:
         if not self.__textureResourcePath.exists() or not self.__textureResourcePath.is_dir():
@@ -66,7 +80,7 @@ class ResourceManager(metaclass = Singleton):
                 raise IOError
 
             print(str(filePath))
-            self.__bgmBank[filePath.name] = Mix_LoadMUS(str(filePath).encode("UTF-8"))
+            self.__bgmBank[filePath.name] = Mix_LoadWAV(str(filePath).encode("UTF-8"))
 
     def LoadSFX(self) -> None:
         if not self.__sfxResourcePath.exists() or not self.__sfxResourcePath.is_dir():
@@ -77,7 +91,7 @@ class ResourceManager(metaclass = Singleton):
                 raise IOError
 
             print(str(filePath))
-            self.__sfxBank[filePath.name] = Mix_LoadMUS(str(filePath).encode("UTF-8"))
+            self.__sfxBank[filePath.name] = Mix_LoadWAV(str(filePath).encode("UTF-8"))
 
     def LoadFont(self) -> None:
         if not self.__fontResourcePath.exists() or not self.__fontResourcePath.is_dir():
@@ -98,3 +112,6 @@ class ResourceManager(metaclass = Singleton):
 
     def GetFont(self, _name: str, _size: int = 25) -> TTF_Font:
         return self.__fontBank[_name]
+
+    def GetBGM(self, _name: str) -> Mix_Chunk:
+        return self.__bgmBank[_name]
