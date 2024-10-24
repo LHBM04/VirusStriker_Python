@@ -14,5 +14,6 @@ class Font(Object):
     def __del__(self) -> None:
         TTF_CloseFont(self.__font)
 
+    @property
     def font(self) -> TTF_Font:
         return self.__font
