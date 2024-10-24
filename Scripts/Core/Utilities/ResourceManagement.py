@@ -43,6 +43,8 @@ class ResourceManager(metaclass = Singleton):
             print(f"Failed to initialize SDL audio: {SDL_GetError()}")
             return
 
+        Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_FLAC)
+
         # Open the audio device
         if Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) < 0:
             print(f"Failed to initialize audio: {Mix_GetError()}")
