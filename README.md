@@ -8,7 +8,7 @@
 ### Python Version
 `>= 3.12`
 ### Modules
-* numpy (Methematics Utilities)
-* pathlib (I/O Utilities)
-* pico2d (Base Development Frameworks)
-* sdl2 (Other Windows Utilities)
+* numpy (Mathematics Module)
+* pathlib (I/O Module)
+* sdl2 (Windows API Module)
+* multipledispatch (Function/Method Overload & Typing Module)
