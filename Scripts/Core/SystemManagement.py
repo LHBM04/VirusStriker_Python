@@ -5,6 +5,8 @@ from typing import *
 from sdl2 import *
 from pathlib import *
 
+from sdl2.sdlttf import TTF_Font, TTF_RenderText_Solid
+
 from Core.Utilities.InputManagement import InputManager
 from Core.Utilities.Singleton import Singleton
 from Level.SceneManagement import SceneManager
@@ -122,21 +124,23 @@ class SystemManager(metaclass = Singleton):
 
         from Core.Utilities.ResourceManagement import ResourceManager
 
-        testTexture: SDL_Texture = ResourceManager().GetTexture("Sprite_Background_Initialize.png")
+        testFont: TTF_Font = ResourceManager().GetFont("BMDOHYEON_otf.otf")
+        surface = TTF_RenderText_Solid(testFont, "Hello, PySDL!".encode('UTF-8'), SDL_Color(255, 255, 255, 255))
+        texture = SDL_CreateTextureFromSurface(self.__rendererHandle, surface)
+
         width: c_int = c_int(0)
         height: c_int = c_int(0)
-        SDL_QueryTexture(testTexture, None, None, byref(width), byref(height))
+        SDL_QueryTexture(texture, None, None, byref(width), byref(height))
         center      = SDL_Point(width.value // 2, height.value // 2)
-        rectangle   = SDL_Rect(0, 0, width.value, height.value)
+        rectangle   = SDL_Rect(1000, 10, width.value, height.value)
+
+         # "1"은 Linear Filtering(부드러운 스케일링)
 
         while self.__isRunning:
             self.ProceedEvent()
 
             SDL_RenderClear(self.__rendererHandle)
-            SDL_RenderCopyEx(self.__rendererHandle, testTexture, rectangle, rectangle, 0.0, center, 0)
-            SDL_SetTextureColorMod(testTexture, 255, 255, 255)
-            SDL_SetTextureAlphaMod(testTexture, 255)
-            SDL_SetTextureBlendMode(testTexture, SDL_BLENDMODE_BLEND)
+            SDL_RenderCopyEx(self.__rendererHandle, texture, None, rectangle, 0.0, center, 0)
 
             if SceneManager().isResetDeltaTime:
                 previousTime = SDL_GetTicks()

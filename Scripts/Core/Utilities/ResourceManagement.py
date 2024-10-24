@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from ctypes import *
 from typing import *
 
 from sdl2 import *
@@ -8,57 +7,8 @@ from sdl2.sdlttf import *
 from sdl2.sdlmixer import *
 from pathlib import *
 
-from Core.Objects.Object import Object
 from Core.SystemManagement import SystemManager
 from Core.Utilities.Singleton import Singleton
-
-class ScriptableObject(Object, metaclass = ABCMeta):
-    @abstractmethod
-    def ToJson(self):
-        ...
-
-    @abstractmethod
-    def FromJson(self):
-        ...
-
-@final
-class Sprite:
-    def __init__(self, _texture: SDL_Texture):
-        self.__texture: SDL_Texture = _texture
-
-        width: c_int    = c_int(0)
-        height: c_int   = c_int(0)
-
-        SDL_QueryTexture(self.__texture, None, None, byref(width), byref(height))
-
-        self.__pivot    = SDL_Point(width.value // 2, height.value // 2)
-        self.__rect     = SDL_Rect(0, 0, width.value, height.value)
-
-    def __del__(self):
-        SDL_DestroyTexture(self.__texture)
-
-    # region Properties
-    @property
-    def texture(self) -> SDL_Texture:
-        return self.__texture
-
-    @property
-    def pivot(self) -> SDL_Point:
-        return self.__pivot
-
-    @property
-    def rect(self) -> SDL_Rect:
-        return self.__rect
-    # endregion
-
-@final
-class Font:
-    def __init__(self, _font: TTF_Font) -> None:
-        self.__font: TTF_Font = _font
-
-    def __del__(self) -> None:
-        ...
-
 
 @final
 class ResourceManager(metaclass = Singleton):
@@ -76,8 +26,9 @@ class ResourceManager(metaclass = Singleton):
         self.__sfxResourcePath: Path    = Path(r"Resources\Audio\SFX")
         self.__audioResourceSuffix: str = "*.flac"
 
-        self.__fontResourcePath: Path   = Path(r"Resources\Fonts")
-        self.__fontResourceSuffix: str  = "*.otf"
+        self.__fontBank: Dict[str, TTF_Font]    = {}
+        self.__fontResourcePath: Path           = Path(r"Resources\Fonts")
+        self.__fontResourceSuffix: str          = "*.otf"
 
         IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP)
         TTF_Init()
@@ -87,9 +38,9 @@ class ResourceManager(metaclass = Singleton):
         IMG_Quit()
 
     def Initialize(self) -> None:
-        self.LoadTextures()
-        self.LoadBGM()
-        self.LoadSFX()
+        # self.LoadTextures()
+        # self.LoadBGM()
+        # self.LoadSFX()
         self.LoadFont()
 
     def LoadTextures(self) -> None:
@@ -137,11 +88,13 @@ class ResourceManager(metaclass = Singleton):
                 raise IOError
 
             print(str(filePath))
-            # TODO: Font 파일 읽어오기
-            # self.__fontBank[filePath.name] = load_font(str(filePath), 20)
+            self.__fontBank[filePath.name] = TTF_OpenFont(str(filePath).encode('utf-8'), 20)
 
     def GetTextures(self, _name: str) -> List[SDL_Texture]:
         return self.__textureBank[_name]
 
     def GetTexture(self, _name: str, _index: int = 0) -> SDL_Texture:
         return self.GetTextures(_name)[_index]
+
+    def GetFont(self, _name: str, _size: int = 25) -> TTF_Font:
+        return self.__fontBank[_name]
