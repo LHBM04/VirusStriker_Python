@@ -10,27 +10,11 @@ from Core.Objects.GameObject import GameObject
 from Core.SystemManagement import SystemManager
 
 @final
-class Sprite:
-    def __init__(self, _texture: SDL_Texture):
-        self.__texture: SDL_Texture = _texture
-
-        width: c_int    = c_int(0)
-        height: c_int   = c_int(0)
-
-        SDL_QueryTexture(self.__texture, None, None, byref(width), byref(height))
-
-        self.__point    = SDL_Point(width.value // 2, height.value // 2)
-        self.__rect     = SDL_Rect(0, 0, width.value, height.value)
-
-    def __del__(self):
-        SDL_DestroyTexture(self.__texture)
-
-@final
 class SpriteRenderer(Component):
     def __init__(self, _owner: GameObject):
         super().__init__(_owner)
         
-        self.__texture: Optional[SDL_Texture]   = None
+        self.__sprite: Optional[Sprite]         = None
         self.__color: SDL_Color                 = SDL_Color(255, 255, 255, 255)
         self.__flipFlag: int                    = SDL_FLIP_NONE
 
@@ -41,23 +25,16 @@ class SpriteRenderer(Component):
         self.__orderInLayer: int                = 0
 
     def __del__(self):
-        SDL_DestroyTexture(self.__texture)
+        SDL_DestroyTexture(self.__sprite)
 
     # region Properties
     @property
-    def texture(self) -> SDL_Texture:
-        return self.__texture
+    def sprite(self) -> Sprite:
+        return self.__sprite
 
-    @texture.setter
-    def texture(self, _value: SDL_Texture) -> None:
-        self.__texture = _value
-
-        width: c_int    = c_int(0)
-        height: c_int   = c_int(0)
-        SDL_QueryTexture(self.__texture, None, None, byref(width), byref(height))
-
-        self.__point    = SDL_Point(width.value // 2, height.value // 2)
-        self.__rect     = SDL_Rect(0, 0, width.value, height.value)
+    @sprite.setter
+    def sprite(self, _value: Sprite) -> None:
+        self.__sprite = _value
 
     @property
     def color(self) -> SDL_Color:
@@ -107,11 +84,15 @@ class SpriteRenderer(Component):
     def orderInLayer(self, _value: int) -> None:
         self.__orderInLayer = _value
     # endregion
-
-    @dispatch(int, int)
-    def Draw(self, _x: int, _y: int) -> None:
-        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, self.__rect, 0.0, self.__point, self.__flipFlag)
-
-    @dispatch(int, int, int)
-    def Draw(self, _x: int, _y: int, _rotate: int) -> None:
-        SDL_RenderCopyEx(SystemManager().rendererHandle, self.__texture, None, self.__rect, degrees(-_rotate), self.__point, self.__flipFlag)
+    def Draw(self, _x: int, _y: int, _rotate: int = 0) -> None:
+        SDL_RenderCopyEx(
+            SystemManager().rendererHandle,
+            self.__sprite.texture,
+            self.__sprite.rect,
+            self.__sprite.rect,
+            degrees(-_rotate),
+            self.__sprite.pivot,
+            self.__flipFlag)
+        SDL_SetTextureColorMod(self.__sprite.texture, self.__color.r, self.__color.g, self.__color.b)
+        SDL_SetTextureAlphaMod(self.__sprite.texture, self.__color.a)
+        SDL_SetTextureBlendMode(self.__sprite.texture, SDL_BLENDMODE_BLEND)

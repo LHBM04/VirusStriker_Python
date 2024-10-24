@@ -64,6 +64,7 @@ class SystemManager(metaclass = Singleton):
         print("[Notice] Configuration.json을 찾고 있습니다.")
         settingFile: Path = Path(r"Resources\Configuration.json")
 
+        # Fallback
         if not settingFile.exists() or not settingFile.is_file():
             print("[Caution!] Configuration.json을 찾지 못했습니다. 기본 설정으로 기동합니다...")
             self.__windowWidth     = self.__DEFAULT_WINDOW_WIDTH
@@ -132,7 +133,10 @@ class SystemManager(metaclass = Singleton):
             self.ProceedEvent()
 
             SDL_RenderClear(self.__rendererHandle)
-            SDL_RenderCopyEx(self.__rendererHandle, testTexture, None, rectangle, 0.0, center, 0)
+            SDL_RenderCopyEx(self.__rendererHandle, testTexture, rectangle, rectangle, 0.0, center, 0)
+            SDL_SetTextureColorMod(testTexture, 255, 255, 255)
+            SDL_SetTextureAlphaMod(testTexture, 255)
+            SDL_SetTextureBlendMode(testTexture, SDL_BLENDMODE_BLEND)
 
             if SceneManager().isResetDeltaTime:
                 previousTime = SDL_GetTicks()

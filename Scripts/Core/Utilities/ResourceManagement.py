@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from ctypes import *
 from typing import *
 
 from sdl2 import *
@@ -19,6 +20,45 @@ class ScriptableObject(Object, metaclass = ABCMeta):
     @abstractmethod
     def FromJson(self):
         ...
+
+@final
+class Sprite:
+    def __init__(self, _texture: SDL_Texture):
+        self.__texture: SDL_Texture = _texture
+
+        width: c_int    = c_int(0)
+        height: c_int   = c_int(0)
+
+        SDL_QueryTexture(self.__texture, None, None, byref(width), byref(height))
+
+        self.__pivot    = SDL_Point(width.value // 2, height.value // 2)
+        self.__rect     = SDL_Rect(0, 0, width.value, height.value)
+
+    def __del__(self):
+        SDL_DestroyTexture(self.__texture)
+
+    # region Properties
+    @property
+    def texture(self) -> SDL_Texture:
+        return self.__texture
+
+    @property
+    def pivot(self) -> SDL_Point:
+        return self.__pivot
+
+    @property
+    def rect(self) -> SDL_Rect:
+        return self.__rect
+    # endregion
+
+@final
+class Font:
+    def __init__(self, _font: TTF_Font) -> None:
+        self.__font: TTF_Font = _font
+
+    def __del__(self) -> None:
+        ...
+
 
 @final
 class ResourceManager(metaclass = Singleton):

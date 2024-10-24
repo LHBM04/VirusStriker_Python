@@ -3,12 +3,11 @@ from typing import final, Dict, Any
 
 from sdl2 import *
 
-from Core.Utilities.ResourceManagement import ScriptableObject
 from Core.Utilities.Singleton import Singleton
 from Core.Utilities.Mathematics import Vector2
 
 @final
-class Input(ScriptableObject):
+class Input:
     class EState(Enum):
         NONE    = 0,
         UP      = 1,
